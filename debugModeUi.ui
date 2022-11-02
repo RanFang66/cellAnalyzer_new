@@ -1,0 +1,779 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>debugModeUi</class>
+ <widget class="QWidget" name="debugModeUi">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1080</width>
+    <height>1600</height>
+   </rect>
+  </property>
+  <property name="baseSize">
+   <size>
+    <width>1080</width>
+    <height>1600</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <layout class="QGridLayout" name="gridLayout">
+   <item row="0" column="0">
+    <widget class="QSplitter" name="splitter">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <widget class="QToolBox" name="toolBox">
+      <property name="currentIndex">
+       <number>2</number>
+      </property>
+      <widget class="QWidget" name="page_3">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>0</y>
+         <width>349</width>
+         <height>1438</height>
+        </rect>
+       </property>
+       <attribute name="label">
+        <string>Serial Port</string>
+       </attribute>
+       <layout class="QGridLayout" name="gridLayout_2">
+        <item row="0" column="0">
+         <widget class="QLabel" name="label">
+          <property name="text">
+           <string>Port:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QComboBox" name="comboPortName"/>
+        </item>
+        <item row="1" column="0">
+         <widget class="QLabel" name="label_2">
+          <property name="text">
+           <string>Baudrate:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="QComboBox" name="comboBaudrate"/>
+        </item>
+        <item row="2" column="0">
+         <widget class="QPushButton" name="btnRefreshPortInfo">
+          <property name="text">
+           <string>refresh</string>
+          </property>
+          <property name="checkable">
+           <bool>false</bool>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="1">
+         <widget class="QPushButton" name="btnSerialConnect">
+          <property name="text">
+           <string>connect</string>
+          </property>
+          <property name="checkable">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="page">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>0</y>
+         <width>349</width>
+         <height>1438</height>
+        </rect>
+       </property>
+       <attribute name="label">
+        <string>Motor / Led</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout_2">
+        <item>
+         <widget class="QComboBox" name="comboMotoType">
+          <item>
+           <property name="text">
+            <string>Chip Motor X</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Chip Motor Y</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Camera Motor</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Filter Motor</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Insert Motor</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="btnMotoRunForward">
+          <property name="text">
+           <string>moto run forward</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="btnMotoRunBackward">
+          <property name="text">
+           <string>moto run backward</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="btnMotoStop">
+          <property name="text">
+           <string>moto stop</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="btnMotoReset">
+          <property name="text">
+           <string>moto reset</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout">
+          <item>
+           <widget class="QPushButton" name="btnMotoSteps">
+            <property name="text">
+             <string>moto run steps</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QSpinBox" name="editMotoRunSteps">
+            <property name="minimum">
+             <number>-100</number>
+            </property>
+            <property name="maximum">
+             <number>2000</number>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_2">
+          <item>
+           <widget class="QPushButton" name="btnSetMotoSpeed">
+            <property name="text">
+             <string>set Speed</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QSpinBox" name="editMotoSpeed">
+            <property name="minimum">
+             <number>0</number>
+            </property>
+            <property name="maximum">
+             <number>100</number>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QGridLayout" name="gridLayout_3">
+          <item row="0" column="0">
+           <widget class="QRadioButton" name="radioLedGreen">
+            <property name="text">
+             <string>Green</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QRadioButton" name="radioLedBlue">
+            <property name="text">
+             <string>Blue</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QRadioButton" name="radioLedWhite">
+            <property name="text">
+             <string>White</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QRadioButton" name="radioLedOff">
+            <property name="text">
+             <string>Off</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="page_2">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>0</y>
+         <width>349</width>
+         <height>1438</height>
+        </rect>
+       </property>
+       <attribute name="label">
+        <string>Camera</string>
+       </attribute>
+       <layout class="QGridLayout" name="gridLayout_6">
+        <item row="0" column="0">
+         <widget class="QGroupBox" name="groupBox_4">
+          <property name="title">
+           <string>Info</string>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_5">
+           <item row="0" column="1">
+            <widget class="QLabel" name="lblCamName">
+             <property name="text">
+              <string>Cam</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="0">
+            <widget class="QLabel" name="label_6">
+             <property name="text">
+              <string>Name:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="2">
+            <widget class="QLabel" name="label_7">
+             <property name="text">
+              <string>Version:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="3">
+            <widget class="QLabel" name="lblCamVersion">
+             <property name="text">
+              <string>0</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0" colspan="2">
+            <widget class="QLabel" name="label_8">
+             <property name="text">
+              <string>Resolution:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="2" colspan="2">
+            <widget class="QComboBox" name="cmbResolution"/>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="QGroupBox" name="groupBox">
+          <property name="title">
+           <string>Control</string>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_4">
+           <item row="0" column="0">
+            <widget class="QPushButton" name="btnOpenCam">
+             <property name="text">
+              <string>Open</string>
+             </property>
+             <property name="checkable">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QPushButton" name="btnStartCam">
+             <property name="text">
+              <string>Start</string>
+             </property>
+             <property name="checkable">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item row="2" column="0">
+         <widget class="QGroupBox" name="groupBox_2">
+          <property name="title">
+           <string>ISP</string>
+          </property>
+          <layout class="QVBoxLayout" name="verticalLayout_3">
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_3">
+             <item>
+              <widget class="QLabel" name="label_4">
+               <property name="text">
+                <string>Gamma</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QSlider" name="hsGamma">
+               <property name="minimum">
+                <number>30</number>
+               </property>
+               <property name="maximum">
+                <number>250</number>
+               </property>
+               <property name="value">
+                <number>200</number>
+               </property>
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="lblGamm">
+               <property name="minimumSize">
+                <size>
+                 <width>20</width>
+                 <height>0</height>
+                </size>
+               </property>
+               <property name="text">
+                <string/>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_4">
+             <item>
+              <widget class="QLabel" name="label_10">
+               <property name="text">
+                <string>Contrast</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QSlider" name="hsContrast">
+               <property name="minimum">
+                <number>30</number>
+               </property>
+               <property name="maximum">
+                <number>200</number>
+               </property>
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="lblContrast">
+               <property name="minimumSize">
+                <size>
+                 <width>20</width>
+                 <height>0</height>
+                </size>
+               </property>
+               <property name="text">
+                <string/>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_5">
+             <item>
+              <widget class="QCheckBox" name="cbGain">
+               <property name="text">
+                <string>Auto</string>
+               </property>
+               <property name="checked">
+                <bool>false</bool>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="label_3">
+               <property name="text">
+                <string>Gain</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QSlider" name="hsGain">
+               <property name="enabled">
+                <bool>true</bool>
+               </property>
+               <property name="minimum">
+                <number>8</number>
+               </property>
+               <property name="maximum">
+                <number>63</number>
+               </property>
+               <property name="value">
+                <number>8</number>
+               </property>
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="lblGain">
+               <property name="minimumSize">
+                <size>
+                 <width>20</width>
+                 <height>0</height>
+                </size>
+               </property>
+               <property name="text">
+                <string/>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_6">
+             <item>
+              <widget class="QCheckBox" name="cbExposure">
+               <property name="text">
+                <string>Auto</string>
+               </property>
+               <property name="checked">
+                <bool>false</bool>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="label_5">
+               <property name="text">
+                <string>Exposure</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QSlider" name="hsExposure">
+               <property name="enabled">
+                <bool>true</bool>
+               </property>
+               <property name="minimum">
+                <number>1</number>
+               </property>
+               <property name="maximum">
+                <number>2000</number>
+               </property>
+               <property name="sliderPosition">
+                <number>8</number>
+               </property>
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="lblExposure">
+               <property name="minimumSize">
+                <size>
+                 <width>20</width>
+                 <height>0</height>
+                </size>
+               </property>
+               <property name="text">
+                <string/>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <widget class="QPushButton" name="btnWB">
+             <property name="text">
+              <string>White Balance</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item row="3" column="0">
+         <widget class="QGroupBox" name="groupBox_3">
+          <property name="title">
+           <string>Zoom View</string>
+          </property>
+          <layout class="QVBoxLayout" name="verticalLayout_5">
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_9">
+             <item>
+              <widget class="QPushButton" name="btnZoomIn">
+               <property name="maximumSize">
+                <size>
+                 <width>40</width>
+                 <height>16777215</height>
+                </size>
+               </property>
+               <property name="text">
+                <string>+</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="btnZoomOut">
+               <property name="maximumSize">
+                <size>
+                 <width>40</width>
+                 <height>16777215</height>
+                </size>
+               </property>
+               <property name="text">
+                <string>-</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="btnResetView">
+               <property name="maximumSize">
+                <size>
+                 <width>40</width>
+                 <height>16777215</height>
+                </size>
+               </property>
+               <property name="text">
+                <string>=</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_10">
+             <item>
+              <widget class="QCheckBox" name="cbHFlip">
+               <property name="text">
+                <string>H Flip</string>
+               </property>
+               <property name="checked">
+                <bool>false</bool>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QCheckBox" name="cbVFlip">
+               <property name="text">
+                <string>V Flip</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+          </layout>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="page_4">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>0</y>
+         <width>349</width>
+         <height>1438</height>
+        </rect>
+       </property>
+       <attribute name="label">
+        <string>Operations</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout_4">
+        <item>
+         <widget class="QPushButton" name="btnUpdateSysStatus">
+          <property name="text">
+           <string>Update Status</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="btnAutoFocus">
+          <property name="text">
+           <string>Auto Focus</string>
+          </property>
+          <property name="checkable">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QProgressBar" name="progressAutoFocus">
+          <property name="value">
+           <number>0</number>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+     <widget class="QWidget" name="layoutWidget">
+      <layout class="QVBoxLayout" name="verticalLayout">
+       <item>
+        <widget class="QGraphicsView" name="gvMain"/>
+       </item>
+       <item>
+        <widget class="QTableWidget" name="tblSysStatus">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <row>
+          <property name="text">
+           <string>Chip Motor X</string>
+          </property>
+         </row>
+         <row>
+          <property name="text">
+           <string>Chip Motor Y</string>
+          </property>
+         </row>
+         <row>
+          <property name="text">
+           <string>Camera Motor</string>
+          </property>
+         </row>
+         <row>
+          <property name="text">
+           <string>FilterMotor</string>
+          </property>
+         </row>
+         <row>
+          <property name="text">
+           <string>Led</string>
+          </property>
+         </row>
+         <row>
+          <property name="text">
+           <string>Chip Tray</string>
+          </property>
+         </row>
+         <column>
+          <property name="text">
+           <string>Status</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>LimitPos</string>
+          </property>
+         </column>
+         <item row="0" column="0">
+          <property name="text">
+           <string>0</string>
+          </property>
+          <property name="textAlignment">
+           <set>AlignCenter</set>
+          </property>
+         </item>
+         <item row="0" column="1">
+          <property name="text">
+           <string>No Limit</string>
+          </property>
+          <property name="textAlignment">
+           <set>AlignCenter</set>
+          </property>
+         </item>
+         <item row="1" column="0">
+          <property name="text">
+           <string>0</string>
+          </property>
+          <property name="textAlignment">
+           <set>AlignCenter</set>
+          </property>
+         </item>
+         <item row="1" column="1">
+          <property name="text">
+           <string>No Limit</string>
+          </property>
+          <property name="textAlignment">
+           <set>AlignCenter</set>
+          </property>
+         </item>
+         <item row="2" column="0">
+          <property name="text">
+           <string>0</string>
+          </property>
+          <property name="textAlignment">
+           <set>AlignCenter</set>
+          </property>
+         </item>
+         <item row="2" column="1">
+          <property name="text">
+           <string>No Limit</string>
+          </property>
+          <property name="textAlignment">
+           <set>AlignCenter</set>
+          </property>
+         </item>
+         <item row="3" column="0">
+          <property name="text">
+           <string>0</string>
+          </property>
+          <property name="textAlignment">
+           <set>AlignCenter</set>
+          </property>
+         </item>
+         <item row="3" column="1">
+          <property name="text">
+           <string>No Limit</string>
+          </property>
+          <property name="textAlignment">
+           <set>AlignCenter</set>
+          </property>
+         </item>
+         <item row="4" column="0">
+          <property name="text">
+           <string>Led Off</string>
+          </property>
+          <property name="textAlignment">
+           <set>AlignCenter</set>
+          </property>
+         </item>
+         <item row="5" column="0">
+          <property name="text">
+           <string>No Chip</string>
+          </property>
+          <property name="textAlignment">
+           <set>AlignCenter</set>
+          </property>
+         </item>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

@@ -1,0 +1,90 @@
+Shenzhen Jinghang Technology
+(C) 2018
+
+1 Summary
+The jhsdk include the following directory and files, please use the install.sh to install the necessary files to the system directory before run the demo or samples. The program and samples are verified on Ubuntu 16.04 LTS.
+
+driver
+	Camera use libusb as the main driver on Linux.
+	Some supplemented file are needed to set permissions and configurations.
+
+JHCap2
+	SDK and samples. 
+	The library file will symbol linked by the install.sh to the system under /usr/lib
+	libJHCap.a is static library.
+	libJHCap.so is the shared library.
+	JHCap.h is the header file.
+
+Samples
+        SDK samples, include pure c++,qt, python demos.
+	
+usbVideo
+	Demo program to demonstrate the functionality of the camera.
+
+
+2 Prepare
+a) Install OpenCV by system install
+  >>sudo apt-get install libopencv-dev
+
+b) Install OpenCV from source, alterative of step a)
+  Prepare build environment
+  >>sudo apt-get install cmake git libgtk2.0-dev pkg-config libavcodec-dev libavformat-dev libswscale-dev 
+
+  Download opencv source code, unzipped to a directory. Create a build directory along the source directory.
+  https://github.com/Itseez/opencv/archive/2.4.13.zip
+
+  >>cd build
+  >>cmake ../opencv-2.4.13
+  >>make
+  >>sudo make install
+  >>export LD_LIBRARY_PATH=LD_LIBRARY_PATH:/usr/local/lib
+
+c) Install Qt with package
+  Prepare environment.
+  >>sudo apt-get install libgl1-mesa-dev libglu1-mesa-dev
+
+  Version 5.5.1 for x86 download url
+  http://mirrors.ustc.edu.cn/qtproject/archive/qt/5.5/5.5.1/qt-opensource-linux-x86-5.5.1.run
+  >>sudo ./qt-opensource-linux-x86-5.5.1.run
+  Version 5.7.0 for x64 download url
+  http://mirrors.ustc.edu.cn/qtproject/archive/qt/5.7/5.7.0/qt-opensource-linux-x64-5.7.0.run
+  >>sudo ./qt-opensource-linux-x64-5.7.0.run
+
+  Set LD_LIBRARY_PATH as below in ~/.profile  (optional)
+  >>export LD_LIBRARY_PATH=/opt/Qt5.7.0/5.7/gcc_64/lib
+  
+d) Install python-opencv
+  >>sudo apt-get install python-opencv
+  
+
+e) Install JHCap2 library. Please refer to the windows version for the SDK document.
+  >>sudo sh install.sh
+
+f) Driver depends on libusb, install it if missed.
+  >>sudo apt-get install libusb-1.0-0 libusb-1.0-0-dev
+
+3 Build&Run
+
+Run usbVideo demo, this is a precompiled demo can preview the camera and tuning parameters.
+(All the sudo prefix can be ommited after reboot the machine.)
+  >>sudo ./usbVideo
+
+Build JHCap2/Samples/Console, it save 50 image as bmp files
+  >>make
+  >>sudo ./console
+
+Build JHCap2/Samples/OpenCV, it show preview of the camera, press ESC at image window to terminate.
+  >>make
+  >>sudo ./opencv
+
+Build JHCap2/Samples/QtDemo, it show a GUI for operate the camera.
+  Using Qt Creator to compile the project.
+
+Run python sample in Python directory, press ESC at image window to terminate.
+  >> sudo python loop.py
+  
+
+
+
+
+
