@@ -7,6 +7,7 @@ debugModeUi::debugModeUi(DevCtrl *dev, QWidget *parent) :
     m_dev(dev)
 {
     ui->setupUi(this);
+    initDubugModeUi();
     camTimer = new QTimer(this);
     camTimer->setInterval(1000);
     camTimer->stop();
@@ -83,6 +84,7 @@ void debugModeUi::initDubugModeUi()
     } else {
         ui->lblCamName->setText(tr("Camera Closed"));
     }
+    connect(m_dev, SIGNAL(imageUpdated()), this, SLOT(onCamImageUpdated()));
     connect(m_dev, SIGNAL(devStatusUpdated()), this, SLOT(onDevStatusUpdated()));
     connect(ui->rBtnLedGreen, SIGNAL(clicked()), this, SLOT(onLedChanged()));
     connect(ui->rBtnLedBlue, SIGNAL(clicked()), this, SLOT(onLedChanged()));

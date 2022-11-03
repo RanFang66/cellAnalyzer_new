@@ -44,6 +44,7 @@ void DevCtrl::onSerialRecvFrame(const char *data, int len)
 void DevCtrl::onCamInitRet(bool ok)
 {
     m_camState = ok;
+
 }
 
 void DevCtrl::onCamImageUpdate(unsigned char *data, int width, int height)
@@ -114,6 +115,7 @@ void DevCtrl::initCameraCtrl()
     m_camCtrl = new CameraCtrl();
     m_camThread = new QThread();
     m_camCtrl->moveToThread(m_camThread);
+    connect(this, &DevCtrl::capImage, m_camCtrl, &CameraCtrl::updateImage);
     connect(m_camCtrl, &CameraCtrl::cameraInitRet, this, &DevCtrl::onCamInitRet);
     connect(m_camCtrl, &CameraCtrl::imageUpdated, this, &DevCtrl::onCamImageUpdate);
     connect(m_camThread, &QThread::finished, m_camCtrl, &QObject::deleteLater);

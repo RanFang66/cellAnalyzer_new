@@ -10,6 +10,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
     QString ret = executeShellCmd("sudo raspi-gpio set 26 op dh");
     qDebug() << ret;
+
     m_dev = new DevCtrl(this);
 
     experiSetting = new experiSettingUi(this);
