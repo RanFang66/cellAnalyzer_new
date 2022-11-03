@@ -5,9 +5,7 @@
 #include <experiSettingUi.h>
 #include <experiDataUi.h>
 #include <debugModeUi.h>
-#include <QSerialWorker.h>
-#include <SerialProtocol.h>
-#include <CameraCtrl.h>
+#include "DevCtrl.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -43,13 +41,8 @@ private:
     experiSettingUi     *experiSetting;
     experiDataUi        *experiData;
     debugModeUi         *debugMode;
+    DevCtrl             *m_dev;
 
-    QSerialWorker       *m_serialWorker;
-    QThread             *m_serialThread;
-    SerialProtocol      *m_serialProtocol;
-
-    CameraCtrl          *m_camCtrl;
-    QThread             *m_camThread;
     int appSelcIndex = 0;
     int sysSettingIndex = 1;
     int helpDocIndex = 2;
@@ -58,7 +51,6 @@ private:
     int debugModeIndex;
 
     void initMainWindowUi();
-    void initSerialComm();
-    void initCameraCtrl();
+    QString executeShellCmd(QString strCmd);
 };
 #endif // MAINWINDOW_H

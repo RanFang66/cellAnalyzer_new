@@ -1,0 +1,139 @@
+#ifndef DEVCTRL_H
+#define DEVCTRL_H
+
+#include <QObject>
+#include <QThread>
+#include <QImage>
+#include "QSerialWorker.h"
+#include "CameraCtrl.h"
+#include <opencv2/opencv.hpp>
+using namespace cv;
+class DevCtrl : public QObject
+{
+    Q_OBJECT
+public:
+    explicit DevCtrl(QObject *parent = nullptr);
+    ~DevCtrl();
+    enum DEVICE_ID {
+        CHIP_MOTOR_X = 1,
+        CHIP_MOTOR_Y,
+        CAMERA_MOTOR,
+        FILTER_MOTOR,
+        INSERT_MOTOR,
+        LED,
+        LED_ADJUST,
+    };
+
+    enum MOTOR_CMD {
+        MOTOR_RUN_POS = 0,
+        MOTOR_STOP,
+        MOTOR_RUN_FORWARD,
+        MOTOR_RUN_BACKWARD,
+        MOTOR_RESET,
+        MOTOR_SET_SPEED,
+    };
+
+    enum LED_CMD {
+        LED_BLUE = 1,
+        LED_GREEN,
+        LED_WHITE,
+        LED_OFF,
+    };
+
+public slots:
+    void onSerialConnected(bool ok);
+    void onSerialRecvFrame(const char *data, int len);
+    void onCamInitRet(bool ok);
+    void onCamImageUpdate(unsigned char *data, int width, int height);
+
+signals:
+    void sendDevCmd(int devId, int cmd, int data);
+    void capImage();
+    void imageUpdated();
+    void devStatusUpdated();
+
+public:
+    void motorRun(int id, int cmd, int data = 0);
+    void motorStop(int id);
+    void motorSetSpeed(int id, int speed);
+    void motorReset(int id);
+    void ledLigthOn(int color);
+    void ledLightOff();
+    void updateDevStatus();
+    void camSnap();
+
+    int getMotorPos(int id);
+    int getMotorLimitState(int id);
+    int getLedState();
+    int getChipState();
+    Mat getCVImage();
+    QImage getQImage();
+    int getCameraState();
+    int getSerialState();
+
+private:
+    QSerialWorker       *m_serialWorker;
+    QThread             *m_serialThread;
+
+    CameraCtrl          *m_camCtrl;
+    QThread             *m_camThread;
+
+    int     m_camState;
+    int     m_serialState;
+    int     m_motorPos[4];
+    int     m_motorLimitState[4];
+    int     m_ledState;
+    int     m_chipState;
+    Mat     m_cvImage;
+    QImage  m_qImage;
+
+    void initDeviceCtrl();
+
+    void initCameraCtrl();
+
+    int  str2int(const char *data, int len);
+};
+
+inline int DevCtrl::getMotorPos(int id)
+{
+    return m_motorPos[id-1];
+}
+
+inline int DevCtrl::getMotorLimitState(int id)
+{
+    return m_motorLimitState[id-1];
+}
+
+inline int DevCtrl::getLedState()
+{
+    return m_ledState;
+}
+
+inline int DevCtrl::getChipState()
+{
+    return m_chipState;
+}
+
+inline Mat DevCtrl::getCVImage()
+{
+    return m_cvImage;
+}
+
+inline QImage DevCtrl::getQImage()
+{
+    return m_qImage;
+}
+
+inline int DevCtrl::getCameraState()
+{
+    return m_camState;
+}
+
+inline int DevCtrl::getSerialState()
+{
+    return m_serialState;
+}
+
+
+
+#endif // DEVCTRL_H

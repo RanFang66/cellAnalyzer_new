@@ -10,10 +10,10 @@ CONFIG += c++11
 
 SOURCES += \
     CameraCtrl.cpp \
+    DevCtrl.cpp \
     QDlgLogin.cpp \
     QSerialWorker.cpp \
     SerialDataQueue.cpp \
-    SerialProtocol.cpp \
     debugModeUi.cpp \
     experiDataUi.cpp \
     experiSettingUi.cpp \
@@ -22,11 +22,11 @@ SOURCES += \
 
 HEADERS += \
     CameraCtrl.h \
+    DevCtrl.h \
     MainWindow.h \
     QDlgLogin.h \
     QSerialWorker.h \
     SerialDataQueue.h \
-    SerialProtocol.h \
     debugModeUi.h \
     experiDataUi.h \
     experiSettingUi.h
@@ -47,6 +47,8 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 unix:!macx: LIBS += -L$$PWD/cam_sdk/arm64/ -lJHCap
+unix:!maxx: LIBS += /usr/lib/aarch64-linux-gnu/libopencv*.so
 
-INCLUDEPATH += $$PWD/cam_sdk/arm64
+INCLUDEPATH += $$PWD/cam_sdk/arm64 \
+               /usr/include/opencv4/.
 DEPENDPATH += $$PWD/cam_sdk/arm64

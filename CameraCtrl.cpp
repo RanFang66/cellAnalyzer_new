@@ -28,6 +28,11 @@ CameraCtrl::CameraCtrl(QObject *parent) : QObject(parent)
 
 }
 
+CameraCtrl::~CameraCtrl()
+{
+    CameraFree(m_id);
+}
+
 void CameraCtrl::cameraInit()
 {
     int count;

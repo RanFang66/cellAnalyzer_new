@@ -1,34 +1,26 @@
 #include "MainWindow.h"
 #include "ui_MainWindow.h"
-#include <QSerialPort>
-#include <QSerialPortInfo>
 #include <QDebug>
 #include <QMessageBox>
-
+#include <QProcess>
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    QString ret = executeShellCmd("sudo raspi-gpio set 26 op dh");
+    qDebug() << ret;
+    m_dev = new DevCtrl(this);
+
     experiSetting = new experiSettingUi(this);
     experiData = new experiDataUi(this);
-    debugMode = new debugModeUi(this);
-
+    debugMode = new debugModeUi(m_dev, this);
 
     initMainWindowUi();
-    initSerialComm();
-    initCameraCtrl();
 }
 
 MainWindow::~MainWindow()
 {
-    if(m_serialThread) {
-        m_serialThread->quit();
-        m_serialThread->wait();
-        m_serialThread->deleteLater();
-    }
-    delete m_serialWorker;
-    delete m_serialProtocol;
     delete ui;
 }
 
@@ -41,36 +33,15 @@ void MainWindow::initMainWindowUi()
     ui->stackedWidget->setCurrentIndex(appSelcIndex);
 }
 
-void MainWindow::initSerialComm()
+QString MainWindow::executeShellCmd(QString strCmd)
 {
-    m_serialProtocol = new SerialProtocol();
-    m_serialWorker = new QSerialWorker();
-    m_serialThread = new QThread();
-    m_serialWorker->moveToThread(m_serialThread);
-
-    QList<QSerialPortInfo> serInfo = QSerialPortInfo::availablePorts();
-    if (serInfo.length() > 0) {
-        m_serialWorker->setSerialParams(serInfo[0].portName());
-    }
-    connect(m_serialWorker, &QSerialWorker::serialRecvData, m_serialProtocol, &SerialProtocol::onSerialRecvData);
-    connect(m_serialProtocol, &SerialProtocol::writeToSerial, m_serialWorker, &QSerialWorker::sendSerialData);
-    connect(m_serialWorker, &QSerialWorker::serialConnected, this, &MainWindow::onSerialConnected);
-    connect(m_serialWorker, &QSerialWorker::serialDisconnected, this, &MainWindow::onSerialDisconnected);
-    connect(m_serialThread, &QThread::finished, m_serialWorker, &QObject::deleteLater);
-    connect(m_serialThread, &QThread::started, m_serialWorker, &QSerialWorker::serialInit);
-    m_serialThread->start();
+    QProcess proc;
+    proc.start("bash", QStringList() << "-c" << strCmd);
+    proc.waitForFinished(1000);
+    QString strRet = proc.readAllStandardOutput();
+    return strRet;
 }
 
-void MainWindow::initCameraCtrl()
-{
-    m_camCtrl = new CameraCtrl();
-    m_camThread = new QThread();
-    m_camCtrl->moveToThread(m_camThread);
-    connect(m_camCtrl, &CameraCtrl::cameraInitRet, this, &MainWindow::onCameraInitRet);
-    connect(m_camCtrl, &CameraCtrl::imageUpdated, debugMode, &debugModeUi::onCamImageUpdated);
-    connect(m_camThread, &QThread::finished, m_camCtrl, &QObject::deleteLater);
-    connect(m_camThread, &QThread::started, m_camCtrl, &CameraCtrl::cameraInit);
-}
 
 void MainWindow::on_btnSysSetting_clicked()
 {

@@ -23,8 +23,10 @@ signals:
 
 public slots:
     void serialInit();
+    void serialDisconnect();
     void sendSerialData(const char *buf, int len);
     void onSerialRecvData();
+    void onSerialSendCmd(int dev_id, int cmd, int data);
 
 public:
     Qt::HANDLE getThreadID();
@@ -33,6 +35,12 @@ public:
                          int dataBits = QSerialPort::Data8, int stopBits = QSerialPort::OneStop);
 
 private:
+    enum RECV_STATE {
+        RECV_IDLE = 0,
+        RECV_DATA,
+        RECV_CHECKSUM,
+    };
+
     QSerialPort *m_serialPort = nullptr;
     QString m_serialName = "ttyAMA1";
     int     m_baudrate = QSerialPort::Baud115200;
@@ -41,7 +49,12 @@ private:
     int     m_serialStopBits = QSerialPort::OneStop;
     QMutex  serialWriteMutex;
     int     m_serialTimeout = 3000;
-    QByteArray dataBuff;
+
+    int recvState = 0;
+    int recvDataLen = 0;
+    char recvDataBuff[22];
+    void    recvDataSm(const char ch);
+
 };
 
 inline Qt::HANDLE getThreadID()

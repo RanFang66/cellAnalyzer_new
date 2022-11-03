@@ -11,9 +11,10 @@ class CameraCtrl : public QObject
     Q_OBJECT
 public:
     explicit CameraCtrl(QObject *parent = nullptr);
+    ~CameraCtrl();
 
 signals:
-    void imageUpdated(const unsigned char *data, int width, int height);
+    void imageUpdated(unsigned char *data, int width, int height);
     void cameraInitRet(bool);
     void cameraErrorHandle(int error);
 public slots:

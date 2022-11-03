@@ -34,6 +34,12 @@ void QSerialWorker::serialInit()
     emit serialConnected(ret);
 }
 
+void QSerialWorker::serialDisconnect()
+{
+    m_serialPort->clear();
+    m_serialPort->close();
+}
+
 void QSerialWorker::sendSerialData(const char *data, int len)
 {
     if (data == nullptr || len <= 0)
@@ -52,14 +58,42 @@ void QSerialWorker::sendSerialData(const char *data, int len)
 void QSerialWorker::onSerialRecvData()
 {
     if (m_serialPort && m_serialPort->isOpen()) {
-        dataBuff.clear();
+        QByteArray dataBuff;
         dataBuff.append(m_serialPort->readAll());
         if (dataBuff.isEmpty()) {
             qDebug() << "read data error";
             return;
         }
-        int len = dataBuff.length();
-        emit serialRecvData(dataBuff.data(), len);
+        for (int i = 0; i < dataBuff.length();i++) {
+            recvDataSm(dataBuff.at(i));
+        }
+    }
+}
+
+void QSerialWorker::onSerialSendCmd(int devId, int cmd, int data)
+{
+    char sendBuff[10];
+    int sum = 0;
+    sendBuff[0] = (char)0x58;
+    sendBuff[1] = (char)0x59;
+    sendBuff[2] = (char)(devId & 0x000000FF);
+    sendBuff[3] = (char)(cmd & 0x000000FF);
+    sendBuff[7] = (char)(data & 0x000000FF);
+    sendBuff[6] = (char)((data & 0x0000FF00) >> 8);
+    sendBuff[5] = (char)((data & 0x00FF0000) >> 16);
+    sendBuff[4] = (char)((data & 0xFF000000) >> 24);
+    for (int i = 2; i < 8; i++) {
+        sum += sendBuff[i];
+    }
+    sendBuff[8] = sum & 0x000000FF;
+
+    QMutexLocker Locker(&serialWriteMutex);
+    if (m_serialPort && m_serialPort->isOpen()) {
+        m_serialPort->clear();
+        int ret = m_serialPort->write(sendBuff, 9);
+        m_serialPort->flush();
+        emit serialSentData(ret);
+        m_serialPort->waitForBytesWritten(m_serialTimeout);
     }
 }
 
@@ -70,3 +104,35 @@ void QSerialWorker::setSerialParams(QString name, int baudrate, int parity, int 
     m_serialDataBits = dataBits;
     m_serialStopBits = stopBits;
 }
+
+void QSerialWorker::recvDataSm(const char ch)
+{
+    switch (recvState) {
+    case RECV_IDLE:
+        if (ch == 'S') {
+           recvState = RECV_DATA;
+        }
+        break;
+    case RECV_DATA:
+        recvDataBuff[recvDataLen++] = ch;
+        if (recvDataLen == 22) {
+            recvDataLen = 0;
+            recvState = RECV_CHECKSUM;
+        }
+        break;
+    case RECV_CHECKSUM:
+        int sum = 0;
+        for (int i = 0; i < 22; i++) {
+            sum += recvDataBuff[i];
+        }
+        if ((char)(sum & 0x000000FF) == ch) {
+            emit serialRecvData(recvDataBuff, 22);
+            recvState= RECV_IDLE;
+        } else {
+            qDebug() << "checksum error!";
+        }
+        break;
+    }
+}
+
+
