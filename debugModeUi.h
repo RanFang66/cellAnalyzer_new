@@ -4,7 +4,6 @@
 #include <QWidget>
 #include <QGraphicsScene>
 #include <QGraphicsItem>
-#include <QTimer>
 #include <DevCtrl.h>
 
 
@@ -22,8 +21,8 @@ public:
 
 public slots:
     void onCamImageUpdated();
-    void onTimerTimeout();
     void onDevStatusUpdated();
+    void onAutoFocusComplete();
 
 private slots:
     void onLedChanged();
@@ -48,12 +47,23 @@ private slots:
 
     void on_btnUpdateSysStatus_clicked();
 
+    void on_cbExposure_3_clicked(bool checked);
+
+    void on_btnWB_clicked();
+
+    void on_btnAutoFocus_clicked(bool checked);
+
+    void on_btnChipIn_clicked();
+
+    void on_btnChipOut_clicked();
+
+    void on_btnChipStop_clicked();
+
 private:
-    Ui::debugModeUi *ui;
-    DevCtrl         *m_dev;
-    QTimer          *camTimer;
-    QGraphicsScene *m_scene;
-    QGraphicsPixmapItem *m_image_item;
+    Ui::debugModeUi         *ui;
+    DevCtrl                 *m_dev;
+    QGraphicsScene          *m_scene;
+    QGraphicsPixmapItem     *m_image_item;
 
     int  m_motorId;
 

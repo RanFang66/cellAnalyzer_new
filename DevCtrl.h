@@ -7,6 +7,8 @@
 #include "QSerialWorker.h"
 #include "CameraCtrl.h"
 #include <opencv2/opencv.hpp>
+#include <QTimer>
+
 using namespace cv;
 class DevCtrl : public QObject
 {
@@ -45,12 +47,15 @@ public slots:
     void onSerialRecvFrame(const char *data, int len);
     void onCamInitRet(bool ok);
     void onCamImageUpdate(unsigned char *data, int width, int height);
+    void onCamTimerTimeout();
+    void onFocusTimerTimeout();
 
 signals:
     void sendDevCmd(int devId, int cmd, int data);
     void capImage();
     void imageUpdated();
     void devStatusUpdated();
+    void autoFocusComplete();
 
 public:
     void motorRun(int id, int cmd, int data = 0);
@@ -61,6 +66,10 @@ public:
     void ledLightOff();
     void updateDevStatus();
     void camSnap();
+    void cameraRun(int framePeriod = 1000);
+    void cameraStop();
+    void cameraAutoExplosure(bool checked);
+    void cameraWhiteBalance();
 
     int getMotorPos(int id);
     int getMotorLimitState(int id);
@@ -70,13 +79,26 @@ public:
     QImage getQImage();
     int getCameraState();
     int getSerialState();
+    double getClarity();
+
+    void startAutoFocus(bool act);
 
 private:
+    enum AUTO_FOCUS_STATE {
+        FOCUS_IDLE = 0,
+        FOCUS_START,
+        FOCUS_INIT,
+        FOCUS_PROCESS,
+        FOCUS_COMPLETE,
+    };
+
     QSerialWorker       *m_serialWorker;
     QThread             *m_serialThread;
 
     CameraCtrl          *m_camCtrl;
     QThread             *m_camThread;
+    QTimer              *m_camTimer;
+    QTimer              *m_focusTimer;
 
     int     m_camState;
     int     m_serialState;
@@ -85,11 +107,24 @@ private:
     int     m_ledState;
     int     m_chipState;
     Mat     m_cvImage;
+    double  m_clarity = 0;
     QImage  m_qImage;
+
+    int     m_autoFocusState = FOCUS_IDLE;
+    int     m_focusNextPos;
+    int     m_focusPos;
+    int     m_maxClarity = 0;
+    static  int autoFocusStartPos;
+    static  int autoFocusEndPos;
+    static  int autoFocusStep;
 
     void initDeviceCtrl();
 
     void initCameraCtrl();
+
+    void initAutoFocus();
+
+    double calcClarity(Mat &img);
 
     int  str2int(const char *data, int len);
 };
@@ -132,6 +167,11 @@ inline int DevCtrl::getCameraState()
 inline int DevCtrl::getSerialState()
 {
     return m_serialState;
+}
+
+inline double DevCtrl::getClarity()
+{
+    return m_clarity;
 }
 
 

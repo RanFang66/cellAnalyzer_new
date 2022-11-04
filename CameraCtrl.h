@@ -17,10 +17,13 @@ signals:
     void imageUpdated(unsigned char *data, int width, int height);
     void cameraInitRet(bool);
     void cameraErrorHandle(int error);
+
 public slots:
     void cameraInit();
     void updateImage();
     void changeResolution(int index);
+    void whiteBalance(bool en);
+    void autoExplosure(bool en);
 
 private:
     const static QString errorMsg[20];
@@ -41,6 +44,18 @@ private:
     unsigned char       *m_buff;
 
     void cameraErrorHandle();
+
+public:
+    void getGetResolution(int index, int &width, int &height);
+
 };
+
+inline void CameraCtrl::getGetResolution(int index, int &width, int &height)
+{
+    if (index < m_resolutionCount && index >= 0) {
+        width = m_resolutions[index].width;
+        height = m_resolutions[index].height;
+    }
+}
 
 #endif // CAMERACTRL_H

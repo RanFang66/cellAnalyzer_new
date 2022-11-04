@@ -13,7 +13,6 @@ SOURCES += \
     DevCtrl.cpp \
     QDlgLogin.cpp \
     QSerialWorker.cpp \
-    SerialDataQueue.cpp \
     debugModeUi.cpp \
     experiDataUi.cpp \
     experiSettingUi.cpp \
@@ -26,7 +25,6 @@ HEADERS += \
     MainWindow.h \
     QDlgLogin.h \
     QSerialWorker.h \
-    SerialDataQueue.h \
     debugModeUi.h \
     experiDataUi.h \
     experiSettingUi.h

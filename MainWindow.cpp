@@ -9,6 +9,9 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
     QString ret = executeShellCmd("sudo raspi-gpio set 26 op dh");
+    if (ret.isEmpty()) {
+        QString ret2 = executeShellCmd("sleep 3");
+    }
     qDebug() << ret;
 
     m_dev = new DevCtrl(this);
@@ -38,7 +41,7 @@ QString MainWindow::executeShellCmd(QString strCmd)
 {
     QProcess proc;
     proc.start("bash", QStringList() << "-c" << strCmd);
-    proc.waitForFinished(1000);
+    proc.waitForFinished(5000);
     QString strRet = proc.readAllStandardOutput();
     return strRet;
 }

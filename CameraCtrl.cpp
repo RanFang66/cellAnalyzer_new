@@ -67,6 +67,7 @@ void CameraCtrl::cameraInit()
 
 void CameraCtrl::updateImage()
 {
+    CameraClearHostBuffer(m_id);
     if (API_OK == CameraQueryImage(m_id, m_buff, &m_bufLen,
                                    CAMERA_IMAGE_RGB24 | CAMERA_IMAGE_BGR)){
         emit imageUpdated(m_buff, m_imgWidth, m_imgHeight);
@@ -80,6 +81,16 @@ void CameraCtrl::changeResolution(int index)
     if (API_OK != CameraSetResolution(m_id, index, &m_imgWidth, &m_imgHeight)) {
         cameraErrorHandle();
     }
+}
+
+void CameraCtrl::whiteBalance(bool en)
+{
+    CameraOnePushWB(m_id);
+}
+
+void CameraCtrl::autoExplosure(bool en)
+{
+    CameraSetAEC(m_id, en);
 }
 
 void CameraCtrl::cameraErrorHandle()

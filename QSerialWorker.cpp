@@ -130,8 +130,11 @@ void QSerialWorker::recvDataSm(const char ch)
             recvState= RECV_IDLE;
         } else {
             qDebug() << "checksum error!";
+            recvState = RECV_IDLE;
         }
         break;
+ //   default:
+ //       break;
     }
 }
 
