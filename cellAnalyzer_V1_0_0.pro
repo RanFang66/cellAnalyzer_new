@@ -50,3 +50,6 @@ unix:!maxx: LIBS += /usr/lib/aarch64-linux-gnu/libopencv*.so
 INCLUDEPATH += $$PWD/cam_sdk/arm64 \
                /usr/include/opencv4/.
 DEPENDPATH += $$PWD/cam_sdk/arm64
+
+RESOURCES += \
+    resource.qrc

@@ -47,7 +47,7 @@ private:
 
 public:
     void getGetResolution(int index, int &width, int &height);
-
+    int getResolutionCount(void);
 };
 
 inline void CameraCtrl::getGetResolution(int index, int &width, int &height)
@@ -56,6 +56,11 @@ inline void CameraCtrl::getGetResolution(int index, int &width, int &height)
         width = m_resolutions[index].width;
         height = m_resolutions[index].height;
     }
+}
+
+inline int CameraCtrl::getResolutionCount()
+{
+    return m_resolutionCount;
 }
 
 #endif // CAMERACTRL_H

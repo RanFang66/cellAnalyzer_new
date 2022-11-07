@@ -1,9 +1,9 @@
 #include "DevCtrl.h"
 #include <QDebug>
 
-int DevCtrl::autoFocusStartPos = 130;
-int DevCtrl::autoFocusEndPos = 170;
-int DevCtrl::autoFocusStep = 2;
+int DevCtrl::autoFocusStartPos = 820;
+int DevCtrl::autoFocusEndPos = 880;
+int DevCtrl::autoFocusStep = 10;
 DevCtrl::DevCtrl(QObject *parent) : QObject(parent)
 {
     initDeviceCtrl();
@@ -55,15 +55,22 @@ void DevCtrl::onSerialRecvFrame(const char *data, int len)
 
 void DevCtrl::onCamInitRet(bool ok)
 {
+    if (ok) {
+        m_resolutionCount = m_camCtrl->getResolutionCount();
+        m_resolutions = new struct CamResolution[m_resolutionCount];
+        for (int i = 0; i < m_resolutionCount; i++) {
+            m_camCtrl->getGetResolution(i, m_resolutions[i].width, m_resolutions[i].height);
+        }
+    }
     m_camState = ok;
 
 }
 
 void DevCtrl::onCamImageUpdate(unsigned char *data, int width, int height)
 {
+    m_cvImage = Mat(height, width, CV_8UC3, data);
+    m_clarity = calcClarity(m_cvImage);
     if (m_autoFocusState == FOCUS_PROCESS) {
-        m_cvImage = Mat(height, width, CV_8UC3, data);
-        m_clarity = calcClarity(m_cvImage);
         if (m_clarity > m_maxClarity) {
             m_maxClarity = m_clarity;
             m_focusPos = m_focusNextPos;
@@ -139,7 +146,10 @@ void DevCtrl::camSnap()
 
 void DevCtrl::cameraStop()
 {
-    m_camTimer->stop();
+    //m_camTimer->stop();
+    if (m_autoFocusState == FOCUS_IDLE) {
+        m_focusTimer->stop();
+    }
 }
 
 void DevCtrl::cameraAutoExplosure(bool checked)
@@ -152,21 +162,27 @@ void DevCtrl::cameraWhiteBalance()
     m_camCtrl->whiteBalance(true);
 }
 
+void DevCtrl::camChangeResolution(int index)
+{
+    emit changeResolution(index);
+}
+
 void DevCtrl::startAutoFocus(bool act)
 {
     if (act) {
-        if (m_camTimer->isActive())
-            m_camTimer->stop();
+//        if (m_camTimer->isActive())
+//            m_camTimer->stop();
         m_focusNextPos = autoFocusStartPos;
         motorRun(CAMERA_MOTOR, MOTOR_RUN_POS, m_focusNextPos);
         m_autoFocusState = FOCUS_PROCESS;
-        m_focusTimer->start();
+        m_focusTimer->start(8000);
     }
 }
 
 void DevCtrl::cameraRun(int framePeriod)
 {
-    m_camTimer->start(framePeriod);
+//    m_camTimer->start(framePeriod);
+    m_focusTimer->start(1000);
     emit capImage();
 }
 
@@ -198,6 +214,7 @@ void DevCtrl::initCameraCtrl()
     connect(this, &DevCtrl::capImage, m_camCtrl, &CameraCtrl::updateImage);
     connect(m_camCtrl, &CameraCtrl::cameraInitRet, this, &DevCtrl::onCamInitRet);
     connect(m_camCtrl, &CameraCtrl::imageUpdated, this, &DevCtrl::onCamImageUpdate);
+    connect(this, &DevCtrl::changeResolution, m_camCtrl, &CameraCtrl::changeResolution);
     connect(m_camThread, &QThread::finished, m_camCtrl, &QObject::deleteLater);
     connect(m_camThread, &QThread::started, m_camCtrl, &CameraCtrl::cameraInit);
     connect(m_camTimer, SIGNAL(timeout()), this, SLOT(onCamTimerTimeout()));
@@ -207,7 +224,7 @@ void DevCtrl::initCameraCtrl()
 void DevCtrl::initAutoFocus()
 {
     m_focusTimer = new QTimer(this);
-    m_focusTimer->setInterval(1000);
+    m_focusTimer->setInterval(8000);
     m_focusTimer->stop();
     m_autoFocusState = FOCUS_IDLE;
     m_focusNextPos = autoFocusStartPos;

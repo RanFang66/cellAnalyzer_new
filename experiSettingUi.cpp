@@ -1,12 +1,14 @@
 #include "experiSettingUi.h"
 #include "ui_experiSettingUi.h"
 #include <QDateTime>
+#include <QFile>
+#include <QDebug>
 experiSettingUi::experiSettingUi(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::experiSettingUi)
 {
     ui->setupUi(this);
-
+    loadStyleSheet(":/styles/experiSettingStyle.qss");
     experiName = QDateTime::currentDateTime().toString();
     sampleId = "sample 1";
     userName = "admin";
@@ -46,4 +48,19 @@ void experiSettingUi::initExperiSettingUi()
     ui->editExperiUser->setText(userName);
     ui->editSampleId->setText(sampleId);
     ui->editCellSize->setText(cellSize);
+}
+
+
+void experiSettingUi::loadStyleSheet(const QString &styleSheetFile)
+{
+    QFile file(styleSheetFile);
+    file.open(QFile::ReadOnly);
+    if (file.isOpen()) {
+        QString styleSheet = this->styleSheet();
+        styleSheet += QLatin1String(file.readAll());
+        this->setStyleSheet(styleSheet);
+        file.close();
+    } else {
+        qDebug() << "Login: Open Style Sheet File Failed!";
+    }
 }

@@ -1,0 +1,65 @@
+QDialog#QDlgLogin {
+    border-image: url(:/images/background_main.png);
+}
+
+.QGroupBox#groupBox {
+    background-color: rgba(166, 166, 166, 80);
+    border-radius: 15px;
+    border: 5px solid rgba(150, 150, 150, 120);
+
+}
+
+QLineEdit#editPasswd,
+QLineEdit#editUserName {
+    background: rgba(255, 255, 255, 13);
+    border: 3px solid rgba(255, 255, 255, 128); 
+    font-size: 50px;
+    font-weight:  300;
+    letter-spacing: 0px;
+    line-height: 0px;
+    color: rgba(255, 255, 255, 1);
+    text-align: center;
+    vertical-align: middle;
+}
+
+QLabel#label, QLabel#label_2 {
+    font-size: 50px;
+    font-weight: 400;
+    letter-spacing: 0px;
+    line-height: 0px;
+    color: rgba(255, 255, 255, 1);
+    text-align: center;
+    vertical-align: middle;
+}
+
+.QCheckBox{
+    font-size: 35px;
+    font-weight: 400;
+    letter-spacing: 0px;
+    line-height: 0px;
+    color: rgba(255, 255, 255, 1);
+    text-align: center;
+    vertical-align: middle;
+}
+
+QCheckBox::indicator:unchecked {
+    image: url(:/images/checkbox_icon.png);
+}
+
+QCheckBox::indicator:checked {
+    image: url(:/images/checkbox_selc_icon.png);
+}
+
+QPushButton#btnLogin {
+    border-radius: 10px;
+    background: rgba(0, 186, 173, 1);
+    border: 2px solid rgba(0, 0, 0, 1);
+    font-size: 45px;
+    font-weight: 400;
+    letter-spacing: 0px;
+    line-height: 0px;
+    color: rgba(255, 255, 255, 1);
+    text-align: center;
+    vertical-align: middle;
+}
+

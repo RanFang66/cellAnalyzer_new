@@ -51,6 +51,7 @@ private:
     int debugModeIndex;
 
     void initMainWindowUi();
+    void loadStyleSheet(const QString &styleSheetFile);
     QString executeShellCmd(QString strCmd);
 };
 #endif // MAINWINDOW_H

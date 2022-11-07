@@ -1,0 +1,73 @@
+QPushButton#btnRetrive {
+    /* width: 205px;
+    height: 80px; */
+    border-radius: 10px;
+    background: rgba(0, 186, 173, 1);
+    border: 2px solid rgba(0, 0, 0, 1);   
+
+    font-size: 35px;
+    font-weight: 400;
+    letter-spacing: 0px;
+    line-height: 0px;
+    color: rgba(255, 255, 255, 1);
+    text-align: center;
+    vertical-align: middle; 
+}
+
+QGroupBox#groupDataExport QPushButton {
+    width:  140px;
+    height: 90px;
+    border-radius: 10px;
+    background: rgba(0, 186, 173, 1);
+    border: 2px solid rgba(0, 0, 0, 1);
+    
+    font-size: 22px;
+    font-weight: 400;
+    letter-spacing: 0px;
+    line-height: 0px;
+    color: rgba(255, 255, 255, 1);
+    text-align: center;
+    vertical-align: middle;
+}
+
+QGroupBox#groupDataRetrive QComboBox, 
+QGroupBox#groupDataRetrive QLineEdit,
+QGroupBox#groupDataRetrive QDateEdit {
+    width: 366px;
+    height: 58px;
+    border-radius: 3px;
+    background: rgba(236, 242, 254, 1);
+
+    font-size: 35px;
+    font-weight: 400;
+    letter-spacing: 0px;
+    line-height: 0px;
+    color: rgba(0, 0, 0, 1);
+    text-align: left;
+    vertical-align: middle;
+} 
+
+.QComboBox::drop-down,
+.QDateEdit::drop-down{
+    border:none;
+    width: 37px;
+}
+
+.QDateEdit::down-arrow {
+    image: url(:/images/calendar.png)
+}
+
+.QComboBox::down-arrow {
+    image: url(:/images/arrow_up.png)
+}
+
+
+QGroupBox#groupDataRetrive QLabel {
+    font-size: 35px;
+    font-weight: 400;
+    letter-spacing: 0px;
+    line-height: 0px;
+    color: rgba(255, 255, 255, 1);
+    text-align: center;
+    vertical-align: middle;
+}

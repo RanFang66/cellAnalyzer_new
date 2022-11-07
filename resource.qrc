@@ -1,0 +1,27 @@
+<RCC>
+    <qresource prefix="/">
+        <file>images/arrow_up.png</file>
+        <file>images/background_main.png</file>
+        <file>images/background_tab.png</file>
+        <file>images/button_icon_main.png</file>
+        <file>images/calendar.png</file>
+        <file>images/checkbox_icon.png</file>
+        <file>images/checkbox_selc_icon.png</file>
+        <file>images/chip.png</file>
+        <file>images/datetime.png</file>
+        <file>images/experi_selc_icon1.png</file>
+        <file>images/experi_selc_icon2.png</file>
+        <file>images/insert_chip.mp4</file>
+        <file>images/language.png</file>
+        <file>images/memory.png</file>
+        <file>images/rect_decoration.png</file>
+        <file>images/return_icon.png</file>
+        <file>images/sys_info.png</file>
+        <file>images/user_manage.png</file>
+        <file>images/waiting.gif</file>
+        <file>styles/loginStyle.qss</file>
+        <file>styles/main.qss</file>
+        <file>styles/experiSettingStyle.qss</file>
+        <file>styles/experiDataStyle.qss</file>
+    </qresource>
+</RCC>

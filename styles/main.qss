@@ -1,0 +1,149 @@
+QMainWindow{
+    border-image: url(:/images/background_main.png);
+    padding: 0px 0px 0px 0px;
+}
+
+QGroupBox#mainButtonGroup {
+    left: 0px;
+    top: 0px;
+    min-width: 1080px;
+    min-height: 200px;
+    border: none;
+    margin-top: 0px;
+    padding-top: 0px;
+}
+
+QStackedWidget {
+    left: 0px;
+    top: 207px;
+    width: 1080px;
+    height: 1600px;
+    border-image: url(:/images/background_tab.png);
+    
+    border-width: 5px 0px 0px 0px;
+    border-style: solid;
+    border-color: rgba(255, 255, 255, 1);
+    margin-left: 0px;
+    margin-right: 0px;    
+}
+
+
+QGroupBox#mainButtonGroup QPushButton{
+    min-width: 90px;
+    min-height: 150px;
+    max-width: 165px;
+    max-height: 150px;
+    border-bottom-left-radius: 50px;
+    border-bottom-right-radius: 50px;
+    border: 1px solid rgba(255, 255, 255, 1); 
+    
+    border-image: url(:/images/button_icon_main);
+    font-size: 45px;
+    font-weight: 700;
+    letter-spacing: 0px;
+    line-height: 0px;
+    color: rgba(255, 255, 255, 1); 
+    text-align: center;
+    vertical-align: middle;    
+}
+
+
+QGroupBox#mainButtonGroup QPushButton:checked {
+    /* width: 220px;
+    height: 174px; */
+    min-width: 110px;
+    min-height: 174;
+    max-width: 200px;
+    max-height: 174px;
+    border-bottom-left-radius: 50px;
+    border-bottom-right-radius: 50px;
+    border-image: none;
+    background: rgba(0, 186, 173, 1);
+
+    border: 3px solid rgba(255, 255, 255, 1);            
+}
+
+
+QWidget#pageAppSelc QLabel {
+    font-size: 30px;
+    font-weight: 400;
+    letter-spacing: 0px;
+    line-height: 0px;
+    color: rgba(255, 255, 255, 1);
+    text-align: center;
+    vertical-align: middle;
+}
+
+QPushButton#btnAOPI {
+    border-image: url(:/images/experi_selc_icon1.png);
+    width: 180px;
+    height: 180px;
+    min-width: 90px;
+    min-height: 90px; 
+}
+
+QPushButton#btnTaipanBlue {
+    border-image: url(:/images/experi_selc_icon2.png);
+    width: 180px;
+    height: 180px;
+    min-width: 90px;
+    min-height: 90px; 
+}
+
+QPushButton#btnExpr1 {
+    border-image: url(:/images/experi_selc_icon1.png);
+    width: 180px;
+    height: 180px;
+    min-width: 90px;
+    min-height: 90px;
+}
+
+QPushButton#btnUserManage {
+    background-image: url(:/images/user_manage.png);
+    width: 150px;
+    height: 150px;
+    min-width: 80px;
+    min-height: 80px;
+    max-width: 150px;
+    max-height: 150px;
+    border-radius: 30px;
+    /* background: rgba(204, 204, 204, 0.45); */
+}
+
+QPushButton#btnDateTime {
+    background-image: url(:/images/datetime.png);
+    width: 150px;
+    height: 150px;
+    min-width: 80px;
+    min-height: 80px;
+    max-width: 150px;
+    max-height: 150px;
+    border-radius: 30px;
+    /* background: rgba(204, 204, 204, 0.45); */
+}
+
+QPushButton#btnStorageManage {
+    background-image: url(:/images/memory.png);
+    width: 150px;
+    height: 150px;
+    min-width: 80px;
+    min-height: 80px;
+    max-width: 150px;
+    max-height: 150px;
+    border-radius: 30px;
+    /* background: rgba(204, 204, 204, 0.45); */
+}
+
+QPushButton#btnLanguage {
+    background-image: url(:/images/language.png);
+    width: 150px;
+    height: 150px;
+    min-width: 80px;
+    min-height: 80px;
+    max-width: 150px;
+    max-height: 150px;
+    border-radius: 30px;
+    /* background: rgba(204, 204, 204, 0.45); */
+}
+
+

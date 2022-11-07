@@ -17,9 +17,9 @@ QDlgLogin::QDlgLogin(QWidget *parent) :
     qDebug() << db.databaseName() << db.tables();
     query = new QSqlQuery(db);
 
-//    query->setForwardOnly(true);
-//    loadStyleSheet(":/style/loginStyle.qss");
-    readSettings();
+    query->setForwardOnly(true);
+    loadStyleSheet(":/styles/loginStyle.qss");
+//    readSettings();
 }
 
 QDlgLogin::~QDlgLogin()

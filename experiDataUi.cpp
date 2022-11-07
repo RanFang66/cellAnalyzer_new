@@ -1,12 +1,13 @@
 #include "experiDataUi.h"
 #include "ui_experiDataUi.h"
-
+#include <QFile>
+#include <QDebug>
 experiDataUi::experiDataUi(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::experiDataUi)
 {
     ui->setupUi(this);
-
+    loadStyleSheet(":/styles/experiDataStyle.qss");
     db = QSqlDatabase::database("cellDataConn");
     query = new QSqlQuery(db);
     initExperiDataUi();
@@ -73,5 +74,17 @@ void experiDataUi::initExperiDataUi()
     ui->tblExperiData->setColumnHidden(tblModel->fieldIndex("imgFLR_3"), true);
 }
 
-
+void experiDataUi::loadStyleSheet(const QString &styleSheetFile)
+{
+    QFile file(styleSheetFile);
+    file.open(QFile::ReadOnly);
+    if (file.isOpen()) {
+        QString styleSheet = this->styleSheet();
+        styleSheet += QLatin1String(file.readAll());
+        this->setStyleSheet(styleSheet);
+        file.close();
+    } else {
+        qDebug() << "Login: Open Style Sheet File Failed!";
+    }
+}
 

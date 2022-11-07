@@ -49,7 +49,7 @@ void CameraCtrl::cameraInit()
                 CameraGetResolutionCount(m_id, &m_resolutionCount);
                 m_resolutions = new struct ImgResolution[m_resolutionCount];
                 for (int i = 0; i < m_resolutionCount; i++) {
-                    CameraGetResolution(m_id, 0, &m_resolutions[i].width, &m_resolutions->height);
+                    CameraGetResolution(m_id, 0, &m_resolutions[i].width, &m_resolutions[i].height);
                 }
                 CameraGetImageSize(m_id, &m_imgWidth, &m_imgHeight);
                 CameraGetImageBufferSize(m_id, &m_bufLen, CAMERA_IMAGE_RGB24);

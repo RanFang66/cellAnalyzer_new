@@ -41,6 +41,7 @@ private:
     QString experiType;
     QString cellSize;
     void initExperiSettingUi();
+    void loadStyleSheet(const QString &styleSheetFile);
 };
 
 #endif // EXPERISETTINGUI_H

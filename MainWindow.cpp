@@ -3,6 +3,7 @@
 #include <QDebug>
 #include <QMessageBox>
 #include <QProcess>
+#include <QFile>
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -11,14 +12,18 @@ MainWindow::MainWindow(QWidget *parent)
     QString ret = executeShellCmd("sudo raspi-gpio set 26 op dh");
     if (ret.isEmpty()) {
         QString ret2 = executeShellCmd("sleep 3");
+    } else {
+        qDebug() << ret;
     }
-    qDebug() << ret;
 
+    loadStyleSheet(":/styles/main.qss");
     m_dev = new DevCtrl(this);
 
+    executeShellCmd("sleep 3");
     experiSetting = new experiSettingUi(this);
     experiData = new experiDataUi(this);
     debugMode = new debugModeUi(m_dev, this);
+
 
     initMainWindowUi();
 }
@@ -35,6 +40,7 @@ void MainWindow::initMainWindowUi()
     debugModeIndex = ui->stackedWidget->addWidget(debugMode);
 
     ui->stackedWidget->setCurrentIndex(appSelcIndex);
+    ui->btnExperiApp->setChecked(true);
 }
 
 QString MainWindow::executeShellCmd(QString strCmd)
@@ -97,5 +103,21 @@ void MainWindow::onCameraInitRet(bool camOk)
         qDebug() << "Camera: initialized successfully";
     } else {
         QMessageBox::warning(this, "Error", "Camera init failed!");
+    }
+}
+
+
+
+void MainWindow::loadStyleSheet(const QString &styleSheetFile)
+{
+    QFile file(styleSheetFile);
+    file.open(QFile::ReadOnly);
+    if (file.isOpen()) {
+        QString styleSheet = this->styleSheet();
+        styleSheet += QLatin1String(file.readAll());
+        this->setStyleSheet(styleSheet);
+        file.close();
+    } else {
+        qDebug() << "Login: Open Style Sheet File Failed!";
     }
 }

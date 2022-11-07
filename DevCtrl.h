@@ -56,6 +56,7 @@ signals:
     void imageUpdated();
     void devStatusUpdated();
     void autoFocusComplete();
+    void changeResolution(int index);
 
 public:
     void motorRun(int id, int cmd, int data = 0);
@@ -70,6 +71,9 @@ public:
     void cameraStop();
     void cameraAutoExplosure(bool checked);
     void cameraWhiteBalance();
+    int  getCamResolutionsCount();
+    void getCamResolution(int index, int &width, int &height);
+    void camChangeResolution(int index);
 
     int getMotorPos(int id);
     int getMotorLimitState(int id);
@@ -92,6 +96,11 @@ private:
         FOCUS_COMPLETE,
     };
 
+    struct CamResolution {
+        int width;
+        int height;
+    };
+
     QSerialWorker       *m_serialWorker;
     QThread             *m_serialThread;
 
@@ -107,13 +116,15 @@ private:
     int     m_ledState;
     int     m_chipState;
     Mat     m_cvImage;
-    double  m_clarity = 0;
+    double  m_clarity = 0.0;
     QImage  m_qImage;
+    int     m_resolutionCount;
+    struct  CamResolution *m_resolutions;
 
     int     m_autoFocusState = FOCUS_IDLE;
     int     m_focusNextPos;
     int     m_focusPos;
-    int     m_maxClarity = 0;
+    double  m_maxClarity = 0.0;
     static  int autoFocusStartPos;
     static  int autoFocusEndPos;
     static  int autoFocusStep;
@@ -128,6 +139,19 @@ private:
 
     int  str2int(const char *data, int len);
 };
+
+inline int DevCtrl::getCamResolutionsCount()
+{
+    return m_resolutionCount;
+}
+
+inline void DevCtrl::getCamResolution(int index, int &width, int &height)
+{
+    if (index < 0 || index >= m_resolutionCount)
+        return;
+    width = m_resolutions[index].width;
+    height = m_resolutions[index].height;
+}
 
 inline int DevCtrl::getMotorPos(int id)
 {

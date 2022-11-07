@@ -28,6 +28,7 @@ private:
     QItemSelectionModel *theSelection;
 
     void initExperiDataUi();
+    void loadStyleSheet(const QString &styleSheetFile);
 };
 
 #endif // EXPERIDATAUI_H

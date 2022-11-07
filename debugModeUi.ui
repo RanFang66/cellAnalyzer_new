@@ -19,11 +19,8 @@
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <layout class="QGridLayout" name="gridLayout">
-   <item row="0" column="2">
-    <widget class="QGraphicsView" name="gvMain"/>
-   </item>
-   <item row="0" column="1">
+  <layout class="QHBoxLayout" name="horizontalLayout_11">
+   <item>
     <widget class="QToolBox" name="toolBox">
      <property name="currentIndex">
       <number>0</number>
@@ -34,13 +31,13 @@
         <x>0</x>
         <y>0</y>
         <width>528</width>
-        <height>1474</height>
+        <height>1471</height>
        </rect>
       </property>
       <attribute name="label">
        <string>Motor / Led</string>
       </attribute>
-      <layout class="QVBoxLayout" name="verticalLayout">
+      <layout class="QVBoxLayout" name="verticalLayout_2">
        <item>
         <widget class="QGroupBox" name="groupBox_7">
          <property name="sizePolicy">
@@ -145,7 +142,7 @@
              <number>-100</number>
             </property>
             <property name="maximum">
-             <number>2000</number>
+             <number>10000</number>
             </property>
            </widget>
           </item>
@@ -270,95 +267,70 @@
          <property name="title">
           <string>Camera Control</string>
          </property>
-         <layout class="QGridLayout" name="gridLayout_4">
-          <item row="2" column="0" colspan="2">
-           <widget class="QPushButton" name="btnCamRun">
-            <property name="text">
-             <string>Run</string>
-            </property>
-            <property name="checkable">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="5" column="0" colspan="3">
-           <layout class="QHBoxLayout" name="horizontalLayout_15">
+         <layout class="QVBoxLayout" name="verticalLayout">
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_7">
             <item>
-             <widget class="QLabel" name="label_16">
+             <widget class="QLabel" name="lblCamName">
               <property name="text">
-               <string>Gamma</string>
+               <string>Cam</string>
               </property>
              </widget>
             </item>
             <item>
-             <widget class="QSlider" name="hsGamma_3">
-              <property name="minimum">
-               <number>30</number>
-              </property>
-              <property name="maximum">
-               <number>250</number>
-              </property>
-              <property name="value">
-               <number>200</number>
-              </property>
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </item>
-          <item row="0" column="0">
-           <widget class="QLabel" name="label_6">
-            <property name="text">
-             <string>Name:</string>
-            </property>
-           </widget>
-          </item>
-          <item row="4" column="0" colspan="5">
-           <layout class="QHBoxLayout" name="horizontalLayout_14">
-            <item>
-             <widget class="QCheckBox" name="cbExposure_3">
+             <widget class="QPushButton" name="btnUpdateResolution">
               <property name="text">
-               <string>Auto</string>
+               <string>update</string>
               </property>
-              <property name="checked">
-               <bool>false</bool>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QLabel" name="label_15">
-              <property name="text">
-               <string>Exposure</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QSlider" name="hsExposure_3">
-              <property name="enabled">
+              <property name="checkable">
                <bool>true</bool>
               </property>
-              <property name="minimum">
-               <number>1</number>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_5">
+            <item>
+             <widget class="QLabel" name="label_8">
+              <property name="text">
+               <string>Resolution:</string>
               </property>
-              <property name="maximum">
-               <number>2000</number>
+             </widget>
+            </item>
+            <item>
+             <widget class="QComboBox" name="cmbResolution"/>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_6">
+            <item>
+             <widget class="QPushButton" name="btnCamRun">
+              <property name="text">
+               <string>Run</string>
               </property>
-              <property name="sliderPosition">
-               <number>8</number>
+              <property name="checkable">
+               <bool>true</bool>
               </property>
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="btnCamStop">
+              <property name="text">
+               <string>Stop</string>
+              </property>
+              <property name="checkable">
+               <bool>true</bool>
               </property>
              </widget>
             </item>
            </layout>
           </item>
-          <item row="6" column="0" colspan="6">
-           <layout class="QHBoxLayout" name="horizontalLayout_16">
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout">
             <item>
-             <widget class="QCheckBox" name="cbGain_3">
+             <widget class="QCheckBox" name="cbGain">
               <property name="text">
                <string>Auto</string>
               </property>
@@ -375,45 +347,94 @@
              </widget>
             </item>
             <item>
-             <widget class="QSlider" name="hsGain_3">
+             <widget class="QSlider" name="hsGain">
               <property name="enabled">
                <bool>true</bool>
               </property>
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
               <property name="minimum">
-               <number>8</number>
+               <number>1</number>
               </property>
               <property name="maximum">
-               <number>63</number>
+               <number>255</number>
               </property>
               <property name="value">
-               <number>8</number>
+               <number>32</number>
               </property>
               <property name="orientation">
                <enum>Qt::Horizontal</enum>
               </property>
              </widget>
             </item>
+            <item>
+             <widget class="QLabel" name="lblGain">
+              <property name="text">
+               <string>TextLabel</string>
+              </property>
+             </widget>
+            </item>
            </layout>
           </item>
-          <item row="1" column="0" colspan="2">
-           <widget class="QLabel" name="label_8">
-            <property name="text">
-             <string>Resolution:</string>
-            </property>
-           </widget>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_3">
+            <item>
+             <widget class="QCheckBox" name="cbExposure">
+              <property name="text">
+               <string>Auto</string>
+              </property>
+              <property name="checked">
+               <bool>false</bool>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="label_15">
+              <property name="text">
+               <string>Exposure</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QSlider" name="hsExposure">
+              <property name="enabled">
+               <bool>true</bool>
+              </property>
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="minimum">
+               <number>1</number>
+              </property>
+              <property name="maximum">
+               <number>32767</number>
+              </property>
+              <property name="sliderPosition">
+               <number>30</number>
+              </property>
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="lblExposure">
+              <property name="text">
+               <string>TextLabel</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
           </item>
-          <item row="1" column="2" colspan="3">
-           <widget class="QComboBox" name="cmbResolution"/>
-          </item>
-          <item row="0" column="3">
-           <widget class="QLabel" name="lblCamName">
-            <property name="text">
-             <string>Cam</string>
-            </property>
-           </widget>
-          </item>
-          <item row="3" column="0" colspan="3">
-           <layout class="QHBoxLayout" name="horizontalLayout_13">
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_2">
             <item>
              <widget class="QLabel" name="label_14">
               <property name="text">
@@ -422,7 +443,13 @@
              </widget>
             </item>
             <item>
-             <widget class="QSlider" name="hsContrast_3">
+             <widget class="QSlider" name="hsContrast">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
               <property name="minimum">
                <number>30</number>
               </property>
@@ -434,44 +461,72 @@
               </property>
              </widget>
             </item>
+            <item>
+             <widget class="QLabel" name="lblContrast">
+              <property name="text">
+               <string>TextLabel</string>
+              </property>
+             </widget>
+            </item>
            </layout>
           </item>
-          <item row="7" column="0" colspan="2">
-           <widget class="QPushButton" name="btnWB">
-            <property name="text">
-             <string>White Balance</string>
-            </property>
-           </widget>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_4">
+            <item>
+             <widget class="QLabel" name="label_16">
+              <property name="text">
+               <string>Gamma</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QSlider" name="hsGamma">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="minimum">
+               <number>30</number>
+              </property>
+              <property name="maximum">
+               <number>200</number>
+              </property>
+              <property name="value">
+               <number>30</number>
+              </property>
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="lblGamma">
+              <property name="text">
+               <string>TextLabel</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
           </item>
-          <item row="2" column="4" colspan="2">
-           <widget class="QPushButton" name="btnCamStop">
-            <property name="text">
-             <string>Stop</string>
-            </property>
-            <property name="checkable">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="3" column="3" colspan="2">
-           <widget class="QLabel" name="lblContrast_3">
-            <property name="minimumSize">
-             <size>
-              <width>20</width>
-              <height>0</height>
-             </size>
-            </property>
-            <property name="text">
-             <string/>
-            </property>
-           </widget>
-          </item>
-          <item row="7" column="3">
-           <widget class="QLabel" name="lblClarity">
-            <property name="text">
-             <string>Clarity: </string>
-            </property>
-           </widget>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_8">
+            <item>
+             <widget class="QPushButton" name="btnWB">
+              <property name="text">
+               <string>White Balance</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="lblClarity">
+              <property name="text">
+               <string>Clarity: </string>
+              </property>
+             </widget>
+            </item>
+           </layout>
           </item>
          </layout>
         </widget>
@@ -614,7 +669,7 @@
         <x>0</x>
         <y>0</y>
         <width>528</width>
-        <height>1474</height>
+        <height>1471</height>
        </rect>
       </property>
       <attribute name="label">
@@ -702,7 +757,7 @@
         <x>0</x>
         <y>0</y>
         <width>528</width>
-        <height>1474</height>
+        <height>1471</height>
        </rect>
       </property>
       <attribute name="label">
@@ -723,6 +778,9 @@
       </widget>
      </widget>
     </widget>
+   </item>
+   <item>
+    <widget class="QGraphicsView" name="gvMain"/>
    </item>
   </layout>
  </widget>
