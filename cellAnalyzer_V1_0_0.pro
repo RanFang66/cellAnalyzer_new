@@ -11,30 +11,38 @@ CONFIG += c++11
 SOURCES += \
     CameraCtrl.cpp \
     DevCtrl.cpp \
+    DlgAnimationUi.cpp \
+    ExperiCtrl.cpp \
     QDlgLogin.cpp \
     QSerialWorker.cpp \
     debugModeUi.cpp \
     experiDataUi.cpp \
     experiSettingUi.cpp \
+    inExperimentUi.cpp \
     main.cpp \
     MainWindow.cpp
 
 HEADERS += \
     CameraCtrl.h \
     DevCtrl.h \
+    DlgAnimationUi.h \
+    ExperiCtrl.h \
     MainWindow.h \
     QDlgLogin.h \
     QSerialWorker.h \
     debugModeUi.h \
     experiDataUi.h \
-    experiSettingUi.h
+    experiSettingUi.h \
+    inExperimentUi.h
 
 FORMS += \
+    DlgAnimationUi.ui \
     MainWindow.ui \
     QDlgLogin.ui \
     debugModeUi.ui \
     experiDataUi.ui \
-    experiSettingUi.ui
+    experiSettingUi.ui \
+    inExperimentUi.ui
 
 TRANSLATIONS += \
     cellAnalyzer_V1_0_0_zh_CN.ts

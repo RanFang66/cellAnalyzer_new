@@ -23,7 +23,7 @@ MainWindow::MainWindow(QWidget *parent)
     experiSetting = new experiSettingUi(this);
     experiData = new experiDataUi(this);
     debugMode = new debugModeUi(m_dev, this);
-
+    inExperiment = new inExperimentUi(this);
 
     initMainWindowUi();
 }
@@ -38,9 +38,13 @@ void MainWindow::initMainWindowUi()
     experiSettingIndex = ui->stackedWidget->addWidget(experiSetting);
     experiDataIndex = ui->stackedWidget->addWidget(experiData);
     debugModeIndex = ui->stackedWidget->addWidget(debugMode);
-
+    inExperimentIndex = ui->stackedWidget->addWidget(inExperiment);
     ui->stackedWidget->setCurrentIndex(appSelcIndex);
     ui->btnExperiApp->setChecked(true);
+
+    connect(experiSetting, SIGNAL(startExperiment()), this, SLOT(onExperimentStart()));
+    connect(experiSetting, SIGNAL(exitExperimentSetting()), this, SLOT(onExitExperiSetting()));
+    connect(inExperiment, SIGNAL(pauseExperiment()), this, SLOT(onExperimentPaused()));
 }
 
 QString MainWindow::executeShellCmd(QString strCmd)
@@ -104,6 +108,22 @@ void MainWindow::onCameraInitRet(bool camOk)
     } else {
         QMessageBox::warning(this, "Error", "Camera init failed!");
     }
+}
+
+void MainWindow::onExperimentStart()
+{
+    ui->stackedWidget->setCurrentIndex(inExperimentIndex);
+    inExperiment->updateNoticeText("start experiment");
+}
+
+void MainWindow::onExperimentPaused()
+{
+    ui->stackedWidget->setCurrentIndex(appSelcIndex);
+}
+
+void MainWindow::onExitExperiSetting()
+{
+    ui->stackedWidget->setCurrentIndex(appSelcIndex);
 }
 
 

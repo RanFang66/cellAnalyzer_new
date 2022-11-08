@@ -11,7 +11,6 @@
         <file>images/datetime.png</file>
         <file>images/experi_selc_icon1.png</file>
         <file>images/experi_selc_icon2.png</file>
-        <file>images/insert_chip.mp4</file>
         <file>images/language.png</file>
         <file>images/memory.png</file>
         <file>images/rect_decoration.png</file>
@@ -23,5 +22,7 @@
         <file>styles/main.qss</file>
         <file>styles/experiSettingStyle.qss</file>
         <file>styles/experiDataStyle.qss</file>
+        <file>images/insert_chip.gif</file>
+        <file>styles/inExperimentStyle.qss</file>
     </qresource>
 </RCC>

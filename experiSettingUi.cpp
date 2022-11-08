@@ -3,6 +3,7 @@
 #include <QDateTime>
 #include <QFile>
 #include <QDebug>
+#include <DlgAnimationUi.h>
 experiSettingUi::experiSettingUi(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::experiSettingUi)
@@ -63,4 +64,21 @@ void experiSettingUi::loadStyleSheet(const QString &styleSheetFile)
     } else {
         qDebug() << "Login: Open Style Sheet File Failed!";
     }
+}
+
+void experiSettingUi::on_btnNextStep_clicked()
+{
+    DlgAnimationUi *animation = new DlgAnimationUi(this);
+    animation->setAttribute(Qt::WA_DeleteOnClose);
+    Qt::WindowFlags flags = animation->windowFlags();
+    animation->setWindowFlags(flags | Qt::WindowStaysOnTopHint);
+
+    if (animation->exec() == QDialog::Accepted) {
+        emit startExperiment();
+    }
+}
+
+void experiSettingUi::on_btnReturn_clicked()
+{
+    emit exitExperimentSetting();
 }

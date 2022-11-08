@@ -5,6 +5,7 @@
 #include <experiSettingUi.h>
 #include <experiDataUi.h>
 #include <debugModeUi.h>
+#include <inExperimentUi.h>
 #include "DevCtrl.h"
 
 QT_BEGIN_NAMESPACE
@@ -36,11 +37,18 @@ private slots:
     void onSerialDisconnected();
 
     void onCameraInitRet(bool);
+
+    void onExperimentStart();
+
+    void onExperimentPaused();
+
+    void onExitExperiSetting();
 private:
     Ui::MainWindow      *ui;
     experiSettingUi     *experiSetting;
     experiDataUi        *experiData;
     debugModeUi         *debugMode;
+    inExperimentUi      *inExperiment;
     DevCtrl             *m_dev;
 
     int appSelcIndex = 0;
@@ -49,6 +57,7 @@ private:
     int experiSettingIndex;
     int experiDataIndex;
     int debugModeIndex;
+    int inExperimentIndex;
 
     void initMainWindowUi();
     void loadStyleSheet(const QString &styleSheetFile);

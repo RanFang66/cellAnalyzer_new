@@ -33,6 +33,15 @@ public:
     explicit experiSettingUi(QWidget *parent = nullptr);
     ~experiSettingUi();
 
+private slots:
+    void on_btnNextStep_clicked();
+
+    void on_btnReturn_clicked();
+
+signals:
+    void startExperiment();
+    void exitExperimentSetting();
+
 private:
     Ui::experiSettingUi *ui;
     QString experiName;
