@@ -45,13 +45,13 @@ void QSerialWorker::sendSerialData(const char *data, int len)
     if (data == nullptr || len <= 0)
         return;
 
-    QMutexLocker Locker(&serialWriteMutex);
+//    QMutexLocker Locker(&serialWriteMutex);
     if (m_serialPort && m_serialPort->isOpen()) {
         m_serialPort->clear();
         int ret = m_serialPort->write(data, len);
         m_serialPort->flush();
-        emit serialSentData(ret);
-        m_serialPort->waitForBytesWritten(m_serialTimeout);
+//        emit serialSentData(ret);
+//        m_serialPort->waitForBytesWritten(m_serialTimeout);
     }
 }
 
@@ -87,13 +87,13 @@ void QSerialWorker::onSerialSendCmd(int devId, int cmd, int data)
     }
     sendBuff[8] = sum & 0x000000FF;
 
-    QMutexLocker Locker(&serialWriteMutex);
+//   QMutexLocker Locker(&serialWriteMutex);
     if (m_serialPort && m_serialPort->isOpen()) {
         m_serialPort->clear();
         int ret = m_serialPort->write(sendBuff, 9);
         m_serialPort->flush();
-        emit serialSentData(ret);
-        m_serialPort->waitForBytesWritten(m_serialTimeout);
+//        emit serialSentData(ret);
+//        m_serialPort->waitForBytesWritten(m_serialTimeout);
     }
 }
 
