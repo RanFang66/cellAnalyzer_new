@@ -53,6 +53,15 @@ void debugModeUi::onAutoFocusComplete()
     QMessageBox::about(this, "Complete", "Auto focus completeed");
 }
 
+void debugModeUi::onMotorStateUpdated(int id)
+{
+    int pos = m_dev->getMotorPos(id);
+    int limit = m_dev->getMotorLimitState(id);
+
+    ui->tblSysStatus->item(id-1, 0)->setText(QString::number(pos));
+    ui->tblSysStatus->item(id-1, 1)->setText(QString::number(limit));
+}
+
 void debugModeUi::onLedChanged()
 {
     if (ui->rBtnLedWhite->isChecked()) {
@@ -99,6 +108,7 @@ void debugModeUi::initDubugModeUi()
 
     connect(m_dev, SIGNAL(imageUpdated()), this, SLOT(onCamImageUpdated()));
     connect(m_dev, SIGNAL(devStatusUpdated()), this, SLOT(onDevStatusUpdated()));
+    connect(m_dev, SIGNAL(motorStateUpdated(int)), this, SLOT(onMotorStateUpdate(int)));
     connect(m_dev, SIGNAL(autoFocusComplete()), this, SLOT(onAutoFocusComplete()));
     connect(ui->rBtnLedGreen, SIGNAL(clicked()), this, SLOT(onLedChanged()));
     connect(ui->rBtnLedBlue, SIGNAL(clicked()), this, SLOT(onLedChanged()));

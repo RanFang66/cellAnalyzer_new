@@ -34,9 +34,18 @@ public:
     void setSerialParams(QString name, int baudrate = QSerialPort::Baud115200, int parity = QSerialPort::NoParity,
                          int dataBits = QSerialPort::Data8, int stopBits = QSerialPort::OneStop);
 
+    enum FRAME_TYPE {
+        CHIP_X_MOTOR_STATE = 1,
+        CHIP_Y_MOTOR_STATE,
+        CAMERA_MOTOR_STATE,
+        FILTER_MOTOR_STATE,
+        DEV_STATUS = 10,
+    };
+
 private:
     enum RECV_STATE {
         RECV_IDLE = 0,
+        RECV_ID,
         RECV_DATA,
         RECV_CHECKSUM,
     };
@@ -50,9 +59,11 @@ private:
     QMutex  serialWriteMutex;
     int     m_serialTimeout = 3000;
 
-    int recvState = 0;
-    int recvDataLen = 0;
-    char recvDataBuff[22];
+    int     recvFrameType = 0;
+    int     recvFrameLength = 0;
+    int     recvState = 0;
+    int     recvDataLen = 0;
+    char    recvDataBuff[22];
     void    recvDataSm(const char ch);
 
 };

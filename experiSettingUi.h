@@ -2,6 +2,7 @@
 #define EXPERISETTINGUI_H
 
 #include <QWidget>
+#include <ExperiSetting.h>
 
 namespace Ui {
 class experiSettingUi;
@@ -44,11 +45,7 @@ signals:
 
 private:
     Ui::experiSettingUi *ui;
-    QString experiName;
-    QString sampleId;
-    QString userName;
-    QString experiType;
-    QString cellSize;
+    ExperiSetting       *setting;
     void initExperiSettingUi();
     void loadStyleSheet(const QString &styleSheetFile);
 };

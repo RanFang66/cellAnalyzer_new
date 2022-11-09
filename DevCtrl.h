@@ -44,7 +44,7 @@ public:
 
 public slots:
     void onSerialConnected(bool ok);
-    void onSerialRecvFrame(const char *data, int len);
+    void onSerialRecvFrame(const char *data, int frameType);
     void onCamInitRet(bool ok);
     void onCamImageUpdate(unsigned char *data, int width, int height);
     void onCamTimerTimeout();
@@ -55,6 +55,7 @@ signals:
     void capImage();
     void imageUpdated();
     void devStatusUpdated();
+    void motorStateUpdated(int devId);
     void autoFocusComplete();
     void changeResolution(int index);
 

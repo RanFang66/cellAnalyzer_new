@@ -3,6 +3,11 @@
 
 #include <QObject>
 #include <DevCtrl.h>
+#include <CellImageAlogrithm.h>
+#include <ExperiSetting.h>
+#include <ExperiData.h>
+
+
 
 class ExperiCtrl : public QObject
 {
@@ -10,10 +15,16 @@ class ExperiCtrl : public QObject
 public:
     explicit ExperiCtrl(QObject *parent = nullptr);
 
+public slots:
+    void startExperiment();
+
 signals:
 
 private:
     DevCtrl *devCtrl;
+    ExperiSetting *setting;
+    ExperiData  *data;
+
 
 };
 

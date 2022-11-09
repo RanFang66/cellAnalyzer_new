@@ -23,6 +23,7 @@ public slots:
     void onCamImageUpdated();
     void onDevStatusUpdated();
     void onAutoFocusComplete();
+    void onMotorStateUpdated(int id);
 
 private slots:
     void onLedChanged();
