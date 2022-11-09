@@ -31,17 +31,32 @@ void DevCtrl::onSerialConnected(bool ok)
     motorReset(CAMERA_MOTOR);
 }
 
-void DevCtrl::onSerialRecvFrame(const char *data, int len)
+void DevCtrl::onSerialRecvFrame(const char *data, int frameType)
 {
-    if (len < 22) {
-        return ;
+    switch(frameType) {
+    case QSerialWorker::CHIP_X_MOTOR_STATE:
+    case QSerialWorker::CHIP_Y_MOTOR_STATE:
+    case QSerialWorker::CAMERA_MOTOR_STATE:
+    case QSerialWorker::FILTER_MOTOR_STATE:
+        m_motorPos[frameType-1] = str2int(data, 4);
+        m_motorLimitState[frameType-1] = data[4] - '0';
+        emit motorStateUpdated(frameType);
+        break;
+    case QSerialWorker::DEV_STATUS:
+        for (int i = 0; i < 4; i++) {
+            m_motorPos[i] = str2int(data + 5*i, 4);
+            m_motorLimitState[i] = data[5*i+4] - '0';
+        }
+        m_ledState = data[20] - '0';
+        m_chipState = data[21] - '0';
+        emit devStatusUpdated();
+        break;
+    default:
+        break;
     }
-    for (int i = 0; i < 4; i++) {
-        m_motorPos[i] = str2int(data + 5*i, 4);
-        m_motorLimitState[i] = data[5*i+4] - '0';
-    }
-    m_ledState = data[20] - '0';
-    m_chipState = data[21] - '0';
+
+
+
 //    if (m_autoFocusState == FOCUS_PROCESS && m_motorPos[2] >= m_focusNextPos) {
 //        emit capImage();
 //    } else if (m_autoFocusState == FOCUS_COMPLETE && m_motorPos[2] >= m_focusNextPos) {
@@ -50,7 +65,7 @@ void DevCtrl::onSerialRecvFrame(const char *data, int len)
 //    } else {
 //        emit devStatusUpdated();
 //    }
-    emit devStatusUpdated();
+
 }
 
 void DevCtrl::onCamInitRet(bool ok)

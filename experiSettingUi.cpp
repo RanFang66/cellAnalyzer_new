@@ -10,11 +10,11 @@ experiSettingUi::experiSettingUi(QWidget *parent) :
 {
     ui->setupUi(this);
     loadStyleSheet(":/styles/experiSettingStyle.qss");
-    experiName = QDateTime::currentDateTime().toString();
-    sampleId = "sample 1";
-    userName = "admin";
-    experiType = "AOPI viability";
-    cellSize = "5~10(um)";
+//    experiName = QDateTime::currentDateTime().toString();
+//    sampleId = "sample 1";
+//    userName = "admin";
+//    experiType = "AOPI viability";
+//    cellSize = "5~10(um)";
 
     initExperiSettingUi();
 }
@@ -44,11 +44,11 @@ void experiSettingUi::initExperiSettingUi()
     ui->comboCellType->addItem("mice liver", CELL_MICE_LIVER);
     ui->comboCellType->addItem("human bone", CELL_HUMAN_BONE);
 
-    ui->editExperiName->setText(experiName);
-    ui->editExperiType->setText(experiType);
-    ui->editExperiUser->setText(userName);
-    ui->editSampleId->setText(sampleId);
-    ui->editCellSize->setText(cellSize);
+    ui->editExperiName->setText(setting->experiName());
+    ui->editExperiType->setText(setting->experiType());
+    ui->editExperiUser->setText(setting->userName());
+    ui->editSampleId->setText(setting->sampleId());
+    ui->editCellSize->setText("5~15um");
 }
 
 

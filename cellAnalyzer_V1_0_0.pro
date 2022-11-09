@@ -10,9 +10,12 @@ CONFIG += c++11
 
 SOURCES += \
     CameraCtrl.cpp \
+    CellImageAlogrithm.cpp \
     DevCtrl.cpp \
     DlgAnimationUi.cpp \
     ExperiCtrl.cpp \
+    ExperiData.cpp \
+    ExperiSetting.cpp \
     QDlgLogin.cpp \
     QSerialWorker.cpp \
     debugModeUi.cpp \
@@ -24,9 +27,12 @@ SOURCES += \
 
 HEADERS += \
     CameraCtrl.h \
+    CellImageAlogrithm.h \
     DevCtrl.h \
     DlgAnimationUi.h \
     ExperiCtrl.h \
+    ExperiData.h \
+    ExperiSetting.h \
     MainWindow.h \
     QDlgLogin.h \
     QSerialWorker.h \
