@@ -36,11 +36,22 @@ void DevCtrl::onSerialRecvFrame(const char *data, int frameType)
     switch(frameType) {
     case QSerialWorker::CHIP_X_MOTOR_STATE:
     case QSerialWorker::CHIP_Y_MOTOR_STATE:
-    case QSerialWorker::CAMERA_MOTOR_STATE:
     case QSerialWorker::FILTER_MOTOR_STATE:
         m_motorPos[frameType-1] = str2int(data, 4);
         m_motorLimitState[frameType-1] = data[4] - '0';
         emit motorStateUpdated(frameType);
+        break;
+    case QSerialWorker::CAMERA_MOTOR_STATE:
+        m_motorPos[frameType-1] = str2int(data, 4);
+        m_motorLimitState[frameType-1] = data[4] - '0';
+        if (m_autoFocusState == FOCUS_PROCESS && m_motorPos[2] >= m_focusNextPos) {
+            emit capImage();
+        } else if (m_autoFocusState == FOCUS_COMPLETE && m_motorPos[2] >= m_focusNextPos) {
+            m_autoFocusState = FOCUS_IDLE;
+            emit autoFocusComplete();
+        } else {
+            emit motorStateUpdated(frameType);
+        }
         break;
     case QSerialWorker::DEV_STATUS:
         for (int i = 0; i < 4; i++) {
@@ -57,14 +68,7 @@ void DevCtrl::onSerialRecvFrame(const char *data, int frameType)
 
 
 
-//    if (m_autoFocusState == FOCUS_PROCESS && m_motorPos[2] >= m_focusNextPos) {
-//        emit capImage();
-//    } else if (m_autoFocusState == FOCUS_COMPLETE && m_motorPos[2] >= m_focusNextPos) {
-//        m_autoFocusState = FOCUS_IDLE;
-//        emit autoFocusComplete();
-//    } else {
-//        emit devStatusUpdated();
-//    }
+
 
 }
 
@@ -110,7 +114,6 @@ void DevCtrl::onCamTimerTimeout()
 
 void DevCtrl::onFocusTimerTimeout()
 {
-    //updateDevStatus();
     if (m_autoFocusState == FOCUS_COMPLETE){
         m_autoFocusState = FOCUS_IDLE;
         emit autoFocusComplete();
@@ -161,10 +164,7 @@ void DevCtrl::camSnap()
 
 void DevCtrl::cameraStop()
 {
-    //m_camTimer->stop();
-    if (m_autoFocusState == FOCUS_IDLE) {
-        m_focusTimer->stop();
-    }
+    m_camTimer->stop();
 }
 
 void DevCtrl::cameraAutoExplosure(bool checked)
@@ -185,19 +185,17 @@ void DevCtrl::camChangeResolution(int index)
 void DevCtrl::startAutoFocus(bool act)
 {
     if (act) {
-//        if (m_camTimer->isActive())
-//            m_camTimer->stop();
+        if (m_camTimer->isActive())
+            m_camTimer->stop();
         m_focusNextPos = autoFocusStartPos;
         motorRun(CAMERA_MOTOR, MOTOR_RUN_POS, m_focusNextPos);
         m_autoFocusState = FOCUS_PROCESS;
-        m_focusTimer->start(8000);
     }
 }
 
 void DevCtrl::cameraRun(int framePeriod)
 {
-//    m_camTimer->start(framePeriod);
-    m_focusTimer->start(1000);
+    m_camTimer->start(framePeriod);
     emit capImage();
 }
 
@@ -238,16 +236,16 @@ void DevCtrl::initCameraCtrl()
 
 void DevCtrl::initAutoFocus()
 {
-    m_focusTimer = new QTimer(this);
-    m_focusTimer->setInterval(8000);
-    m_focusTimer->stop();
+//    m_focusTimer = new QTimer(this);
+//    m_focusTimer->setInterval(4000);
+//    m_focusTimer->stop();
     m_autoFocusState = FOCUS_IDLE;
     m_focusNextPos = autoFocusStartPos;
     m_focusPos = 150;
     m_maxClarity = 0;
     m_clarity = 0;
 
-    connect(m_focusTimer, SIGNAL(timeout()), this, SLOT(onFocusTimerTimeout()));
+//    connect(m_focusTimer, SIGNAL(timeout()), this, SLOT(onFocusTimerTimeout()));
 }
 
 double DevCtrl::calcClarity(Mat &img)

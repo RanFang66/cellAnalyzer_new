@@ -3,7 +3,7 @@
 
 #include <QObject>
 
-#define CHAMBER_NUM     (5)
+#define CHAMBER_NUM     (6)
 class ExperiSetting : public QObject
 {
     Q_OBJECT

@@ -108,7 +108,7 @@ void debugModeUi::initDubugModeUi()
 
     connect(m_dev, SIGNAL(imageUpdated()), this, SLOT(onCamImageUpdated()));
     connect(m_dev, SIGNAL(devStatusUpdated()), this, SLOT(onDevStatusUpdated()));
-    connect(m_dev, SIGNAL(motorStateUpdated(int)), this, SLOT(onMotorStateUpdate(int)));
+    connect(m_dev, SIGNAL(motorStateUpdated(int)), this, SLOT(onMotorStateUpdated(int)));
     connect(m_dev, SIGNAL(autoFocusComplete()), this, SLOT(onAutoFocusComplete()));
     connect(ui->rBtnLedGreen, SIGNAL(clicked()), this, SLOT(onLedChanged()));
     connect(ui->rBtnLedBlue, SIGNAL(clicked()), this, SLOT(onLedChanged()));

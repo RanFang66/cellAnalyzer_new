@@ -114,33 +114,38 @@ void QSerialWorker::recvDataSm(const char ch)
         case 'X':
             recvFrameType = CHIP_X_MOTOR_STATE;
             recvFrameLength = 5;
+            recvDataLen = 0;
             recvState = RECV_DATA;
             break;
         case 'Y':
             recvFrameType = CHIP_Y_MOTOR_STATE;
             recvFrameLength = 5;
+            recvDataLen = 0;
             recvState = RECV_DATA;
             break;
 
         case 'L':
             recvFrameType = CAMERA_MOTOR_STATE;
             recvFrameLength = 5;
+            recvDataLen = 0;
             recvState = RECV_DATA;
             break;
         case 'F':
             recvFrameType = FILTER_MOTOR_STATE;
             recvFrameLength = 5;
+            recvDataLen = 0;
             recvState = RECV_DATA;
-            break;
             break;
         case 'S':
             recvFrameType = DEV_STATUS;
             recvFrameLength = 22;
+            recvDataLen = 0;
             recvState = RECV_DATA;
             break;
         default:
-            break;
+            return ;
         }
+        break;
     }
 
     case RECV_DATA:
@@ -154,11 +159,11 @@ void QSerialWorker::recvDataSm(const char ch)
     }
     case RECV_CHECKSUM:
     {
-        int sum = 0;
+        quint32 sum = 0;
         for (int i = 0; i < recvFrameLength; i++) {
             sum += recvDataBuff[i];
         }
-        if ((char)(sum & 0x000000FF) == ch) {
+        if ((quint8)(sum & 0x000000FF) == ch) {
             emit serialRecvData(recvDataBuff, recvFrameType);
             recvFrameLength = 0;
             recvState= RECV_IDLE;

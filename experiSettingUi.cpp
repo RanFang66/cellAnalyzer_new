@@ -44,10 +44,10 @@ void experiSettingUi::initExperiSettingUi()
     ui->comboCellType->addItem("mice liver", CELL_MICE_LIVER);
     ui->comboCellType->addItem("human bone", CELL_HUMAN_BONE);
 
-    ui->editExperiName->setText(setting->experiName());
-    ui->editExperiType->setText(setting->experiType());
-    ui->editExperiUser->setText(setting->userName());
-    ui->editSampleId->setText(setting->sampleId());
+    ui->editExperiName->setText("aaaaa");
+    ui->editExperiType->setText("AOPI Cell Viability");
+    ui->editExperiUser->setText("Admin");
+    ui->editSampleId->setText("sample 1");
     ui->editCellSize->setText("5~15um");
 }
 
