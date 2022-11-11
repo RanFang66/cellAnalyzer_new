@@ -53,15 +53,6 @@ void debugModeUi::onAutoFocusComplete()
     QMessageBox::about(this, "Complete", "Auto focus completeed");
 }
 
-void debugModeUi::onMotorStateUpdated(int id)
-{
-    int pos = m_dev->getMotorPos(id);
-    int limit = m_dev->getMotorLimitState(id);
-
-    ui->tblSysStatus->item(id-1, 0)->setText(QString::number(pos));
-    ui->tblSysStatus->item(id-1, 1)->setText(QString::number(limit));
-}
-
 void debugModeUi::onLedChanged()
 {
     if (ui->rBtnLedWhite->isChecked()) {
@@ -106,9 +97,12 @@ void debugModeUi::initDubugModeUi()
         ui->lblCamName->setText(tr("Camera Closed"));
     }
 
-    connect(m_dev, SIGNAL(imageUpdated()), this, SLOT(onCamImageUpdated()));
+
     connect(m_dev, SIGNAL(devStatusUpdated()), this, SLOT(onDevStatusUpdated()));
-    connect(m_dev, SIGNAL(motorStateUpdated(int)), this, SLOT(onMotorStateUpdated(int)));
+//    connect(m_dev, SIGNAL(chipXMotorStateUpdated()), this, SLOT(onDevStatusUpdated()));
+//    connect(m_dev, SIGNAL(chipYMotorStateUpdated()), this, SLOT(onDevStatusUpdated()));
+//    connect(m_dev, SIGNAL(cameraMotorStateUpdated()), this, SLOT(onDevStatusUpdated()));
+//    connect(m_dev, SIGNAL(filterMotorStateUpdated()), this, SLOT(onDevStatusUpdated()));
     connect(m_dev, SIGNAL(autoFocusComplete()), this, SLOT(onAutoFocusComplete()));
     connect(ui->rBtnLedGreen, SIGNAL(clicked()), this, SLOT(onLedChanged()));
     connect(ui->rBtnLedBlue, SIGNAL(clicked()), this, SLOT(onLedChanged()));
@@ -220,11 +214,13 @@ void debugModeUi::on_btnSetMotoSpeed_clicked()
 void debugModeUi::on_btnCamRun_clicked()
 {
     m_dev->cameraRun();
+    connect(m_dev, SIGNAL(imageUpdated()), this, SLOT(onCamImageUpdated()));
 }
 
 void debugModeUi::on_btnCamStop_clicked()
 {
     m_dev->cameraStop();
+    disconnect(m_dev, SIGNAL(imageUpdated()), this, SLOT(onCamImageUpdated()));
 }
 
 void debugModeUi::on_btnUpdateSysStatus_clicked()

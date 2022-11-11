@@ -6,7 +6,13 @@
 #include <experiDataUi.h>
 #include <debugModeUi.h>
 #include <inExperimentUi.h>
+#include <experiResultUi.h>
+
 #include "DevCtrl.h"
+#include "ExperiData.h"
+#include "CellImageAlogrithm.h"
+#include "ExperiCtrl.h"
+
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -43,13 +49,21 @@ private slots:
     void onExperimentPaused();
 
     void onExitExperiSetting();
+
+    void onExperimentFinished();
 private:
     Ui::MainWindow      *ui;
     experiSettingUi     *experiSetting;
     experiDataUi        *experiData;
     debugModeUi         *debugMode;
     inExperimentUi      *inExperiment;
+    experiResultUi      *experiRes;
+
     DevCtrl             *m_dev;
+    ExperiSetting       *m_setting;
+    ExperiData          *m_data;
+    ExperiCtrl          *m_experiCtrl;
+    CellImageAlogrithm  *m_algorithm;
 
     int appSelcIndex = 0;
     int sysSettingIndex = 1;
@@ -58,6 +72,7 @@ private:
     int experiDataIndex;
     int debugModeIndex;
     int inExperimentIndex;
+    int experiResultIndex;
 
     void initMainWindowUi();
     void loadStyleSheet(const QString &styleSheetFile);

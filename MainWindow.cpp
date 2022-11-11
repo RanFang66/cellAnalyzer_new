@@ -19,11 +19,18 @@ MainWindow::MainWindow(QWidget *parent)
     loadStyleSheet(":/styles/main.qss");
     m_dev = new DevCtrl(this);
 
+    m_data = new ExperiData(this);
+    m_setting = new ExperiSetting(this);
+    m_algorithm = new CellImageAlogrithm(this);
+    m_experiCtrl = new ExperiCtrl(m_dev, m_setting, m_data, m_algorithm, this);
+
+
     executeShellCmd("sleep 3");
-    experiSetting = new experiSettingUi(this);
+    experiSetting = new experiSettingUi(m_setting, this);
     experiData = new experiDataUi(this);
     debugMode = new debugModeUi(m_dev, this);
     inExperiment = new inExperimentUi(this);
+    experiRes = new experiResultUi(this);
 
     initMainWindowUi();
 }
@@ -39,12 +46,15 @@ void MainWindow::initMainWindowUi()
     experiDataIndex = ui->stackedWidget->addWidget(experiData);
     debugModeIndex = ui->stackedWidget->addWidget(debugMode);
     inExperimentIndex = ui->stackedWidget->addWidget(inExperiment);
+    experiResultIndex = ui->stackedWidget->addWidget(experiRes);
+
     ui->stackedWidget->setCurrentIndex(appSelcIndex);
     ui->btnExperiApp->setChecked(true);
 
     connect(experiSetting, SIGNAL(startExperiment()), this, SLOT(onExperimentStart()));
     connect(experiSetting, SIGNAL(exitExperimentSetting()), this, SLOT(onExitExperiSetting()));
     connect(inExperiment, SIGNAL(pauseExperiment()), this, SLOT(onExperimentPaused()));
+    connect(m_experiCtrl, SIGNAL(experimentFinished()), this, SLOT(onExperimentFinished));
 }
 
 QString MainWindow::executeShellCmd(QString strCmd)
@@ -114,6 +124,7 @@ void MainWindow::onExperimentStart()
 {
     ui->stackedWidget->setCurrentIndex(inExperimentIndex);
     inExperiment->updateNoticeText("start experiment");
+    m_experiCtrl->startExperiment();
 }
 
 void MainWindow::onExperimentPaused()
@@ -124,6 +135,11 @@ void MainWindow::onExperimentPaused()
 void MainWindow::onExitExperiSetting()
 {
     ui->stackedWidget->setCurrentIndex(appSelcIndex);
+}
+
+void MainWindow::onExperimentFinished()
+{
+    ui->stackedWidget->setCurrentIndex(experiResultIndex);
 }
 
 

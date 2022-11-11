@@ -31,7 +31,7 @@ public:
         CELL_HUMAN_BONE,
     };
 
-    explicit experiSettingUi(QWidget *parent = nullptr);
+    explicit experiSettingUi(ExperiSetting *setting, QWidget *parent = nullptr);
     ~experiSettingUi();
 
 private slots:
@@ -45,7 +45,7 @@ signals:
 
 private:
     Ui::experiSettingUi *ui;
-    ExperiSetting       *setting;
+    ExperiSetting       *m_setting;
     void initExperiSettingUi();
     void loadStyleSheet(const QString &styleSheetFile);
 };

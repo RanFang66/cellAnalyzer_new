@@ -35,24 +35,36 @@ void DevCtrl::onSerialRecvFrame(const char *data, int frameType)
 {
     switch(frameType) {
     case QSerialWorker::CHIP_X_MOTOR_STATE:
-    case QSerialWorker::CHIP_Y_MOTOR_STATE:
-    case QSerialWorker::FILTER_MOTOR_STATE:
-        m_motorPos[frameType-1] = str2int(data, 4);
-        m_motorLimitState[frameType-1] = data[4] - '0';
-        emit motorStateUpdated(frameType);
+        m_motorPos[0] = str2int(data, 4);
+        m_motorLimitState[0] = data[4] - '0';
+        emit chipXMotorStateUpdated();
         break;
+
+    case QSerialWorker::CHIP_Y_MOTOR_STATE:
+        m_motorPos[1] = str2int(data, 4);
+        m_motorLimitState[1] = data[4] - '0';
+        emit chipYMotorStateUpdated();
+        break;
+
     case QSerialWorker::CAMERA_MOTOR_STATE:
-        m_motorPos[frameType-1] = str2int(data, 4);
-        m_motorLimitState[frameType-1] = data[4] - '0';
+        m_motorPos[2] = str2int(data, 4);
+        m_motorLimitState[2] = data[4] - '0';
         if (m_autoFocusState == FOCUS_PROCESS && m_motorPos[2] >= m_focusNextPos) {
             emit capImage();
         } else if (m_autoFocusState == FOCUS_COMPLETE && m_motorPos[2] >= m_focusNextPos) {
             m_autoFocusState = FOCUS_IDLE;
             emit autoFocusComplete();
         } else {
-            emit motorStateUpdated(frameType);
+            emit cameraMotorStateUpdated();
         }
         break;
+
+    case QSerialWorker::FILTER_MOTOR_STATE:
+        m_motorPos[3] = str2int(data, 4);
+        m_motorLimitState[3] = data[4] - '0';
+        emit filterMotorStateUpdated();
+        break;
+
     case QSerialWorker::DEV_STATUS:
         for (int i = 0; i < 4; i++) {
             m_motorPos[i] = str2int(data + 5*i, 4);

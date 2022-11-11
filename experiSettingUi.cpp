@@ -4,8 +4,9 @@
 #include <QFile>
 #include <QDebug>
 #include <DlgAnimationUi.h>
-experiSettingUi::experiSettingUi(QWidget *parent) :
+experiSettingUi::experiSettingUi(ExperiSetting *setting, QWidget *parent) :
     QWidget(parent),
+    m_setting(setting),
     ui(new Ui::experiSettingUi)
 {
     ui->setupUi(this);

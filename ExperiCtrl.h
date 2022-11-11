@@ -13,6 +13,7 @@ class ExperiCtrl : public QObject
     Q_OBJECT
 public:
     explicit ExperiCtrl(QObject *parent = nullptr);
+    ExperiCtrl(DevCtrl *dev, ExperiSetting *setting, ExperiData *data, CellImageAlogrithm *algo, QObject *parent = nullptr);
     enum CHAMBER_ID {
         CHAMBER_1 = 1,
         CHAMBER_2,
@@ -24,28 +25,48 @@ public:
     };
 public slots:
     void startExperiment();
+    void experimentStateTransfer();
+    void experiChamberStateTransfer();
+    void experiPosStateTransfer();
+    void experiCapStateTransfer();
+
+    void experimentStateMachine();
+    void experiChamberStateMachine();
+    void experiPosStateMachine();
+    void experiCapImageStateMachine();
+    void pauseExperiment();
 
 signals:
+    void experimentFinished();
+    void experiOneChamberFinished();
+    void experiOnePosFinished();
+    void experiCapFinished();
+    void experimentInitOk();
 
 private:
     DevCtrl *devCtrl;
-    ExperiSetting *setting;
-    ExperiData  *data;
-    CellImageAlogrithm *alogrithm;
+    ExperiSetting *m_setting;
+    ExperiData  *m_data;
+    CellImageAlogrithm *m_algorithm;
 
     int m_experiState;
     int m_experiChamberState;
+    int m_experiPosState;
+    int m_experiCapState;
 
-    int m_chamberPos[CHAMBER_NUM];
-    int m_capPos[3];
+    int m_xPos;
+    int m_yPos;
+    int m_filterPos;
+    int m_ledState;
 
-    void initExperiState(void);
+    int m_chipPos_Y[CHAMBER_NUM];
+    int m_chipPos_X[3];
+
+    void initExperiment(void);
     void getCellImages();
-    void runToNewPos();
-    void initChamber(int id);
-    int  getNextState(int currentChamber);
-    void experimentStateMachine();
-    void experiChamberStateMachine();
+    int  getNextState(int currentState);
+    int  getNextChamberPos(int state);
+
 
 
 };

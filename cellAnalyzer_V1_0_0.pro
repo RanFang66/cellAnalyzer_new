@@ -20,6 +20,7 @@ SOURCES += \
     QSerialWorker.cpp \
     debugModeUi.cpp \
     experiDataUi.cpp \
+    experiResultUi.cpp \
     experiSettingUi.cpp \
     inExperimentUi.cpp \
     main.cpp \
@@ -38,6 +39,7 @@ HEADERS += \
     QSerialWorker.h \
     debugModeUi.h \
     experiDataUi.h \
+    experiResultUi.h \
     experiSettingUi.h \
     inExperimentUi.h
 
@@ -47,6 +49,7 @@ FORMS += \
     QDlgLogin.ui \
     debugModeUi.ui \
     experiDataUi.ui \
+    experiResultUi.ui \
     experiSettingUi.ui \
     inExperimentUi.ui
 

@@ -55,7 +55,10 @@ signals:
     void capImage();
     void imageUpdated();
     void devStatusUpdated();
-    void motorStateUpdated(int devId);
+    void cameraMotorStateUpdated();
+    void chipXMotorStateUpdated();
+    void chipYMotorStateUpdated();
+    void filterMotorStateUpdated();
     void autoFocusComplete();
     void changeResolution(int index);
 
@@ -77,6 +80,9 @@ public:
     void camChangeResolution(int index);
 
     int getMotorPos(int id);
+    int chipPos_X();
+    int chipPos_Y();
+    int filterPos();
     int getMotorLimitState(int id);
     int getLedState();
     int getChipState();
@@ -157,6 +163,21 @@ inline void DevCtrl::getCamResolution(int index, int &width, int &height)
 inline int DevCtrl::getMotorPos(int id)
 {
     return m_motorPos[id-1];
+}
+
+inline int DevCtrl::chipPos_X()
+{
+    return m_motorPos[0];
+}
+
+inline int DevCtrl::chipPos_Y()
+{
+    return m_motorPos[1];
+}
+
+inline int DevCtrl::filterPos()
+{
+    return m_motorPos[3];
 }
 
 inline int DevCtrl::getMotorLimitState(int id)
