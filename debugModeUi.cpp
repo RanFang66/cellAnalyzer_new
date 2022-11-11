@@ -97,7 +97,7 @@ void debugModeUi::initDubugModeUi()
         ui->lblCamName->setText(tr("Camera Closed"));
     }
 
-
+    connect(m_dev, SIGNAL(imageUpdated()), this, SLOT(onCamImageUpdated()));
     connect(m_dev, SIGNAL(devStatusUpdated()), this, SLOT(onDevStatusUpdated()));
 //    connect(m_dev, SIGNAL(chipXMotorStateUpdated()), this, SLOT(onDevStatusUpdated()));
 //    connect(m_dev, SIGNAL(chipYMotorStateUpdated()), this, SLOT(onDevStatusUpdated()));
@@ -214,13 +214,12 @@ void debugModeUi::on_btnSetMotoSpeed_clicked()
 void debugModeUi::on_btnCamRun_clicked()
 {
     m_dev->cameraRun();
-    connect(m_dev, SIGNAL(imageUpdated()), this, SLOT(onCamImageUpdated()));
+
 }
 
 void debugModeUi::on_btnCamStop_clicked()
 {
     m_dev->cameraStop();
-    disconnect(m_dev, SIGNAL(imageUpdated()), this, SLOT(onCamImageUpdated()));
 }
 
 void debugModeUi::on_btnUpdateSysStatus_clicked()

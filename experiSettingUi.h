@@ -39,6 +39,16 @@ private slots:
 
     void on_btnReturn_clicked();
 
+    void on_cBoxChannel1_clicked(bool checked);
+
+    void on_cBoxChannel2_clicked(bool checked);
+
+    void on_cBoxChannel3_clicked(bool checked);
+
+    void on_cBoxChannel4_clicked(bool checked);
+
+    void on_cBoxChannel5_clicked(bool checked);
+
 signals:
     void startExperiment();
     void exitExperimentSetting();

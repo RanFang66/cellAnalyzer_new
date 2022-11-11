@@ -100,8 +100,9 @@ void DevCtrl::onCamInitRet(bool ok)
 void DevCtrl::onCamImageUpdate(unsigned char *data, int width, int height)
 {
     m_cvImage = Mat(height, width, CV_8UC3, data);
-    m_clarity = calcClarity(m_cvImage);
+
     if (m_autoFocusState == FOCUS_PROCESS) {
+        m_clarity = calcClarity(m_cvImage);
         if (m_clarity > m_maxClarity) {
             m_maxClarity = m_clarity;
             m_focusPos = m_focusNextPos;

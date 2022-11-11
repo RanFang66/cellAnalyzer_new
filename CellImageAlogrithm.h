@@ -15,7 +15,7 @@ public:
     explicit CellImageAlogrithm(QObject *parent = nullptr);
 
 signals:
-
+    void markCellsFinished();
 
 public:
     enum BINAYR_METHOD {

@@ -41,6 +41,7 @@ enum POS_ID {
 enum EXPERI_CAP_STATE {
     CAP_IDLE = 0,
     CAP_INIT,
+    CAP_AUTOFOCUS,
     CAP_SNAP,
     CAP_PROCESS,
     CAP_FINISH,
@@ -77,15 +78,29 @@ ExperiCtrl::ExperiCtrl(DevCtrl *dev, ExperiSetting *setting, ExperiData *data, C
     m_experiPosState = EXPERI_POS_IDLE;
     m_experiCapState = CAP_IDLE;
 
+    m_chipPos_Y[0] = 270;
+    m_chipPos_Y[1] = 2241;
+    m_chipPos_Y[2] = 4080;
+    m_chipPos_Y[3] = 5907;
+    m_chipPos_Y[4] = 7802;
+    m_chipPos_Y[5] = 9767;
+
+
+    m_chipPos_X[0] = 1300;
+    m_chipPos_X[1] = 1900;
+    m_chipPos_X[2] = 2500;
     connect(devCtrl, SIGNAL(chipYMotorStateUpdated()), this, SLOT(experiChamberStateTransfer()));
     connect(devCtrl, SIGNAL(chipXMotorStateUpdated()), this, SLOT(experiPosStateTransfer()));
     connect(devCtrl, SIGNAL(filterMotorStateUpdated()), this, SLOT(experiCapStateTransfer()));
     connect(devCtrl, SIGNAL(imageUpdated()), this, SLOT(experiCapStateTransfer()));
-
+    connect(devCtrl, SIGNAL(autoFocusComplete()), this, SLOT(experiCapStateTransfer()));
+    connect(m_algorithm, SIGNAL(markCellsFinished()), this, SLOT(experiCapStateTransfer()));
     connect(this, SIGNAL(experimentInitOk()), this, SLOT(experimentStateMachine()));
     connect(this, SIGNAL(experiCapFinished()), this, SLOT(experiPosStateTransfer()));
     connect(this, SIGNAL(experiOnePosFinished()), this, SLOT(experiChamberStateTransfer()));
     connect(this, SIGNAL(experiOneChamberFinished()), this, SLOT(experimentStateTransfer()));
+
+
 }
 
 void ExperiCtrl::startExperiment()
@@ -100,6 +115,7 @@ void ExperiCtrl::experimentStateTransfer()
     m_experiState = nextState;
     m_yPos = getNextChamberPos(nextState);
     m_experiChamberState = EXPERI_CHAMBER_INIT;
+    experimentStateMachine();
 }
 
 void ExperiCtrl::experiChamberStateTransfer()
@@ -133,6 +149,7 @@ void ExperiCtrl::experiChamberStateTransfer()
     case EXPERI_CHAMBER_FINISH:
         break;
     }
+    experimentStateMachine();
 }
 
 void ExperiCtrl::experiPosStateTransfer()
@@ -145,6 +162,7 @@ void ExperiCtrl::experiPosStateTransfer()
             m_experiPosState = EXPERI_POS_BRIGHT;
             m_filterPos = FILTER_BRIGHT_POS;
             m_ledState = DevCtrl::LED_WHITE;
+            imgName = QString::asprintf("img_%d_%d_Bright.jpg", m_experiState-1, m_experiChamberState-1);
             m_experiCapState = CAP_INIT;
         }
         break;
@@ -152,12 +170,14 @@ void ExperiCtrl::experiPosStateTransfer()
         m_experiPosState = EXPERI_POS_BLUE;
         m_filterPos = FILTER_BLUE_POS;
         m_ledState = DevCtrl::LED_BLUE;
+        imgName = QString::asprintf("img_%d_%d_Blue.jpg", m_experiState-1, m_experiChamberState-1);
         m_experiCapState = CAP_INIT;
         break;
     case EXPERI_POS_BLUE:
         m_experiPosState = EXPERI_POS_GREEN;
         m_filterPos = FILTER_GREEN_POS;
         m_ledState = DevCtrl::LED_GREEN;
+        imgName = QString::asprintf("img_%d_%d_Green.jpg", m_experiState-1, m_experiChamberState-1);
         m_experiCapState = CAP_INIT;
         break;
     case EXPERI_POS_GREEN:
@@ -170,6 +190,7 @@ void ExperiCtrl::experiPosStateTransfer()
         m_experiPosState = EXPERI_POS_IDLE;
         break;
     }
+    experimentStateMachine();
 }
 
 void ExperiCtrl::experiCapStateTransfer()
@@ -179,8 +200,11 @@ void ExperiCtrl::experiCapStateTransfer()
         break;
     case CAP_INIT:
         if (devCtrl->filterPos() == m_filterPos) {
-            m_experiCapState = CAP_SNAP;
+            m_experiCapState = CAP_AUTOFOCUS;
         }
+        break;
+    case CAP_AUTOFOCUS:
+        m_experiCapState = CAP_SNAP;
         break;
     case CAP_SNAP:
         m_experiCapState = CAP_PROCESS;
@@ -192,6 +216,7 @@ void ExperiCtrl::experiCapStateTransfer()
         m_experiCapState = CAP_IDLE;
         break;
     }
+    experimentStateMachine();
 }
 
 
@@ -231,6 +256,10 @@ void ExperiCtrl::experimentStateMachine()       // ctrl the whole experiment: ct
         break;
     case EXPERI_FINISH:
         emit experimentFinished();
+        m_experiState = EXPERI_IDLE;
+        m_experiChamberState = EXPERI_CHAMBER_IDLE;
+        m_experiPosState = EXPERI_POS_IDLE;
+        m_experiCapState = CAP_IDLE;
         break;
     }
 }
@@ -291,18 +320,25 @@ void ExperiCtrl::experiCapImageStateMachine()
     case CAP_IDLE:
         break;
     case CAP_INIT:
+//        devCtrl->ledLigthOn(m_ledState);
         devCtrl->motorRun(DevCtrl::FILTER_MOTOR, DevCtrl::MOTOR_RUN_POS, m_filterPos);
-        devCtrl->ledLigthOn(DevCtrl::LED_WHITE);
+
         break;
-    case CAP_SNAP:
+    case CAP_AUTOFOCUS:
+        devCtrl->ledLigthOn(m_ledState);
         devCtrl->cameraAutoExplosure(true);
         devCtrl->cameraWhiteBalance();
-        emit devCtrl->capImage();
+        devCtrl->startAutoFocus(true);
+        break;
+    case CAP_SNAP:
+        devCtrl->camSnap();
         break;
     case CAP_PROCESS:
     {
         Mat img = devCtrl->getCVImage();
-        Mat imgMarked;
+        Mat imgMarked = img.clone();
+        QString name = imgFilePath + imgName;
+        imwrite(name.toStdString(), img);
         m_algorithm->markCells(img, imgMarked);
         break;
     }
@@ -312,9 +348,9 @@ void ExperiCtrl::experiCapImageStateMachine()
     }
 }
 
-int  ExperiCtrl::getNextState(int currentChamber)
+int  ExperiCtrl::getNextState(int currentState)
 {
-    int chamberIdStart = currentChamber - 1;
+    int chamberIdStart = currentState - 1;
     for (int i = chamberIdStart; i <= CHAMBER_6; i++) {
         if (m_setting->chamberIsEnable(i)) {
             return i + 2;
@@ -335,4 +371,5 @@ void ExperiCtrl::pauseExperiment()
     m_experiState = EXPERI_IDLE;
     m_experiChamberState = EXPERI_CHAMBER_IDLE;
     m_experiPosState = EXPERI_POS_IDLE;
+    m_experiCapState = CAP_IDLE;
 }

@@ -61,6 +61,8 @@ private:
 
     int m_chipPos_Y[CHAMBER_NUM];
     int m_chipPos_X[3];
+    QString imgFilePath = "/home/seekgene/Documents/cellImages/";
+    QString imgName;
 
     void initExperiment(void);
     void getCellImages();

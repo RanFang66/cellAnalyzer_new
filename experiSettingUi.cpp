@@ -83,3 +83,28 @@ void experiSettingUi::on_btnReturn_clicked()
 {
     emit exitExperimentSetting();
 }
+
+void experiSettingUi::on_cBoxChannel1_clicked(bool checked)
+{
+    m_setting->setChamberEn(0, checked);
+}
+
+void experiSettingUi::on_cBoxChannel2_clicked(bool checked)
+{
+    m_setting->setChamberEn(1, checked);
+}
+
+void experiSettingUi::on_cBoxChannel3_clicked(bool checked)
+{
+    m_setting->setChamberEn(2, checked);
+}
+
+void experiSettingUi::on_cBoxChannel4_clicked(bool checked)
+{
+    m_setting->setChamberEn(3, checked);
+}
+
+void experiSettingUi::on_cBoxChannel5_clicked(bool checked)
+{
+    m_setting->setChamberEn(4, checked);
+}

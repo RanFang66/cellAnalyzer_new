@@ -54,7 +54,7 @@ void MainWindow::initMainWindowUi()
     connect(experiSetting, SIGNAL(startExperiment()), this, SLOT(onExperimentStart()));
     connect(experiSetting, SIGNAL(exitExperimentSetting()), this, SLOT(onExitExperiSetting()));
     connect(inExperiment, SIGNAL(pauseExperiment()), this, SLOT(onExperimentPaused()));
-    connect(m_experiCtrl, SIGNAL(experimentFinished()), this, SLOT(onExperimentFinished));
+    connect(m_experiCtrl, SIGNAL(experimentFinished()), this, SLOT(onExperimentFinished()));
 }
 
 QString MainWindow::executeShellCmd(QString strCmd)
@@ -124,11 +124,14 @@ void MainWindow::onExperimentStart()
 {
     ui->stackedWidget->setCurrentIndex(inExperimentIndex);
     inExperiment->updateNoticeText("start experiment");
+    disconnect(m_dev, SIGNAL(imageUpdated()), debugMode, SLOT(onCamImageUpdated()));
+    disconnect(m_dev, SIGNAL(autoFocusComplete()), debugMode, SLOT(onAutoFocusComplete()));
     m_experiCtrl->startExperiment();
 }
 
 void MainWindow::onExperimentPaused()
 {
+    m_experiCtrl->pauseExperiment();
     ui->stackedWidget->setCurrentIndex(appSelcIndex);
 }
 
