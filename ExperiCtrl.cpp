@@ -343,6 +343,7 @@ void ExperiCtrl::experiCapImageStateMachine()
         break;
     }
     case CAP_FINISH:
+        devCtrl->ledLigthOn(DevCtrl::LED_OFF);
         emit experiCapFinished();
         break;
     }
