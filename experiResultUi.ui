@@ -6,26 +6,181 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>608</width>
-    <height>842</height>
+    <width>1080</width>
+    <height>1600</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <widget class="QLabel" name="label">
-   <property name="geometry">
-    <rect>
-     <x>100</x>
-     <y>290</y>
-     <width>411</width>
-     <height>131</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>实验完成</string>
-   </property>
-  </widget>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout_4">
+     <item>
+      <widget class="QLabel" name="label">
+       <property name="text">
+        <string>Chamber Select:</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QComboBox" name="cBoxChamberSelect"/>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="groupBox_2">
+     <property name="title">
+      <string>View Select</string>
+     </property>
+     <layout class="QHBoxLayout" name="horizontalLayout_2">
+      <item>
+       <widget class="QRadioButton" name="rBtnView1">
+        <property name="text">
+         <string>View1</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QRadioButton" name="rBtnView2">
+        <property name="text">
+         <string>View2</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QRadioButton" name="rBtnView3">
+        <property name="text">
+         <string>View3</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="groupBox_3">
+     <property name="title">
+      <string>Image Type</string>
+     </property>
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <item>
+       <widget class="QRadioButton" name="rBtnBright">
+        <property name="text">
+         <string>Bright</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QRadioButton" name="rBtnFluore">
+        <property name="text">
+         <string>Fluorescence</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QRadioButton" name="rBtnMarked">
+        <property name="text">
+         <string>Marked</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout_3">
+     <item>
+      <widget class="QGraphicsView" name="gvCellImage"/>
+     </item>
+     <item>
+      <widget class="QGroupBox" name="groupBox">
+       <property name="title">
+        <string>Tools</string>
+       </property>
+       <widget class="QPushButton" name="btnLine">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>120</y>
+          <width>91</width>
+          <height>30</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>line</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="btnDist">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>210</y>
+          <width>91</width>
+          <height>30</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>distance</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="btnAngle">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>290</y>
+          <width>91</width>
+          <height>30</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>angle</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="btnCircle">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>380</y>
+          <width>91</width>
+          <height>30</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>circle</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="btnEclipse">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>480</y>
+          <width>91</width>
+          <height>30</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>eclipse</string>
+        </property>
+       </widget>
+       <widget class="QCheckBox" name="cboxMarker">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>40</y>
+          <width>111</width>
+          <height>28</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Show Marker</string>
+        </property>
+       </widget>
+      </widget>
+     </item>
+    </layout>
+   </item>
+  </layout>
  </widget>
  <resources/>
  <connections/>

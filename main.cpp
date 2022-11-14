@@ -30,7 +30,7 @@ int main(int argc, char *argv[])
     if (createDbConnect()) {
         QApplication a(argc, argv);
         MainWindow w;
-        QDlgLogin *dlgLogin = new QDlgLogin();
+        QDlgLogin *dlgLogin = new QDlgLogin(w.getUserIdPointer());
 
         w.show();
         if (dlgLogin->exec() == QDialog::Accepted) {

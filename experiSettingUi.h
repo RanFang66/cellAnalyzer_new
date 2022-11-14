@@ -4,6 +4,11 @@
 #include <QWidget>
 #include <ExperiSetting.h>
 
+const QString EXPERI_TYPE[] = {
+    "AOPI Viability",
+    "TAIPAN BLUE",
+};
+
 namespace Ui {
 class experiSettingUi;
 }
@@ -49,6 +54,13 @@ private slots:
 
     void on_cBoxChannel5_clicked(bool checked);
 
+    void on_editSampleId_textEdited(const QString &arg1);
+
+    void on_comboCellType_currentIndexChanged(int index);
+
+    void on_editExperiName_textEdited(const QString &arg1);
+
+    void on_comboDilutionRate_currentIndexChanged(int index);
 signals:
     void startExperiment();
     void exitExperimentSetting();

@@ -26,6 +26,7 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+    int *getUserIdPointer(void);
 private slots:
     void on_btnSysSetting_clicked();
 
@@ -65,6 +66,9 @@ private:
     ExperiCtrl          *m_experiCtrl;
     CellImageAlogrithm  *m_algorithm;
 
+    QString m_userName;
+    int m_userId;
+
     int appSelcIndex = 0;
     int sysSettingIndex = 1;
     int helpDocIndex = 2;
@@ -78,4 +82,9 @@ private:
     void loadStyleSheet(const QString &styleSheetFile);
     QString executeShellCmd(QString strCmd);
 };
+
+inline int *MainWindow::getUserIdPointer()
+{
+    return &m_userId;
+}
 #endif // MAINWINDOW_H

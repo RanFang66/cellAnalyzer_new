@@ -16,7 +16,7 @@ class QDlgLogin : public QDialog
     Q_OBJECT
 
 public:
-    explicit QDlgLogin(QWidget *parent = nullptr);
+    explicit QDlgLogin(int *userId, QWidget *parent = nullptr);
     ~QDlgLogin();
 
 
@@ -30,6 +30,7 @@ private:
     QSqlQuery *query;
     QString m_user = "user";
     QString m_passwd = "12345";
+    int *m_userId;
     void readSettings();
     void writeSettings();
     QString encrypt(const QString &str);

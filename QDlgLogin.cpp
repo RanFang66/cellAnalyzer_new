@@ -3,9 +3,10 @@
 #include <QFile>
 #include <QDebug>
 
-QDlgLogin::QDlgLogin(QWidget *parent) :
+QDlgLogin::QDlgLogin(int *userId, QWidget *parent) :
     QDialog(parent),
-    ui(new Ui::QDlgLogin)
+    ui(new Ui::QDlgLogin),
+    m_userId(userId)
 {
     ui->setupUi(this);
 
@@ -19,7 +20,7 @@ QDlgLogin::QDlgLogin(QWidget *parent) :
 
     query->setForwardOnly(true);
     loadStyleSheet(":/styles/loginStyle.qss");
-//    readSettings();
+    readSettings();
 }
 
 QDlgLogin::~QDlgLogin()
@@ -40,21 +41,17 @@ void QDlgLogin::on_btnLogin_clicked()
     if (pswd.isEmpty()) {
         QMessageBox::warning(this, tr("Error"), tr("password can't be void"));
     }
-    QString queryStr = QString("SELECT * FROM userInfo WHERE name='%1' AND password='%2'").arg(user).arg(pswd);
-    QSqlQuery sqlQuery;
+    QString queryStr = QString("SELECT userId FROM userInfo WHERE name='%1' AND password='%2'").arg(user).arg(pswd);
     qDebug() << queryStr;
     if (query->exec(queryStr) && query->next()) {
+        *m_userId = query->value(0).toInt();
+        m_user = user;
+        m_passwd = pswd;
+        writeSettings();
         this->accept();
     } else {
         QMessageBox::warning(this, tr("Error"), tr("User name or password incorrect!"));
     }
-
-//    if ((user == m_user) && (encryptPSWD == m_passwd)) {
-//        writeSettings();
-//        this->accept();
-//    } else {
-//        QMessageBox::warning(this, "Notice", "Wrong User Name or Password!");
-//    }
 }
 
 void QDlgLogin::readSettings()
@@ -70,6 +67,7 @@ void QDlgLogin::readSettings()
 
     if (saved) {
         ui->editUserName->setText(m_user);
+        ui->editPasswd->setText(m_passwd);
     }
     ui->chkSave->setChecked(saved);
 }

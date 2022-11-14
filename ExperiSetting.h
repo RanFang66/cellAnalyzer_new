@@ -2,14 +2,33 @@
 #define EXPERISETTING_H
 
 #include <QObject>
-
+#include <QSqlDatabase>
+#include <QSqlQuery>
+#include <QSqlRecord>
+#include <QVariant>
 #define CHAMBER_NUM     (6)
+
+enum EXPERI_TYPE{
+    AOPI_VIABILITY = 0,
+    TAIPAN_BLUE,
+    OTHER_TYPE,
+};
+
+
+
+
+
+enum CELL_TYPE {
+    CELL_5_TO_20,
+    CELL_15_TO_30,
+};
+
 class ExperiSetting : public QObject
 {
     Q_OBJECT
 public:
     explicit ExperiSetting(QObject *parent = nullptr);
-
+    void initSetting(int userId, int experiTypeId);
     const QString &experiName() const;
     void setExperiName(const QString &newExperiName);
     const QString &sampleId() const;
@@ -20,13 +39,16 @@ public:
     void setExperiTypeID(int newExperiTypeID);
     int  cellTypeID() const;
     void setCellTypeID(int newCellTypeID);
-    int dilutionRatio() const;
+    int  dilutionRatio() const;
     void setDilutionRatio(int newDilutionRatio);
+    const QString &getExperiId(void) const;
 
     bool chamberIsEnable(int id);
     int  chamberSet(void) const;
     void setChamberEn(int id, bool checked);
-
+    void setUserName(const QString &userName);
+    const QString &getUserName() const;
+    const QString &getExperiType() const;
 
 
 //    struct ExperiSettingDataType {
@@ -43,9 +65,13 @@ signals:
 
 private:
 //    struct ExperiSettingDataType settingData;
-
+    QString m_experiId;
+    QSqlDatabase db;
+    QSqlQuery *query;
     QString m_experiName;
     QString m_sampleID;
+    QString m_userName;
+    QString m_experiType;
     int     m_userID;
     int     m_experiTypeID;
     int     m_cellTypeID;
@@ -82,6 +108,12 @@ inline int ExperiSetting::userID() const
 inline void ExperiSetting::setUserID(int newUserId)
 {
     m_userID = newUserId;
+    QString queryStr = QString("SELECT name FROM userInfo WHERE userId = %1").arg(m_userID);
+    if (query->exec(queryStr) && query->next()) {
+        m_userName = query->value(0).toString();
+    } else {
+        m_userName = "admin";
+    }
 }
 
 inline int ExperiSetting::experiTypeID() const
@@ -114,6 +146,11 @@ inline void ExperiSetting::setDilutionRatio(int newDilutionRatio)
     m_dilutionRatio = newDilutionRatio;
 }
 
+inline const QString &ExperiSetting::getExperiId() const
+{
+    return m_experiId;
+}
+
 inline bool ExperiSetting::chamberIsEnable(int id)
 {
     return m_chamberSelc[id];
@@ -133,5 +170,16 @@ inline void ExperiSetting::setChamberEn(int id, bool checked)
         m_chamberSet = m_chamberSet & (~(1 << id));
 
 }
+
+inline void ExperiSetting::setUserName(const QString &userName)
+{
+    m_userName = userName;
+}
+
+inline const QString &ExperiSetting::getExperiType() const
+{
+    return m_experiType;
+}
+
 
 #endif // EXPERISETTING_H

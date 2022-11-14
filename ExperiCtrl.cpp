@@ -1,5 +1,5 @@
 ﻿#include "ExperiCtrl.h"
-
+#include <QDir>
 
 enum EXPERI_GENERA_STATE {
     EXPERI_IDLE = 0,
@@ -47,6 +47,11 @@ enum EXPERI_CAP_STATE {
     CAP_FINISH,
 };
 
+const QStringList ImageType= {
+    "BR",
+    "FL1",
+    "FL2",
+};
 #define FILTER_BRIGHT_POS   0
 #define FILTER_BLUE_POS     133
 #define FILTER_GREEN_POS    266
@@ -103,8 +108,13 @@ ExperiCtrl::ExperiCtrl(DevCtrl *dev, ExperiSetting *setting, ExperiData *data, C
 
 }
 
-void ExperiCtrl::startExperiment()
+void ExperiCtrl::startExperiment(const QString &experiId)
 {
+    imgFilePath = "/cellImages/" + experiId + "/";
+    QDir dir(imgFilePath);
+    if (!dir.exists()) {
+        dir.mkdir(imgFilePath);
+    }
     m_experiState = EXPERI_INIT;
     experimentStateMachine();
 }
@@ -162,7 +172,6 @@ void ExperiCtrl::experiPosStateTransfer()
             m_experiPosState = EXPERI_POS_BRIGHT;
             m_filterPos = FILTER_BRIGHT_POS;
             m_ledState = DevCtrl::LED_WHITE;
-            imgName = QString::asprintf("img_%d_%d_Bright.jpg", m_experiState-1, m_experiChamberState-1);
             m_experiCapState = CAP_INIT;
         }
         break;
@@ -170,14 +179,12 @@ void ExperiCtrl::experiPosStateTransfer()
         m_experiPosState = EXPERI_POS_BLUE;
         m_filterPos = FILTER_BLUE_POS;
         m_ledState = DevCtrl::LED_BLUE;
-        imgName = QString::asprintf("img_%d_%d_Blue.jpg", m_experiState-1, m_experiChamberState-1);
         m_experiCapState = CAP_INIT;
         break;
     case EXPERI_POS_BLUE:
         m_experiPosState = EXPERI_POS_GREEN;
         m_filterPos = FILTER_GREEN_POS;
         m_ledState = DevCtrl::LED_GREEN;
-        imgName = QString::asprintf("img_%d_%d_Green.jpg", m_experiState-1, m_experiChamberState-1);
         m_experiCapState = CAP_INIT;
         break;
     case EXPERI_POS_GREEN:
@@ -320,9 +327,7 @@ void ExperiCtrl::experiCapImageStateMachine()
     case CAP_IDLE:
         break;
     case CAP_INIT:
-//        devCtrl->ledLigthOn(m_ledState);
         devCtrl->motorRun(DevCtrl::FILTER_MOTOR, DevCtrl::MOTOR_RUN_POS, m_filterPos);
-
         break;
     case CAP_AUTOFOCUS:
         devCtrl->ledLigthOn(m_ledState);
@@ -335,11 +340,21 @@ void ExperiCtrl::experiCapImageStateMachine()
         break;
     case CAP_PROCESS:
     {
+        updateImageName();
         Mat img = devCtrl->getCVImage();
+        imwrite(imgName.toStdString(), img);
+        if (m_experiPosState == EXPERI_POS_BLUE) {
+            imgFL1 = img.clone();
+        } else if (m_experiPosState == EXPERI_POS_GREEN) {
+            Mat imgFLAll = imgFL1 + img;
+            QString name = imgFilePath+QString("chamber%1_%2_FLAll.jpg")
+                    .arg(m_experiState-1)
+                    .arg(m_experiChamberState-1);
+            imwrite(name.toStdString(), imgFLAll);
+        }
         Mat imgMarked = img.clone();
-        QString name = imgFilePath + imgName;
-        imwrite(name.toStdString(), img);
         m_algorithm->markCells(img, imgMarked);
+        imwrite(imgMarkedName.toStdString(), img);
         break;
     }
     case CAP_FINISH:
@@ -364,6 +379,18 @@ int  ExperiCtrl::getNextState(int currentState)
 int ExperiCtrl::getNextChamberPos(int state)
 {
     return m_chipPos_Y[state-2];
+}
+
+void ExperiCtrl::updateImageName()
+{
+    imgName = imgFilePath + QString("chamber%1_%2_%3.jpg")
+            .arg(m_experiState-1)
+            .arg(m_experiChamberState-1)
+            .arg(ImageType[m_experiPosState-2]);
+    imgMarkedName = imgFilePath + QString("chamber%1_%2_%3_Marked.jpg")
+            .arg(m_experiState-1)
+            .arg(m_experiChamberState-1)
+            .arg(ImageType[m_experiPosState-2]);
 }
 
 

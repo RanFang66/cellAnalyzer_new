@@ -24,7 +24,7 @@ public:
         CHAMBER_FINISH = 99,
     };
 public slots:
-    void startExperiment();
+    void startExperiment(const QString &experiId);
     void experimentStateTransfer();
     void experiChamberStateTransfer();
     void experiPosStateTransfer();
@@ -61,16 +61,15 @@ private:
 
     int m_chipPos_Y[CHAMBER_NUM];
     int m_chipPos_X[3];
-    QString imgFilePath = "/home/seekgene/Documents/cellImages/";
+    QString imgFilePath = "/cellImages/";
     QString imgName;
-
+    QString imgMarkedName;
+    Mat     imgFL1;
     void initExperiment(void);
     void getCellImages();
     int  getNextState(int currentState);
     int  getNextChamberPos(int state);
-
-
-
+    void updateImageName();
 };
 
 #endif // EXPERICTRL_H

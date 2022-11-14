@@ -6,17 +6,11 @@
 #include <DlgAnimationUi.h>
 experiSettingUi::experiSettingUi(ExperiSetting *setting, QWidget *parent) :
     QWidget(parent),
-    m_setting(setting),
-    ui(new Ui::experiSettingUi)
+    ui(new Ui::experiSettingUi),
+    m_setting(setting)
 {
     ui->setupUi(this);
     loadStyleSheet(":/styles/experiSettingStyle.qss");
-//    experiName = QDateTime::currentDateTime().toString();
-//    sampleId = "sample 1";
-//    userName = "admin";
-//    experiType = "AOPI viability";
-//    cellSize = "5~10(um)";
-
     initExperiSettingUi();
 }
 
@@ -45,10 +39,10 @@ void experiSettingUi::initExperiSettingUi()
     ui->comboCellType->addItem("mice liver", CELL_MICE_LIVER);
     ui->comboCellType->addItem("human bone", CELL_HUMAN_BONE);
 
-    ui->editExperiName->setText("aaaaa");
-    ui->editExperiType->setText("AOPI Cell Viability");
-    ui->editExperiUser->setText("Admin");
-    ui->editSampleId->setText("sample 1");
+    ui->editExperiName->setText(m_setting->experiName());
+    ui->editExperiType->setText(m_setting->getExperiType());
+    ui->editExperiUser->setText(m_setting->getUserName());
+    ui->editSampleId->setText(m_setting->sampleId());
     ui->editCellSize->setText("5~15um");
 }
 
@@ -107,4 +101,24 @@ void experiSettingUi::on_cBoxChannel4_clicked(bool checked)
 void experiSettingUi::on_cBoxChannel5_clicked(bool checked)
 {
     m_setting->setChamberEn(4, checked);
+}
+
+void experiSettingUi::on_editSampleId_textEdited(const QString &arg1)
+{
+    m_setting->setSampleId(arg1);
+}
+
+void experiSettingUi::on_comboCellType_currentIndexChanged(int index)
+{
+    m_setting->setCellTypeID(index);
+}
+
+void experiSettingUi::on_editExperiName_textEdited(const QString &arg1)
+{
+    m_setting->setExperiName(arg1);
+}
+
+void experiSettingUi::on_comboDilutionRate_currentIndexChanged(int index)
+{
+    m_setting->setDilutionRatio(index);
 }

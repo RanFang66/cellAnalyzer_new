@@ -23,9 +23,9 @@ MainWindow::MainWindow(QWidget *parent)
     m_setting = new ExperiSetting(this);
     m_algorithm = new CellImageAlogrithm(this);
     m_experiCtrl = new ExperiCtrl(m_dev, m_setting, m_data, m_algorithm, this);
-
-
+    m_setting->setUserID(m_userId);
     executeShellCmd("sleep 3");
+
     experiSetting = new experiSettingUi(m_setting, this);
     experiData = new experiDataUi(this);
     debugMode = new debugModeUi(m_dev, this);
@@ -89,6 +89,7 @@ void MainWindow::on_btnHelpDoc_clicked()
 
 void MainWindow::on_btnAOPI_clicked()
 {
+    m_setting->initSetting(m_userId, 0);
     ui->stackedWidget->setCurrentIndex(experiSettingIndex);
 }
 
@@ -126,7 +127,7 @@ void MainWindow::onExperimentStart()
     inExperiment->updateNoticeText("start experiment");
     disconnect(m_dev, SIGNAL(imageUpdated()), debugMode, SLOT(onCamImageUpdated()));
     disconnect(m_dev, SIGNAL(autoFocusComplete()), debugMode, SLOT(onAutoFocusComplete()));
-    m_experiCtrl->startExperiment();
+    m_experiCtrl->startExperiment(m_setting->getExperiId());
 }
 
 void MainWindow::onExperimentPaused()
@@ -142,6 +143,7 @@ void MainWindow::onExitExperiSetting()
 
 void MainWindow::onExperimentFinished()
 {
+    experiRes->initResultShow(m_setting->getExperiId(), m_setting->chamberSet());
     ui->stackedWidget->setCurrentIndex(experiResultIndex);
 }
 
