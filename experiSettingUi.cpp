@@ -11,7 +11,7 @@ experiSettingUi::experiSettingUi(ExperiSetting *setting, QWidget *parent) :
 {
     ui->setupUi(this);
     loadStyleSheet(":/styles/experiSettingStyle.qss");
-    initExperiSettingUi();
+//    initExperiSettingUi();
 }
 
 experiSettingUi::~experiSettingUi()
@@ -36,14 +36,20 @@ void experiSettingUi::initExperiSettingUi()
 
     ui->comboCellType->clear();
     ui->comboCellType->addItem("human blood", CELL_HUMAN_BLOOD);
-    ui->comboCellType->addItem("mice liver", CELL_MICE_LIVER);
     ui->comboCellType->addItem("human bone", CELL_HUMAN_BONE);
+    ui->comboCellType->addItem("mice liver", CELL_MICE_LIVER);
+
+    ui->cBoxChannel1->setChecked(false);
+    ui->cBoxChannel2->setChecked(false);
+    ui->cBoxChannel3->setChecked(false);
+    ui->cBoxChannel4->setChecked(false);
+    ui->cBoxChannel5->setChecked(false);
 
     ui->editExperiName->setText(m_setting->experiName());
     ui->editExperiType->setText(m_setting->getExperiType());
     ui->editExperiUser->setText(m_setting->getUserName());
     ui->editSampleId->setText(m_setting->sampleId());
-    ui->editCellSize->setText("5~15um");
+    ui->editCellSize->setText(QString("%1~%2 um").arg(m_setting->getCellMinRadiu()).arg(m_setting->getCellMaxRadiu()));
 }
 
 
@@ -111,6 +117,7 @@ void experiSettingUi::on_editSampleId_textEdited(const QString &arg1)
 void experiSettingUi::on_comboCellType_currentIndexChanged(int index)
 {
     m_setting->setCellTypeID(index);
+    ui->editCellSize->setText(QString("%1~%2 um").arg(m_setting->getCellMinRadiu()).arg(m_setting->getCellMaxRadiu()));
 }
 
 void experiSettingUi::on_editExperiName_textEdited(const QString &arg1)

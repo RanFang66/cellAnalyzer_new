@@ -7,7 +7,7 @@
 #include <ExperiSetting.h>
 #include <ExperiData.h>
 
-
+#define VIEW_NUM (3)
 class ExperiCtrl : public QObject
 {
     Q_OBJECT
@@ -62,14 +62,36 @@ private:
     int m_chipPos_Y[CHAMBER_NUM];
     int m_chipPos_X[3];
     QString imgFilePath = "/cellImages/";
-    QString imgName;
-    QString imgMarkedName;
+
+    Mat     imgFL2;
     Mat     imgFL1;
+    Mat     imgBR;
+
+    int  m_cellNum[VIEW_NUM];
+    int  m_liveCellNum[VIEW_NUM];
+    int  m_deadCellNum[VIEW_NUM];
+    double m_avgRadiu[VIEW_NUM];
+    double m_avgCompact[VIEW_NUM];
+    int  totalCellNum;
+    int  totalLiveCellNum;
+    int  totalDeadCellNum;
+    double avgRadiu;
+    double avgCompact;
+
+    int  m_chamberId;
+    int  m_viewId;
+    int  m_imageTypeId;
+
+
     void initExperiment(void);
     void getCellImages();
     int  getNextState(int currentState);
     int  getNextChamberPos(int state);
     void updateImageName();
+    void saveImages(Mat &img, Mat &imgMarked);
+    void saveFLImage();
+    void getAnalyzeResult();
+    void calcAnalyzeResult();
 };
 
 #endif // EXPERICTRL_H

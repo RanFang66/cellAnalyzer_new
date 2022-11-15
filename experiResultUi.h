@@ -26,10 +26,11 @@ public:
     void initResultShow(QString experiId, int chamberSelc);
 
 private slots:
-    void on_comboBox_currentIndexChanged(int index);
     void onViewChanged();
     void onImageTypeChanged();
 
+
+    void on_cBoxChamberSelect_currentIndexChanged(const QString &arg1);
 
 private:
     Ui::experiResultUi *ui;

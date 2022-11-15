@@ -38,7 +38,7 @@ public:
 
     explicit experiSettingUi(ExperiSetting *setting, QWidget *parent = nullptr);
     ~experiSettingUi();
-
+    void initExperiSettingUi();
 private slots:
     void on_btnNextStep_clicked();
 
@@ -68,7 +68,7 @@ signals:
 private:
     Ui::experiSettingUi *ui;
     ExperiSetting       *m_setting;
-    void initExperiSettingUi();
+
     void loadStyleSheet(const QString &styleSheetFile);
 };
 

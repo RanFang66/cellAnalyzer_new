@@ -49,7 +49,9 @@ public:
     void setUserName(const QString &userName);
     const QString &getUserName() const;
     const QString &getExperiType() const;
-
+    const QString &getCellType() const;
+    int  getCellMinRadiu(void) const;
+    int  getCellMaxRadiu(void) const;
 
 //    struct ExperiSettingDataType {
 //        QString experiName;
@@ -72,12 +74,15 @@ private:
     QString m_sampleID;
     QString m_userName;
     QString m_experiType;
+    QString m_cellType;
     int     m_userID;
     int     m_experiTypeID;
     int     m_cellTypeID;
     int     m_dilutionRatio;
     bool    m_chamberSelc[CHAMBER_NUM];
     int     m_chamberSet;
+    int     m_minRadiu;
+    int     m_maxRadiu;
 };
 
 inline const QString &ExperiSetting::experiName() const
@@ -131,10 +136,6 @@ inline int ExperiSetting::cellTypeID() const
     return m_cellTypeID;
 }
 
-inline void ExperiSetting::setCellTypeID(int newCellTypeID)
-{
-    m_cellTypeID = newCellTypeID;
-}
 
 inline int ExperiSetting::dilutionRatio() const
 {
@@ -179,6 +180,21 @@ inline void ExperiSetting::setUserName(const QString &userName)
 inline const QString &ExperiSetting::getExperiType() const
 {
     return m_experiType;
+}
+
+inline const QString &ExperiSetting::getCellType() const
+{
+    return m_cellType;
+}
+
+inline int ExperiSetting::getCellMinRadiu() const
+{
+    return m_minRadiu;
+}
+
+inline int ExperiSetting::getCellMaxRadiu() const
+{
+    return m_maxRadiu;
 }
 
 

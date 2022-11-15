@@ -4,7 +4,7 @@
 
 const QStringList imageType = {
     "BR",
-    "FLAll",
+    "FL1_FL2",
     "BR_Marked",
 };
 
@@ -15,7 +15,7 @@ experiResultUi::experiResultUi(QWidget *parent) :
     ui->setupUi(this);
 
     m_scene = new QGraphicsScene(this);
-     m_imageItem = m_scene->addPixmap(QPixmap(600, 1000));
+    m_imageItem = m_scene->addPixmap(QPixmap(600, 1000));
     ui->gvCellImage->setScene(m_scene);
     imgPath = "/cellImages/";
     currentChamberId = 1;
@@ -101,11 +101,6 @@ QString experiResultUi::getFileName(int chamberId, int viewId, int imgType)
     return fileName;
 }
 
-void experiResultUi::on_comboBox_currentIndexChanged(int index)
-{
-    changeChamber(ui->cBoxChamberSelect->currentData().toInt());
-}
-
 void experiResultUi::onViewChanged()
 {
     if (ui->rBtnView1->isChecked()) {
@@ -115,7 +110,7 @@ void experiResultUi::onViewChanged()
     } else if (ui->rBtnView3->isChecked()) {
         changeView(3);
     } else {
-        changeView(0);
+        changeView(1);
     }
 }
 
@@ -130,4 +125,9 @@ void experiResultUi::onImageTypeChanged()
     } else {
         changeImageType(0);
     }
+}
+
+void experiResultUi::on_cBoxChamberSelect_currentIndexChanged(const QString &arg1)
+{
+     changeChamber(ui->cBoxChamberSelect->currentData().toInt());
 }

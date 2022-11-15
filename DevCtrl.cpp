@@ -87,6 +87,7 @@ void DevCtrl::onSerialRecvFrame(const char *data, int frameType)
 void DevCtrl::onCamInitRet(bool ok)
 {
     if (ok) {
+        cameraAutoExplosure(true);
         m_resolutionCount = m_camCtrl->getResolutionCount();
         m_resolutions = new struct CamResolution[m_resolutionCount];
         for (int i = 0; i < m_resolutionCount; i++) {

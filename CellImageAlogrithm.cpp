@@ -107,50 +107,81 @@ int CellImageAlogrithm::markCellsInCluster(Mat &cluster, Mat &img, Point2f ltPoi
     return cellNum;
 }
 
-int CellImageAlogrithm::markCells(Mat &img, Mat &imgMarked)
+void CellImageAlogrithm::analyzeCellsBright(Mat &img, Mat &imgMarked)
 {
     Mat imgGray;
     Mat imgBin;
-    unsigned long cellNum = 0;
     int cluseterCellNum = 0;
-    int minRadiu = 10;
-    int maxRadiu = 30;
 
     cvtColor(img, imgGray, COLOR_BGR2GRAY);
 
-//    filterImage(imgGray, imgGray, MEDIAN_FILTER);
-//    getBinaryImage(imgGray, imgBin, BINARY_OTSU);
+    filterImage(imgGray, imgGray, MEDIAN_FILTER);
+    getBinaryImage(imgGray, imgBin, BINARY_OTSU);
 
-//    addBorder(imgBin, 3, 255);
+    addBorder(imgBin, 3, 255);
 
-//    // get cell contours
-//    std::vector<std::vector<Point>> contours;
-//    std::vector<Vec4i> hierarchy;
-//    findContours(imgBin, contours, hierarchy, RETR_TREE, CHAIN_APPROX_NONE);
+    // get cell contours
+    std::vector<std::vector<Point>> contours;
+    std::vector<Vec4i> hierarchy;
+    findContours(imgBin, contours, hierarchy, RETR_TREE, CHAIN_APPROX_NONE);
 
 
-//    // fitting the contours with circles
-//    std::vector<Point2f> centers;
-//    std::vector<float> radius;
-//    double avgRadiu = 0;
-//    unsigned long contourNum = contours.size();
-//    for (unsigned long i = 0; i < contourNum; i++) {
-//        Point2f center;
-//        float radiu;
-//        minEnclosingCircle(contours[i], center, radiu);
-//        if (hierarchy[i][3] == 0 && radiu > minRadiu && radiu < maxRadiu) {
-//            centers.push_back(center);
-//            radius.push_back(radiu);
-//            avgRadiu += radiu;
-//            cellNum++;
-//            circle(imgMarked, center, radiu, Scalar(0, 0, 255), 2, LINE_8, 0);
-//        }
-//    }
-//    avgRadiu /= radius.size();
-//    qDebug() << "cell numbers: " << cellNum << ", average radiu: " << avgRadiu << endl;
-//    filterImage(imgMarked, imgMarked, GAUSSIAN_FILTER);
+    // fitting the contours with circles
+    std::vector<Point2f> centers;
+    std::vector<float> radius;
+    unsigned long contourNum = contours.size();
+    for (unsigned long i = 0; i < contourNum; i++) {
+        if (hierarchy[i][3] != 0)
+            continue;
+        Point2f center;
+        float radiu;
+        minEnclosingCircle(contours[i], center, radiu);
+        if (radiu > minRadiu && radiu < maxRadiu) {
+            radiuStat[radiu]++;
+            centers.push_back(center);
+            radius.push_back(radiu);
+            avgRadiu += radiu;
+            cellNum++;
+            circle(imgMarked, center, radiu, Scalar(0, 0, 255), 2, LINE_8, 0);
+        }
+    }
+    avgRadiu /= radius.size();
+    qDebug() << "cell numbers: " << cellNum << ", average radiu: " << avgRadiu << endl;
+    filterImage(imgMarked, imgMarked, GAUSSIAN_FILTER);
     emit markCellsFinished();
-    return cellNum;
+}
+
+void CellImageAlogrithm::analyzeCellsFL1(Mat &img, Mat &imgMarked)
+{
+    Mat imgGray;
+    Mat imgBin;
+    cvtColor(img, imgGray, COLOR_BGR2GRAY);
+
+    filterImage(imgGray, imgGray, MEDIAN_FILTER);
+    getBinaryImage(imgGray, imgBin, BINARY_OTSU);
+    std::vector<std::vector<Point>> contours;
+    std::vector<Vec4i> hierarchy;
+    findContours(imgBin, contours, hierarchy, RETR_TREE, CHAIN_APPROX_NONE);
+    drawContours(imgMarked, contours, -1, Scalar(255, 255, 255));
+    liveCellNum = contours.size();
+    emit markCellsFinished();
+
+}
+
+void CellImageAlogrithm::analyzeCellsFL2(Mat &img, Mat &imgMarked)
+{
+    Mat imgGray;
+    Mat imgBin;
+    cvtColor(img, imgGray, COLOR_BGR2GRAY);
+
+    filterImage(imgGray, imgGray, MEDIAN_FILTER);
+    getBinaryImage(imgGray, imgBin, BINARY_OTSU);
+    std::vector<std::vector<Point>> contours;
+    std::vector<Vec4i> hierarchy;
+    findContours(imgBin, contours, hierarchy, RETR_TREE, CHAIN_APPROX_NONE);
+    deadCellNum = contours.size();
+    drawContours(imgMarked, contours, -1, Scalar(255, 255, 255));
+    emit markCellsFinished();
 }
 
 

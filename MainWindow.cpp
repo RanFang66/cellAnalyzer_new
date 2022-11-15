@@ -19,8 +19,8 @@ MainWindow::MainWindow(QWidget *parent)
     loadStyleSheet(":/styles/main.qss");
     m_dev = new DevCtrl(this);
 
-    m_data = new ExperiData(this);
     m_setting = new ExperiSetting(this);
+    m_data = new ExperiData(m_setting, this);
     m_algorithm = new CellImageAlogrithm(this);
     m_experiCtrl = new ExperiCtrl(m_dev, m_setting, m_data, m_algorithm, this);
     m_setting->setUserID(m_userId);
@@ -89,7 +89,8 @@ void MainWindow::on_btnHelpDoc_clicked()
 
 void MainWindow::on_btnAOPI_clicked()
 {
-    m_setting->initSetting(m_userId, 0);
+    m_setting->initSetting(m_userId, 1);
+    experiSetting->initExperiSettingUi();
     ui->stackedWidget->setCurrentIndex(experiSettingIndex);
 }
 

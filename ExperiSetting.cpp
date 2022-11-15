@@ -10,8 +10,8 @@ ExperiSetting::ExperiSetting(QObject *parent) : QObject(parent)
     }
     m_chamberSet = 0;
 
-    m_experiTypeID = 0;
-    m_cellTypeID = 0;
+    m_experiTypeID = 1;
+    m_cellTypeID = 1;
     m_dilutionRatio = 0;
     m_sampleID = "Sample_" + QDateTime::currentDateTime().toString("MMddHHmm");
 }
@@ -21,7 +21,7 @@ void ExperiSetting::initSetting(int userId, int experiTypeId)
     m_experiId = QDateTime::currentDateTime().toString("yyyyMMddHHmmss");
     m_userID = userId;
     m_experiTypeID = experiTypeId;
-    m_cellTypeID = 0;
+    m_cellTypeID = 1;
     m_experiName = "Cell_" + m_experiId;
     m_sampleID = "Sample_" + m_experiId;
     m_dilutionRatio = 0;
@@ -44,7 +44,33 @@ void ExperiSetting::initSetting(int userId, int experiTypeId)
         m_experiType = "AOPI VIABILITY";
     }
 
+    queryStr = QString("SELECT * FROM cellType WHERE cellTypeID = %1").arg(m_cellTypeID);
+    if (query->exec(queryStr) && query->next()) {
+        m_cellType = query->value(1).toString();
+        m_minRadiu = query->value(2).toInt();
+        m_maxRadiu = query->value(3).toInt();
+    } else {
+        m_cellType = "Human Blood";
+        m_minRadiu = 15;
+        m_maxRadiu = 30;
+    }
 }
+
+void ExperiSetting::setCellTypeID(int newCellTypeID)
+{
+    m_cellTypeID = newCellTypeID + 1;
+    QString queryStr = QString("SELECT * FROM cellType WHERE cellTypeID = %1").arg(m_cellTypeID);
+    if (query->exec(queryStr) && query->next()) {
+        m_cellType = query->value(1).toString();
+        m_minRadiu = query->value(2).toInt();
+        m_maxRadiu = query->value(3).toInt();
+    } else {
+        m_cellType = "Human Blood";
+        m_minRadiu = 15;
+        m_maxRadiu = 30;
+    }
+}
+
 
 const QString &ExperiSetting::getUserName() const
 {

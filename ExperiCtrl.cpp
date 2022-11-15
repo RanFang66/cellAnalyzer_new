@@ -36,7 +36,17 @@ enum POS_ID {
     POS_2,
     POS_3,
 };
+enum VIEW_ID {
+    VIEW_1 = 1,
+    VIEW_2,
+    VIEW_3,
+};
 
+enum IMAGE_TYPE_ID {
+    IMAGE_BRIGHT = 1,
+    IMAGE_FL1,
+    IMAGE_FL2,
+};
 
 enum EXPERI_CAP_STATE {
     CAP_IDLE = 0,
@@ -63,6 +73,10 @@ ExperiCtrl::ExperiCtrl(QObject *parent) : QObject(parent)
     m_experiPosState = EXPERI_POS_IDLE;
     m_experiCapState = CAP_IDLE;
 
+    m_chamberId = 1;
+    m_viewId = 1;
+    m_imageTypeId = 0;
+
     connect(devCtrl, SIGNAL(chipYMotorStateUpdated()), this, SLOT(experiChamberStateTransfer()));
     connect(devCtrl, SIGNAL(chipXMotorStateUpdated()), this, SLOT(experiPosStateTransfer()));
     connect(devCtrl, SIGNAL(filterMotorStateUpdated()), this, SLOT(experiCapStateTransfer()));
@@ -82,6 +96,10 @@ ExperiCtrl::ExperiCtrl(DevCtrl *dev, ExperiSetting *setting, ExperiData *data, C
     m_experiChamberState = EXPERI_CHAMBER_IDLE;
     m_experiPosState = EXPERI_POS_IDLE;
     m_experiCapState = CAP_IDLE;
+
+    m_chamberId = 1;
+    m_viewId = 1;
+    m_imageTypeId = 0;
 
     m_chipPos_Y[0] = 270;
     m_chipPos_Y[1] = 2241;
@@ -115,6 +133,7 @@ void ExperiCtrl::startExperiment(const QString &experiId)
     if (!dir.exists()) {
         dir.mkdir(imgFilePath);
     }
+    m_algorithm->setCellParameters(m_setting->getCellMinRadiu(), m_setting->getCellMaxRadiu());
     m_experiState = EXPERI_INIT;
     experimentStateMachine();
 }
@@ -136,23 +155,27 @@ void ExperiCtrl::experiChamberStateTransfer()
     case EXPERI_CHAMBER_INIT:
         if (devCtrl->chipPos_Y() == m_yPos) {
             m_experiChamberState = EXPERI_CHAMBER_POS1;
+            m_viewId = VIEW_1;
             m_xPos = m_chipPos_X[0];
             m_experiPosState = EXPERI_POS_INIT;
         }
         break;
     case EXPERI_CHAMBER_POS1:
         m_experiChamberState = EXPERI_CHAMBER_POS2;
+        m_viewId = VIEW_2;
         m_xPos = m_chipPos_X[1];
         m_experiPosState = EXPERI_POS_INIT;
 
         break;
     case EXPERI_CHAMBER_POS2:
         m_experiChamberState = EXPERI_CHAMBER_POS3;
+        m_viewId = VIEW_3;
         m_xPos = m_chipPos_X[2];
         m_experiPosState = EXPERI_POS_INIT;
         break;
     case EXPERI_CHAMBER_POS3:
         m_experiChamberState = EXPERI_CHAMBER_FINISH;
+        m_viewId = VIEW_1;
         m_xPos = m_chipPos_X[0];
         m_experiPosState = EXPERI_POS_IDLE;
         break;
@@ -170,6 +193,7 @@ void ExperiCtrl::experiPosStateTransfer()
     case EXPERI_POS_INIT:
         if (devCtrl->chipPos_X() == m_xPos) {
             m_experiPosState = EXPERI_POS_BRIGHT;
+            m_imageTypeId = IMAGE_BRIGHT;
             m_filterPos = FILTER_BRIGHT_POS;
             m_ledState = DevCtrl::LED_WHITE;
             m_experiCapState = CAP_INIT;
@@ -177,18 +201,21 @@ void ExperiCtrl::experiPosStateTransfer()
         break;
     case EXPERI_POS_BRIGHT:
         m_experiPosState = EXPERI_POS_BLUE;
+        m_imageTypeId = IMAGE_FL1;
         m_filterPos = FILTER_BLUE_POS;
         m_ledState = DevCtrl::LED_BLUE;
         m_experiCapState = CAP_INIT;
         break;
     case EXPERI_POS_BLUE:
         m_experiPosState = EXPERI_POS_GREEN;
+        m_imageTypeId = IMAGE_FL2;
         m_filterPos = FILTER_GREEN_POS;
         m_ledState = DevCtrl::LED_GREEN;
         m_experiCapState = CAP_INIT;
         break;
     case EXPERI_POS_GREEN:
         m_experiPosState = EXPERI_POS_FINISH;
+        m_imageTypeId = IMAGE_BRIGHT;
         m_filterPos = FILTER_BRIGHT_POS;
         m_ledState = DevCtrl::LED_OFF;
         m_experiCapState = CAP_IDLE;
@@ -206,9 +233,9 @@ void ExperiCtrl::experiCapStateTransfer()
     case CAP_IDLE:
         break;
     case CAP_INIT:
-        if (devCtrl->filterPos() == m_filterPos) {
+//        if (devCtrl->filterPos() == m_filterPos) {
             m_experiCapState = CAP_AUTOFOCUS;
-        }
+//        }
         break;
     case CAP_AUTOFOCUS:
         m_experiCapState = CAP_SNAP;
@@ -262,6 +289,7 @@ void ExperiCtrl::experimentStateMachine()       // ctrl the whole experiment: ct
         experiChamberStateMachine();
         break;
     case EXPERI_FINISH:
+        calcAnalyzeResult();
         emit experimentFinished();
         m_experiState = EXPERI_IDLE;
         m_experiChamberState = EXPERI_CHAMBER_IDLE;
@@ -291,6 +319,7 @@ void ExperiCtrl::experiChamberStateMachine()    // ctrl the experiment in one ch
         experiPosStateMachine();
         break;
     case EXPERI_CHAMBER_FINISH:
+        calcAnalyzeResult();
         emit experiOneChamberFinished();
         break;
     }
@@ -314,6 +343,7 @@ void ExperiCtrl::experiPosStateMachine()        // ctrl the experiment in one po
         experiCapImageStateMachine();
         break;
     case EXPERI_POS_FINISH:
+        getAnalyzeResult();
         emit experiOnePosFinished();
         break;
     }
@@ -327,11 +357,10 @@ void ExperiCtrl::experiCapImageStateMachine()
     case CAP_IDLE:
         break;
     case CAP_INIT:
-        devCtrl->motorRun(DevCtrl::FILTER_MOTOR, DevCtrl::MOTOR_RUN_POS, m_filterPos);
+        devCtrl->ledLigthOn(m_ledState);
+//        devCtrl->motorRun(DevCtrl::FILTER_MOTOR, DevCtrl::MOTOR_RUN_POS, m_filterPos);
         break;
     case CAP_AUTOFOCUS:
-        devCtrl->ledLigthOn(m_ledState);
-        devCtrl->cameraAutoExplosure(true);
         devCtrl->cameraWhiteBalance();
         devCtrl->startAutoFocus(true);
         break;
@@ -340,21 +369,30 @@ void ExperiCtrl::experiCapImageStateMachine()
         break;
     case CAP_PROCESS:
     {
-        updateImageName();
-        Mat img = devCtrl->getCVImage();
-        imwrite(imgName.toStdString(), img);
-        if (m_experiPosState == EXPERI_POS_BLUE) {
-            imgFL1 = img.clone();
-        } else if (m_experiPosState == EXPERI_POS_GREEN) {
-            Mat imgFLAll = imgFL1 + img;
-            QString name = imgFilePath+QString("chamber%1_%2_FLAll.jpg")
-                    .arg(m_experiState-1)
-                    .arg(m_experiChamberState-1);
-            imwrite(name.toStdString(), imgFLAll);
+        Mat     imgMarked;
+        switch (m_imageTypeId) {
+        case IMAGE_BRIGHT:
+            imgBR = devCtrl->getCVImage();
+            imgMarked = imgBR.clone();
+            m_algorithm->analyzeCellsBright(imgBR, imgMarked);
+            saveImages(imgBR, imgMarked);
+            break;
+        case IMAGE_FL1:
+            imgFL1 = devCtrl->getCVImage();
+            imgMarked = imgFL1.clone();
+            m_algorithm->analyzeCellsFL1(imgFL1, imgMarked);
+            saveImages(imgFL1, imgMarked);
+            break;
+        case IMAGE_FL2:
+            imgFL2 = devCtrl->getCVImage();
+            imgMarked = imgFL2.clone();
+            m_algorithm->analyzeCellsFL2(imgFL2, imgMarked);
+            saveImages(imgFL2, imgMarked);
+            saveFLImage();
+            break;
+        default:
+            break;
         }
-        Mat imgMarked = img.clone();
-        m_algorithm->markCells(img, imgMarked);
-        imwrite(imgMarkedName.toStdString(), img);
         break;
     }
     case CAP_FINISH:
@@ -369,6 +407,7 @@ int  ExperiCtrl::getNextState(int currentState)
     int chamberIdStart = currentState - 1;
     for (int i = chamberIdStart; i <= CHAMBER_6; i++) {
         if (m_setting->chamberIsEnable(i)) {
+            m_chamberId = i+1;
             return i + 2;
         }
     }
@@ -381,16 +420,57 @@ int ExperiCtrl::getNextChamberPos(int state)
     return m_chipPos_Y[state-2];
 }
 
-void ExperiCtrl::updateImageName()
+
+void ExperiCtrl::saveImages(Mat &img, Mat &imgMarked)
 {
-    imgName = imgFilePath + QString("chamber%1_%2_%3.jpg")
-            .arg(m_experiState-1)
-            .arg(m_experiChamberState-1)
-            .arg(ImageType[m_experiPosState-2]);
-    imgMarkedName = imgFilePath + QString("chamber%1_%2_%3_Marked.jpg")
-            .arg(m_experiState-1)
-            .arg(m_experiChamberState-1)
-            .arg(ImageType[m_experiPosState-2]);
+    QString imgName = imgFilePath + QString("chamber%1_%2_%3.jpg")
+            .arg(m_chamberId)
+            .arg(m_viewId)
+            .arg(ImageType[m_imageTypeId-1]);
+    QString imgMarkedName = imgFilePath + QString("chamber%1_%2_%3_Marked.jpg")
+            .arg(m_chamberId)
+            .arg(m_chamberId)
+            .arg(ImageType[m_imageTypeId-1]);
+    imwrite(imgName.toStdString(), img);
+    imwrite(imgMarkedName.toStdString(), imgMarked);
+}
+
+void ExperiCtrl::saveFLImage()
+{
+    QString name = imgFilePath +QString("chamber%1_%2_FL1_FL2.jpg")
+            .arg(m_chamberId)
+            .arg(m_viewId);
+    Mat   img = imgFL1 + imgFL2;
+    imwrite(name.toStdString(), img);
+}
+
+void ExperiCtrl::getAnalyzeResult()
+{
+    m_cellNum[m_viewId-1] = m_algorithm->getCellNum();
+    m_liveCellNum[m_viewId-1] = m_algorithm->getLiveCellNum();
+    m_deadCellNum[m_viewId-1] = m_algorithm->getDeadCellNum();
+    m_avgRadiu[m_viewId-1] = m_algorithm->getAvgRadiu();
+    m_avgCompact[m_viewId-1] = m_algorithm->getCompactness();
+}
+
+void ExperiCtrl::calcAnalyzeResult()
+{
+    int cellNum = 0;
+    int liveCellNum = 0;
+    int deadCellNum = 0;
+
+    double avgRadiu = 0;
+    double avgCompact = 0;
+    for (int i = 0; i < VIEW_3; i++) {
+        cellNum += m_cellNum[i];
+        liveCellNum += m_liveCellNum[i];
+        deadCellNum += m_deadCellNum[i];
+        avgRadiu += m_liveCellNum[i] * m_avgRadiu[i];
+        avgCompact += m_liveCellNum[i] * m_avgCompact[i];
+    }
+    avgRadiu /= cellNum;
+    avgCompact /= cellNum;
+    m_data->updateData(cellNum, liveCellNum, deadCellNum, avgRadiu, avgCompact);
 }
 
 
