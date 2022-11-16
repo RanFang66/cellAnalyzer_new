@@ -1,7 +1,7 @@
 #include "experiResultUi.h"
 #include "ui_experiResultUi.h"
 #include <QFile>
-
+#include <QMessageBox>
 const QStringList imageType = {
     "BR",
     "FL1_FL2",
@@ -21,6 +21,8 @@ experiResultUi::experiResultUi(QWidget *parent) :
     currentChamberId = 1;
     currentViewId = 1;
     currentTypeId = 0;
+    db = QSqlDatabase::database("cellDataConn");
+    query = new QSqlQuery(db);
     connect(ui->rBtnView1, SIGNAL(clicked()), this, SLOT(onViewChanged()));
     connect(ui->rBtnView2, SIGNAL(clicked()), this, SLOT(onViewChanged()));
     connect(ui->rBtnView3, SIGNAL(clicked()), this, SLOT(onViewChanged()));
@@ -37,17 +39,14 @@ experiResultUi::~experiResultUi()
 
 
 
-void experiResultUi::showResult()
+void experiResultUi::showCellImage()
 {
     QString fileName;
     fileName  = QString("chamber%1_%2_%3.jpg").arg(currentChamberId).arg(currentViewId).arg(imageType.at(currentTypeId));
     imgPath = "/cellImages/" + m_experiId + "/";
     imgView = QImage(imgPath + fileName);
-//    if (m_imageItem) {
-        m_imageItem->setPixmap(QPixmap::fromImage(imgView));
-//    } else {
-//        m_imageItem = m_scene->addPixmap(QPixmap::fromImage(imgView));
-//    }
+    m_imageItem->setPixmap(QPixmap::fromImage(imgView));
+
 }
 
 void experiResultUi::setExperiId(QString id)
@@ -58,28 +57,41 @@ void experiResultUi::setExperiId(QString id)
 void experiResultUi::changeView(int id)
 {
     currentViewId = id;
-    showResult();
+    showCellImage();
 }
 
 void experiResultUi::changeChamber(int id)
 {
     currentChamberId = id;
-    showResult();
+    showCellImage();
 }
 
 void experiResultUi::changeImageType(int id)
 {
     currentTypeId = id;
-    showResult();
+    showCellImage();
 }
 
-void experiResultUi::initResultShow(QString experiId, int chamberSelc)
+void experiResultUi::initResultShow(QString experiID)
 {
-    m_experiId = experiId;
+    QSqlRecord rec;
+    query->prepare("SELECT * FROM experiData WHERE experiID = :ID");
+    query->bindValue(":ID", experiID);
+    if (query->exec() && query->next()) {
+        rec = query->record();
+    } else {
+        QMessageBox::critical(this, "Error", "Query record failed!");
+        return ;
+    }
+
+
+    m_experiId = experiID;
     currentChamberId = 0;
+    int chamberSet = rec.value("chamberSet").toInt();
+    ui->cBoxChamberSelect->clear();
     for (int i = 0; i < 6; i++) {
         int p = (0x01 << i);
-        if (chamberSelc & p) {
+        if (chamberSet & p) {
             ui->cBoxChamberSelect->addItem(QString("Chamber %1").arg(i+1), i+1);
             if (currentChamberId == 0) {
                 currentChamberId = i+1;
@@ -90,7 +102,17 @@ void experiResultUi::initResultShow(QString experiId, int chamberSelc)
     currentTypeId = 0;
     ui->rBtnView1->setChecked(true);
     ui->rBtnBright->setChecked(true);
-    showResult();
+    ui->lblViability->setText(rec.value("viability").toString());
+    ui->lblCellConc->setText(rec.value("cellConc").toString());
+    ui->lblLiveCellConc->setText(rec.value("liveCellConc").toString());
+    ui->lblDeadCellConc->setText(rec.value("deadCellConc").toString());
+    ui->lblCellNum->setText(rec.value("totalCellNum").toString());
+    ui->lblLiveCellNum->setText(rec.value("liveCellNum").toString());
+    ui->lblDeadCellNum->setText(rec.value("deadCellNum").toString());
+    ui->lblAvgDiameter->setText(rec.value("avgDiameter").toString());
+    ui->lblAggregateRate->setText(rec.value("aggregateRate").toString());
+    ui->lblAvgRoundness->setText(rec.value("avgCompactness").toString());
+    showCellImage();
 }
 
 

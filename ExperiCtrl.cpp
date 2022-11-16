@@ -134,6 +134,13 @@ void ExperiCtrl::startExperiment(const QString &experiId)
         dir.mkdir(imgFilePath);
     }
     m_algorithm->setCellParameters(m_setting->getCellMinRadiu(), m_setting->getCellMaxRadiu());
+    for (int i = 0; i < VIEW_3; i++) {
+        m_cellNum[i] = 0;
+        m_liveCellNum[i] = 0;
+        m_deadCellNum[i] = 0;
+        m_avgRadiu[i] = 0;
+        m_avgCompact[i] = 0;
+    }
     m_experiState = EXPERI_INIT;
     experimentStateMachine();
 }
@@ -200,6 +207,7 @@ void ExperiCtrl::experiPosStateTransfer()
         }
         break;
     case EXPERI_POS_BRIGHT:
+        saveImages(imgBR, imgMarked);
         m_experiPosState = EXPERI_POS_BLUE;
         m_imageTypeId = IMAGE_FL1;
         m_filterPos = FILTER_BLUE_POS;
@@ -207,6 +215,7 @@ void ExperiCtrl::experiPosStateTransfer()
         m_experiCapState = CAP_INIT;
         break;
     case EXPERI_POS_BLUE:
+        saveImages(imgFL1, imgMarked);
         m_experiPosState = EXPERI_POS_GREEN;
         m_imageTypeId = IMAGE_FL2;
         m_filterPos = FILTER_GREEN_POS;
@@ -214,6 +223,8 @@ void ExperiCtrl::experiPosStateTransfer()
         m_experiCapState = CAP_INIT;
         break;
     case EXPERI_POS_GREEN:
+        saveImages(imgFL2, imgMarked);
+        saveFLImage();
         m_experiPosState = EXPERI_POS_FINISH;
         m_imageTypeId = IMAGE_BRIGHT;
         m_filterPos = FILTER_BRIGHT_POS;
@@ -319,7 +330,6 @@ void ExperiCtrl::experiChamberStateMachine()    // ctrl the experiment in one ch
         experiPosStateMachine();
         break;
     case EXPERI_CHAMBER_FINISH:
-        calcAnalyzeResult();
         emit experiOneChamberFinished();
         break;
     }
@@ -361,7 +371,9 @@ void ExperiCtrl::experiCapImageStateMachine()
 //        devCtrl->motorRun(DevCtrl::FILTER_MOTOR, DevCtrl::MOTOR_RUN_POS, m_filterPos);
         break;
     case CAP_AUTOFOCUS:
-        devCtrl->cameraWhiteBalance();
+        if (m_imageTypeId == IMAGE_BRIGHT) {
+            devCtrl->cameraWhiteBalance();
+        }
         devCtrl->startAutoFocus(true);
         break;
     case CAP_SNAP:
@@ -369,26 +381,25 @@ void ExperiCtrl::experiCapImageStateMachine()
         break;
     case CAP_PROCESS:
     {
-        Mat     imgMarked;
         switch (m_imageTypeId) {
         case IMAGE_BRIGHT:
             imgBR = devCtrl->getCVImage();
             imgMarked = imgBR.clone();
             m_algorithm->analyzeCellsBright(imgBR, imgMarked);
-            saveImages(imgBR, imgMarked);
+//            saveImages(imgBR, imgMarked);
             break;
         case IMAGE_FL1:
             imgFL1 = devCtrl->getCVImage();
             imgMarked = imgFL1.clone();
             m_algorithm->analyzeCellsFL1(imgFL1, imgMarked);
-            saveImages(imgFL1, imgMarked);
+//            saveImages(imgFL1, imgMarked);
             break;
         case IMAGE_FL2:
             imgFL2 = devCtrl->getCVImage();
             imgMarked = imgFL2.clone();
             m_algorithm->analyzeCellsFL2(imgFL2, imgMarked);
-            saveImages(imgFL2, imgMarked);
-            saveFLImage();
+//            saveImages(imgFL2, imgMarked);
+//            saveFLImage();
             break;
         default:
             break;
@@ -405,7 +416,7 @@ void ExperiCtrl::experiCapImageStateMachine()
 int  ExperiCtrl::getNextState(int currentState)
 {
     int chamberIdStart = currentState - 1;
-    for (int i = chamberIdStart; i <= CHAMBER_6; i++) {
+    for (int i = chamberIdStart; i < CHAMBER_6; i++) {
         if (m_setting->chamberIsEnable(i)) {
             m_chamberId = i+1;
             return i + 2;
@@ -426,11 +437,11 @@ void ExperiCtrl::saveImages(Mat &img, Mat &imgMarked)
     QString imgName = imgFilePath + QString("chamber%1_%2_%3.jpg")
             .arg(m_chamberId)
             .arg(m_viewId)
-            .arg(ImageType[m_imageTypeId-1]);
+            .arg(ImageType.at(m_imageTypeId-1));
     QString imgMarkedName = imgFilePath + QString("chamber%1_%2_%3_Marked.jpg")
             .arg(m_chamberId)
-            .arg(m_chamberId)
-            .arg(ImageType[m_imageTypeId-1]);
+            .arg(m_viewId)
+            .arg(ImageType.at(m_imageTypeId-1));
     imwrite(imgName.toStdString(), img);
     imwrite(imgMarkedName.toStdString(), imgMarked);
 }

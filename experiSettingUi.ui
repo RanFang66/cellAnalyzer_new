@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1080</width>
+    <width>1200</width>
     <height>1600</height>
    </rect>
   </property>
@@ -74,7 +74,7 @@ vertical-align: middle;</string>
   <widget class="QGroupBox" name="groupExperiSetting">
    <property name="geometry">
     <rect>
-     <x>450</x>
+     <x>530</x>
      <y>330</y>
      <width>521</width>
      <height>1011</height>
@@ -263,7 +263,7 @@ vertical-align: middle;</string>
   <widget class="QGroupBox" name="groupChannlSelc">
    <property name="geometry">
     <rect>
-     <x>30</x>
+     <x>70</x>
      <y>330</y>
      <width>361</width>
      <height>1008</height>

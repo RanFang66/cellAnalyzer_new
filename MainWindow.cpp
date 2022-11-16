@@ -55,6 +55,7 @@ void MainWindow::initMainWindowUi()
     connect(experiSetting, SIGNAL(exitExperimentSetting()), this, SLOT(onExitExperiSetting()));
     connect(inExperiment, SIGNAL(pauseExperiment()), this, SLOT(onExperimentPaused()));
     connect(m_experiCtrl, SIGNAL(experimentFinished()), this, SLOT(onExperimentFinished()));
+    connect(experiData, SIGNAL(showDataDetail(QString&)), this, SLOT(onShowDataDetail(QString&)));
 }
 
 QString MainWindow::executeShellCmd(QString strCmd)
@@ -70,21 +71,25 @@ QString MainWindow::executeShellCmd(QString strCmd)
 void MainWindow::on_btnSysSetting_clicked()
 {
     ui->stackedWidget->setCurrentIndex(sysSettingIndex);
+    mainIndex = sysSettingIndex;
 }
 
 void MainWindow::on_btnExperiData_clicked()
 {
     ui->stackedWidget->setCurrentIndex(experiDataIndex);
+    mainIndex = experiDataIndex;
 }
 
 void MainWindow::on_btnExperiApp_clicked()
 {
     ui->stackedWidget->setCurrentIndex(appSelcIndex);
+    mainIndex = appSelcIndex;
 }
 
 void MainWindow::on_btnHelpDoc_clicked()
 {
     ui->stackedWidget->setCurrentIndex(helpDocIndex);
+    mainIndex = helpDocIndex;
 }
 
 void MainWindow::on_btnAOPI_clicked()
@@ -97,6 +102,7 @@ void MainWindow::on_btnAOPI_clicked()
 void MainWindow::on_btnDebugPage_clicked()
 {
     ui->stackedWidget->setCurrentIndex(debugModeIndex);
+    mainIndex = debugModeIndex;
 }
 
 void MainWindow::onSerialConnected(bool connected)
@@ -144,7 +150,13 @@ void MainWindow::onExitExperiSetting()
 
 void MainWindow::onExperimentFinished()
 {
-    experiRes->initResultShow(m_setting->getExperiId(), m_setting->chamberSet());
+    experiRes->initResultShow(m_setting->getExperiId());
+    ui->stackedWidget->setCurrentIndex(experiResultIndex);
+}
+
+void MainWindow::onShowDataDetail(QString &id)
+{
+    experiRes->initResultShow(id);
     ui->stackedWidget->setCurrentIndex(experiResultIndex);
 }
 

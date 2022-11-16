@@ -2,6 +2,7 @@
 #include "ui_experiDataUi.h"
 #include <QFile>
 #include <QDebug>
+#include <QMessageBox>
 experiDataUi::experiDataUi(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::experiDataUi)
@@ -33,45 +34,46 @@ void experiDataUi::initExperiDataUi()
         ui->comboUser->addItem(query->value(0).toString());
     }
 
-    tblModel = new QSqlTableModel(this, db);
-    tblModel->setTable("experiData");
-    tblModel->setSort(tblModel->fieldIndex("startTime"), Qt::DescendingOrder);
-    tblModel->setEditStrategy(QSqlTableModel::OnManualSubmit);
-    if (!(tblModel->select())) {
-  //      QMessageBox::critical(this, "Error", "Open data table failed, error info: \n" + tblModel->lastError().text(), QMessageBox::Ok, QMessageBox::NoButton);
+    qryModel = new QSqlQueryModel(this);
+    qryModel->setQuery("SELECT * FROM experiData ORDER BY endTime", db);
+    if (qryModel->lastError().isValid()) {
+        QMessageBox::critical(this, "Error", "Query Data Failed\n"+qryModel->lastError().text());
         return;
     }
 
-    tblModel->setHeaderData(tblModel->fieldIndex("experiName"), Qt::Horizontal, "Experiment Name");
-    tblModel->setHeaderData(tblModel->fieldIndex("startTime"), Qt::Horizontal, "Experiment Time");
-    tblModel->setHeaderData(tblModel->fieldIndex("sampleId"), Qt::Horizontal, "Sample ID");
-    tblModel->setHeaderData(tblModel->fieldIndex("userId"), Qt::Horizontal, "User Name");
-    tblModel->setHeaderData(tblModel->fieldIndex("cellType"), Qt::Horizontal, "Cell Type");
-    tblModel->setHeaderData(tblModel->fieldIndex("viability"), Qt::Horizontal, "Viability");
-    tblModel->setHeaderData(tblModel->fieldIndex("cellConc"), Qt::Horizontal, "Cell Concentration");
-    tblModel->setHeaderData(tblModel->fieldIndex("liveCellConc"), Qt::Horizontal, "Live Cell Concentration");
-    tblModel->setHeaderData(tblModel->fieldIndex("deadCellConc"), Qt::Horizontal, "Dead Cell Concentration");
-    tblModel->setHeaderData(tblModel->fieldIndex("totalCellNum"), Qt::Horizontal, "Total Cell Number");
-    tblModel->setHeaderData(tblModel->fieldIndex("liveCellNum"), Qt::Horizontal, "Live Cell Number");
-    tblModel->setHeaderData(tblModel->fieldIndex("deadCellNum"), Qt::Horizontal, "Dead Cell Number");
-    tblModel->setHeaderData(tblModel->fieldIndex("avgDiameter"), Qt::Horizontal, "Average Diameter");
-    tblModel->setHeaderData(tblModel->fieldIndex("avgCompactness"), Qt::Horizontal, "Average Compactness");
-    tblModel->setHeaderData(tblModel->fieldIndex("aggregateRate"), Qt::Horizontal, "Aggregate Rate");
+    qryModel->setHeaderData(0, Qt::Horizontal, "ID");
+    qryModel->setHeaderData(1, Qt::Horizontal, "Name");
+    qryModel->setHeaderData(2, Qt::Horizontal, "User");
+    qryModel->setHeaderData(3, Qt::Horizontal, "Type");
+    qryModel->setHeaderData(4, Qt::Horizontal, "Cell Type");
+    qryModel->setHeaderData(5, Qt::Horizontal, "Chamber");
+    qryModel->setHeaderData(6, Qt::Horizontal, "Sample ID");
+    qryModel->setHeaderData(7, Qt::Horizontal, "Dilution Ratio");
+    qryModel->setHeaderData(8, Qt::Horizontal, "Cell Conc");
+    qryModel->setHeaderData(9, Qt::Horizontal, "Live Cell Conc");
+    qryModel->setHeaderData(10, Qt::Horizontal, "Dead Cell Conc");
+    qryModel->setHeaderData(11, Qt::Horizontal, "Viability");
+    qryModel->setHeaderData(12, Qt::Horizontal, "Cell Number");
+    qryModel->setHeaderData(13, Qt::Horizontal, "Live Cell Number");
+    qryModel->setHeaderData(14, Qt::Horizontal, "Dead Cell Number");
+    qryModel->setHeaderData(15, Qt::Horizontal, "Average Diameter");
+    qryModel->setHeaderData(16, Qt::Horizontal, "Average Compactness");
+    qryModel->setHeaderData(17, Qt::Horizontal, "Aggregate Rate");
+    qryModel->setHeaderData(18, Qt::Horizontal, "Time");
 
-    theSelection = new QItemSelectionModel(tblModel);
-    ui->tblExperiData->setModel(tblModel);
+    theSelection = new QItemSelectionModel(qryModel);
+    connect(theSelection, SIGNAL(currentRowChanged(QModelIndex, QModelIndex)), this, SLOT(onCurrentRowChanged(QModelIndex, QModelIndex)));
+    ui->tblExperiData->setModel(qryModel);
     ui->tblExperiData->setSelectionModel(theSelection);
     ui->tblExperiData->verticalHeader()->setVisible(false);
-    ui->tblExperiData->setColumnHidden(tblModel->fieldIndex("experiId"), true);
-    ui->tblExperiData->setColumnHidden(tblModel->fieldIndex("imgBright_1"), true);
-    ui->tblExperiData->setColumnHidden(tblModel->fieldIndex("imgFLG_1"), true);
-    ui->tblExperiData->setColumnHidden(tblModel->fieldIndex("imgFLR_1"), true);
-    ui->tblExperiData->setColumnHidden(tblModel->fieldIndex("imgBright_2"), true);
-    ui->tblExperiData->setColumnHidden(tblModel->fieldIndex("imgFLG_2"), true);
-    ui->tblExperiData->setColumnHidden(tblModel->fieldIndex("imgFLR_2"), true);
-    ui->tblExperiData->setColumnHidden(tblModel->fieldIndex("imgBright_3"), true);
-    ui->tblExperiData->setColumnHidden(tblModel->fieldIndex("imgFLG_3"), true);
-    ui->tblExperiData->setColumnHidden(tblModel->fieldIndex("imgFLR_3"), true);
+    ui->tblExperiData->setColumnHidden(0, true);
+    theSelection->clear();
+    ui->btnDeleteData->setEnabled(true);
+    ui->btnDetail->setEnabled(true);
+
+    curRec = qryModel->record(theSelection->currentIndex().row());
+    curExperiID = curRec.value("experiID").toString();
+
 }
 
 void experiDataUi::loadStyleSheet(const QString &styleSheetFile)
@@ -88,3 +90,42 @@ void experiDataUi::loadStyleSheet(const QString &styleSheetFile)
     }
 }
 
+
+void experiDataUi::on_btnDeleteData_clicked()
+{
+//    int curRecNo = theSelection->currentIndex().row();
+    if (curRec.isEmpty()) {
+        return;
+    }
+
+
+    QString warningStr = QString("Delete the data of Experiment_%1")+ (curRec.value("experiID").toString());
+    QMessageBox::StandardButton res = QMessageBox::question(this, "Delete Record", warningStr);
+    if (res == QMessageBox::Yes) {
+        QSqlQuery query;
+        query.prepare("DELETE FROM experiData WHERE experiID = :ID");
+        query.bindValue(":ID", curExperiID);
+        if (!query.exec()) {
+            QMessageBox::critical(this, "Error", "Delete record failed!");
+        } else {
+            qryModel->query().exec();
+        }
+    } else {
+        return;
+    }
+}
+
+void experiDataUi::onCurrentRowChanged(const QModelIndex &current, const QModelIndex &previous)
+{
+    ui->btnDeleteData->setEnabled(current.isValid());
+    ui->btnDetail->setEnabled(current.isValid());
+    if (current.isValid()) {
+        curRec = qryModel->record(current.row());
+        curExperiID = curRec.value("experiID").toString();
+    }
+}
+
+void experiDataUi::on_btnDetail_clicked()
+{
+    emit showDataDetail(curExperiID);
+}

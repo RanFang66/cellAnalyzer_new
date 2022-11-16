@@ -30,14 +30,23 @@ void ExperiData::insertExperimentData()
 //    QSqlRecord mRec = query->record();
 //    QString experiID = QDateTime::currentDateTime().toString("yyMMddHHmmss");
 //    CellImageAlogrithm::experiDataRes *res = algorithm->getImageProcessResult();
-    query->prepare("INSERT INTO experiData(experiID, experiName, userName, experiType, cellType, "
-                   "chamberSet, sampleID, dilutionRatio, cellConc, liveCellConc, deadCellConc, "
-                   "viability, totalCellNum, liveCellNum, deadCellNum, avgDiameter, "
-                   "avgCompactness, aggregateRate, endTime) "
-                   " VALUES(:experiID, :experiName, :userName, :experiType, :cellType, :chamberSet, "
-                   ":sampleID, :dilutionRatio, :cellConc, :liveCellConc, :deadCellConc, "
-                   ":viability, :totalCellNum, :liveCellNum, :deadCellNum, :avgDiameter"
-                   ":avgCompactness, :aggregateRate, :endTime)");
+//    query->prepare("INSERT INTO experiData(experiID, experiName, userName, experiType, cellType, "
+//                   "chamberSet, sampleID, dilutionRatio, cellConc, liveCellConc, deadCellConc, "
+//                   "viability, totalCellNum, liveCellNum, deadCellNum, avgDiameter, "
+//                   "avgCompactness, aggregateRate, endTime) "
+//                   " VALUES(:experiID, :experiName, :userName, :experiType, :cellType, :chamberSet, "
+//                   ":sampleID, :dilutionRatio, :cellConc, :liveCellConc, :deadCellConc, "
+//                   ":viability, :totalCellNum, :liveCellNum, :deadCellNum, :avgDiameter, "
+//                   ":avgCompactness, :aggregateRate, :endTime)");
+
+    query->prepare(R"(INSERT INTO experiData
+VALUES(:experiID, :experiName, :userName,
+:experiType, :cellType, :chamberSet,
+:sampleID, :dilutionRatio, :cellConc,
+:liveCellConc, :deadCellConc,
+:viability, :totalCellNum, :liveCellNum,
+:deadCellNum, :avgDiameter,
+:avgCompactness, :aggregateRate, :endTime))");
 
     query->bindValue(":experiID", m_setting->getExperiId());
     query->bindValue(":experiName", m_setting->experiName());
@@ -52,7 +61,7 @@ void ExperiData::insertExperimentData()
     query->bindValue(":deadCellConc", m_deadCellConc);
     query->bindValue(":viability", m_viability);
     query->bindValue(":totalCellNum", m_cellNum);
-    query->bindValue(":livCellNum", m_liveCellNum);
+    query->bindValue(":liveCellNum", m_liveCellNum);
     query->bindValue(":deadCellNum", m_deadCellNum);
     query->bindValue(":avgDiameter", m_avgDiameter);
     query->bindValue(":avgCompactness", m_avgCompactness);
@@ -60,7 +69,9 @@ void ExperiData::insertExperimentData()
     query->bindValue(":endTime", QDateTime::currentDateTime().toString("yyyy/MM/dd HH:mm:ss"));
 
 
-    if (!query->exec()) {
+    if (query->exec()) {
+        qDebug() << "Insert Data Ok";
+    } else {
         qDebug() << "--- Database Error: insert record failed, " << query->lastError().text();
         qDebug() << query->lastQuery();
     }

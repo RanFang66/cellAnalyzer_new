@@ -66,17 +66,13 @@ private:
     Mat     imgFL2;
     Mat     imgFL1;
     Mat     imgBR;
+    Mat     imgMarked;
 
     int  m_cellNum[VIEW_NUM];
     int  m_liveCellNum[VIEW_NUM];
     int  m_deadCellNum[VIEW_NUM];
     double m_avgRadiu[VIEW_NUM];
     double m_avgCompact[VIEW_NUM];
-    int  totalCellNum;
-    int  totalLiveCellNum;
-    int  totalDeadCellNum;
-    double avgRadiu;
-    double avgCompact;
 
     int  m_chamberId;
     int  m_viewId;

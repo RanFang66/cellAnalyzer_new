@@ -52,6 +52,8 @@ private slots:
     void onExitExperiSetting();
 
     void onExperimentFinished();
+
+    void onShowDataDetail(QString &id);
 private:
     Ui::MainWindow      *ui;
     experiSettingUi     *experiSetting;
@@ -77,6 +79,8 @@ private:
     int debugModeIndex;
     int inExperimentIndex;
     int experiResultIndex;
+
+    int mainIndex;
 
     void initMainWindowUi();
     void loadStyleSheet(const QString &styleSheetFile);

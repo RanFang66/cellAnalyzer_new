@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1080</width>
+    <width>1200</width>
     <height>1920</height>
    </rect>
   </property>
@@ -31,7 +31,7 @@
      <rect>
       <x>0</x>
       <y>10</y>
-      <width>1080</width>
+      <width>1200</width>
       <height>93</height>
      </rect>
     </property>
@@ -152,13 +152,13 @@
      <rect>
       <x>0</x>
       <y>200</y>
-      <width>1080</width>
+      <width>1200</width>
       <height>1600</height>
      </rect>
     </property>
     <property name="baseSize">
      <size>
-      <width>1080</width>
+      <width>1200</width>
       <height>1600</height>
      </size>
     </property>
@@ -444,7 +444,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1080</width>
+     <width>1200</width>
      <height>27</height>
     </rect>
    </property>
