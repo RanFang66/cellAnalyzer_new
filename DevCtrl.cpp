@@ -77,11 +77,6 @@ void DevCtrl::onSerialRecvFrame(const char *data, int frameType)
     default:
         break;
     }
-
-
-
-
-
 }
 
 void DevCtrl::onCamInitRet(bool ok)
@@ -93,6 +88,7 @@ void DevCtrl::onCamInitRet(bool ok)
         for (int i = 0; i < m_resolutionCount; i++) {
             m_camCtrl->getGetResolution(i, m_resolutions[i].width, m_resolutions[i].height);
         }
+        //disconnectCamera();
     }
     m_camState = ok;
 
@@ -119,6 +115,18 @@ void DevCtrl::onCamImageUpdate(unsigned char *data, int width, int height)
         m_qImage = QImage(data, width, height, QImage::Format_BGR888);
         emit imageUpdated();
     }
+}
+
+void DevCtrl::onCamConnected(bool ok)
+{
+    if (ok) {
+        m_camCtrl->autoExplosure(true);
+        emit camInitOk();
+    } else {
+        qDebug() << "camera connect failed!";
+        emit camInitFailed();
+    }
+
 }
 
 void DevCtrl::onCamTimerTimeout()
@@ -179,6 +187,16 @@ void DevCtrl::camSnap()
 void DevCtrl::cameraStop()
 {
     m_camTimer->stop();
+}
+
+void DevCtrl::disconnectCamera()
+{
+    emit disconnectCam();
+}
+
+void DevCtrl::connectCamera()
+{
+    emit connectCam();
 }
 
 void DevCtrl::cameraAutoExplosure(bool checked)
@@ -245,6 +263,9 @@ void DevCtrl::initCameraCtrl()
     connect(m_camThread, &QThread::finished, m_camCtrl, &QObject::deleteLater);
     connect(m_camThread, &QThread::started, m_camCtrl, &CameraCtrl::cameraInit);
     connect(m_camTimer, SIGNAL(timeout()), this, SLOT(onCamTimerTimeout()));
+    connect(this, &DevCtrl::disconnectCam, m_camCtrl, &CameraCtrl::cameraDisconnect);
+    connect(this, &DevCtrl::connectCam, m_camCtrl, &CameraCtrl::cameraConnect);
+    connect(m_camCtrl, &CameraCtrl::cameraConnected, this, &DevCtrl::onCamConnected);
     m_camThread->start();
 }
 

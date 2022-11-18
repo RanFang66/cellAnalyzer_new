@@ -265,7 +265,7 @@ vertical-align: middle;</string>
     <rect>
      <x>70</x>
      <y>330</y>
-     <width>361</width>
+     <width>378</width>
      <height>1008</height>
     </rect>
    </property>
@@ -287,8 +287,8 @@ vertical-align: middle;</string>
    <widget class="QCheckBox" name="cBoxChannel1">
     <property name="geometry">
      <rect>
-      <x>80</x>
-      <y>130</y>
+      <x>100</x>
+      <y>100</y>
       <width>160</width>
       <height>52</height>
      </rect>
@@ -312,8 +312,8 @@ vertical-align: middle;</string>
    <widget class="QCheckBox" name="cBoxChannel3">
     <property name="geometry">
      <rect>
-      <x>80</x>
-      <y>420</y>
+      <x>100</x>
+      <y>340</y>
       <width>160</width>
       <height>52</height>
      </rect>
@@ -337,8 +337,8 @@ vertical-align: middle;</string>
    <widget class="QCheckBox" name="cBoxChannel4">
     <property name="geometry">
      <rect>
-      <x>80</x>
-      <y>560</y>
+      <x>100</x>
+      <y>460</y>
       <width>160</width>
       <height>52</height>
      </rect>
@@ -362,8 +362,8 @@ vertical-align: middle;</string>
    <widget class="QCheckBox" name="cBoxChannel5">
     <property name="geometry">
      <rect>
-      <x>80</x>
-      <y>710</y>
+      <x>100</x>
+      <y>580</y>
       <width>160</width>
       <height>52</height>
      </rect>
@@ -387,8 +387,8 @@ vertical-align: middle;</string>
    <widget class="QCheckBox" name="cBoxChannel2">
     <property name="geometry">
      <rect>
-      <x>80</x>
-      <y>280</y>
+      <x>100</x>
+      <y>220</y>
       <width>160</width>
       <height>52</height>
      </rect>
@@ -407,6 +407,31 @@ vertical-align: middle;</string>
     </property>
     <property name="text">
      <string>通道2</string>
+    </property>
+   </widget>
+   <widget class="QCheckBox" name="cBoxChannel5_2">
+    <property name="geometry">
+     <rect>
+      <x>100</x>
+      <y>700</y>
+      <width>160</width>
+      <height>52</height>
+     </rect>
+    </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>35</pointsize>
+      <strikeout>false</strikeout>
+     </font>
+    </property>
+    <property name="text">
+     <string>通道6</string>
     </property>
    </widget>
   </widget>

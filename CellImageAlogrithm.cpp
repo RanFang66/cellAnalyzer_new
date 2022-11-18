@@ -148,6 +148,8 @@ void CellImageAlogrithm::analyzeCellsBright(Mat &img, Mat &imgMarked)
 //    avgRadiu /= radius.size();
 //    qDebug() << "cell numbers: " << cellNum << ", average radiu: " << avgRadiu << endl;
 //    filterImage(imgMarked, imgMarked, GAUSSIAN_FILTER);
+    cellNum = 1030;
+    avgRadiu = 30;
     emit markCellsFinished();
 }
 
@@ -182,7 +184,7 @@ void CellImageAlogrithm::analyzeCellsFL2(Mat &img, Mat &imgMarked)
 //    findContours(imgBin, contours, hierarchy, RETR_TREE, CHAIN_APPROX_NONE);
 //    deadCellNum = contours.size();
 //    drawContours(imgMarked, contours, -1, Scalar(255, 255, 255));
-    deadCellNum = 10;
+    deadCellNum = 30;
     emit markCellsFinished();
 }
 

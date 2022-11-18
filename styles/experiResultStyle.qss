@@ -1,0 +1,76 @@
+.QLabel {
+    font-size: 35px;
+    font-weight: 400;
+    letter-spacing: 0px;
+    line-height: 0px;
+    color: rgba(255, 255, 255, 1);
+    text-align: left;
+    vertical-align: middle;
+}
+
+
+QComboBox#cBoxChamberSelect {
+    min-width: 366px;
+    min-height: 58px;
+    border-radius: 3px;
+    background: rgba(236, 242, 254, 1);
+
+
+    font-size: 28px;
+    font-weight: 400;
+    letter-spacing: 0px;
+    line-height: 22px;
+    color: rgba(0, 82, 217, 1);
+    text-align: left;
+    vertical-align: middle;
+}
+
+.QComboBox::drop-down {
+    border:none;
+    width: 37px;
+}
+
+.QComboBox::down-arrow {
+    image: url(:/images/arrow_up.png)
+}
+
+/* .QGroupBox {
+    border:none;
+} */
+
+QGroupBox::title {
+    font-size: 28px;
+    font-weight: 400;
+    letter-spacing: 0px;
+    line-height: 22px;
+    color: rgba(255, 255, 255, 0.7);
+    
+    /* background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                      stop: 0 #FF0ECE, stop: 1 #FFFFFF); */
+}
+
+
+.QRadioButton {
+    font-size: 35px;
+    font-weight: 400;
+    letter-spacing: 0px;
+    line-height: 0px;
+    color: rgba(255, 255, 255, 1);
+    text-align: left;
+    vertical-align: middle;
+}
+
+QRadioButton::indicator:unchecked {
+    image: url(:/images/checkbox_icon.png);
+}
+
+QRadioButton::indicator:checked {
+    image: url(:/images/checkbox_selc_icon.png);
+}
+
+QPushButton#btnReturn {
+    min-width: 100px;
+    min-height: 100px;
+    border-radius: 3px;
+    border-image: url(:/images/return_icon.png);
+}

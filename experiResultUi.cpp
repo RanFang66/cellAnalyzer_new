@@ -2,6 +2,8 @@
 #include "ui_experiResultUi.h"
 #include <QFile>
 #include <QMessageBox>
+#include <QDebug>
+
 const QStringList imageType = {
     "BR",
     "FL1_FL2",
@@ -13,7 +15,7 @@ experiResultUi::experiResultUi(QWidget *parent) :
     ui(new Ui::experiResultUi)
 {
     ui->setupUi(this);
-
+    loadStyleSheet(":/styles/experiResultStyle.qss");
     m_scene = new QGraphicsScene(this);
     m_imageItem = m_scene->addPixmap(QPixmap(600, 1000));
     ui->gvCellImage->setScene(m_scene);
@@ -102,16 +104,25 @@ void experiResultUi::initResultShow(QString experiID)
     currentTypeId = 0;
     ui->rBtnView1->setChecked(true);
     ui->rBtnBright->setChecked(true);
-    ui->lblViability->setText(rec.value("viability").toString());
-    ui->lblCellConc->setText(rec.value("cellConc").toString());
-    ui->lblLiveCellConc->setText(rec.value("liveCellConc").toString());
-    ui->lblDeadCellConc->setText(rec.value("deadCellConc").toString());
+
+    double val = rec.value("viability").toDouble();
+    ui->lblViability->setText(QString::number(val, 'f', 2));
+    val = rec.value("cellConc").toDouble();
+    ui->lblCellConc->setText(QString::number(val, 'e', 2));
+    val = rec.value("liveCellConc").toDouble();
+    ui->lblLiveCellConc->setText(QString::number(val, 'e', 2));
+    val = rec.value("deadCellConc").toDouble();
+    ui->lblDeadCellConc->setText(QString::number(val, 'e', 2));
+
     ui->lblCellNum->setText(rec.value("totalCellNum").toString());
     ui->lblLiveCellNum->setText(rec.value("liveCellNum").toString());
     ui->lblDeadCellNum->setText(rec.value("deadCellNum").toString());
-    ui->lblAvgDiameter->setText(rec.value("avgDiameter").toString());
-    ui->lblAggregateRate->setText(rec.value("aggregateRate").toString());
-    ui->lblAvgRoundness->setText(rec.value("avgCompactness").toString());
+    val = rec.value("avgDiameter").toDouble();
+    ui->lblAvgDiameter->setText(QString::number(val, 'f', 2));
+    val = rec.value("aggregateRate").toDouble();
+    ui->lblAggregateRate->setText(QString::number(val, 'f', 2));
+    val = rec.value("avgCompactness").toDouble();
+    ui->lblAvgRoundness->setText(QString::number(val, 'f', 2));
     showCellImage();
 }
 
@@ -121,6 +132,20 @@ QString experiResultUi::getFileName(int chamberId, int viewId, int imgType)
     QString fileName;
     fileName  = QString("chamber%1_%2_%3.jpg").arg(chamberId).arg(viewId).arg(imageType.at(imgType));
     return fileName;
+}
+
+void experiResultUi::loadStyleSheet(const QString &styleSheetFile)
+{
+    QFile file(styleSheetFile);
+    file.open(QFile::ReadOnly);
+    if (file.isOpen()) {
+        QString styleSheet = this->styleSheet();
+        styleSheet += QLatin1String(file.readAll());
+        this->setStyleSheet(styleSheet);
+        file.close();
+    } else {
+        qDebug() << "Login: Open Style Sheet File Failed!";
+    }
 }
 
 void experiResultUi::onViewChanged()
@@ -152,4 +177,9 @@ void experiResultUi::onImageTypeChanged()
 void experiResultUi::on_cBoxChamberSelect_currentIndexChanged(const QString &arg1)
 {
      changeChamber(ui->cBoxChamberSelect->currentData().toInt());
+}
+
+void experiResultUi::on_btnReturn_clicked()
+{
+     emit returnToMainPage();
 }

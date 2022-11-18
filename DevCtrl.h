@@ -47,6 +47,7 @@ public slots:
     void onSerialRecvFrame(const char *data, int frameType);
     void onCamInitRet(bool ok);
     void onCamImageUpdate(unsigned char *data, int width, int height);
+    void onCamConnected(bool ok);
     void onCamTimerTimeout();
     void onFocusTimerTimeout();
 
@@ -61,6 +62,10 @@ signals:
     void filterMotorStateUpdated();
     void autoFocusComplete();
     void changeResolution(int index);
+    void connectCam();
+    void disconnectCam();
+    void camInitOk();
+    void camInitFailed();
 
 public:
     void motorRun(int id, int cmd, int data = 0);
@@ -73,6 +78,8 @@ public:
     void camSnap();
     void cameraRun(int framePeriod = 1000);
     void cameraStop();
+    void disconnectCamera();
+    void connectCamera();
     void cameraAutoExplosure(bool checked);
     void cameraWhiteBalance();
     int  getCamResolutionsCount();

@@ -4,21 +4,20 @@
 #include <QMessageBox>
 #include <QProcess>
 #include <QFile>
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
+
+    loadStyleSheet(":/styles/main.qss");
     ui->setupUi(this);
-    QString ret = executeShellCmd("sudo raspi-gpio set 26 op dh");
-    if (ret.isEmpty()) {
-        QString ret2 = executeShellCmd("sleep 3");
-    } else {
+    QString ret = executeShellCmd("sudo raspi-gpio set 26 op dh && sleep 3");
+    if (!ret.isEmpty()) {
         qDebug() << ret;
     }
 
-    loadStyleSheet(":/styles/main.qss");
     m_dev = new DevCtrl(this);
-
     m_setting = new ExperiSetting(this);
     m_data = new ExperiData(m_setting, this);
     m_algorithm = new CellImageAlogrithm(this);
@@ -56,6 +55,7 @@ void MainWindow::initMainWindowUi()
     connect(inExperiment, SIGNAL(pauseExperiment()), this, SLOT(onExperimentPaused()));
     connect(m_experiCtrl, SIGNAL(experimentFinished()), this, SLOT(onExperimentFinished()));
     connect(experiData, SIGNAL(showDataDetail(QString&)), this, SLOT(onShowDataDetail(QString&)));
+    connect(experiRes, SIGNAL(returnToMainPage()), this, SLOT(onReturnToMainPage()));
 }
 
 QString MainWindow::executeShellCmd(QString strCmd)
@@ -76,20 +76,27 @@ void MainWindow::on_btnSysSetting_clicked()
 
 void MainWindow::on_btnExperiData_clicked()
 {
-    ui->stackedWidget->setCurrentIndex(experiDataIndex);
-    mainIndex = experiDataIndex;
+    if (mainIndex != experiDataIndex) {
+        experiData->updateExperiDataUi();
+        ui->stackedWidget->setCurrentIndex(experiDataIndex);
+        mainIndex = experiDataIndex;
+    }
 }
 
 void MainWindow::on_btnExperiApp_clicked()
 {
-    ui->stackedWidget->setCurrentIndex(appSelcIndex);
-    mainIndex = appSelcIndex;
+    if (mainIndex != appSelcIndex) {
+        ui->stackedWidget->setCurrentIndex(appSelcIndex);
+        mainIndex = appSelcIndex;
+    }
 }
 
 void MainWindow::on_btnHelpDoc_clicked()
 {
-    ui->stackedWidget->setCurrentIndex(helpDocIndex);
-    mainIndex = helpDocIndex;
+    if (mainIndex != helpDocIndex) {
+        ui->stackedWidget->setCurrentIndex(helpDocIndex);
+        mainIndex = helpDocIndex;
+    }
 }
 
 void MainWindow::on_btnAOPI_clicked()
@@ -101,8 +108,10 @@ void MainWindow::on_btnAOPI_clicked()
 
 void MainWindow::on_btnDebugPage_clicked()
 {
-    ui->stackedWidget->setCurrentIndex(debugModeIndex);
-    mainIndex = debugModeIndex;
+    if (mainIndex != debugModeIndex) {
+        ui->stackedWidget->setCurrentIndex(debugModeIndex);
+        mainIndex = debugModeIndex;
+    }
 }
 
 void MainWindow::onSerialConnected(bool connected)
@@ -132,6 +141,7 @@ void MainWindow::onExperimentStart()
 {
     ui->stackedWidget->setCurrentIndex(inExperimentIndex);
     inExperiment->updateNoticeText("start experiment");
+
     disconnect(m_dev, SIGNAL(imageUpdated()), debugMode, SLOT(onCamImageUpdated()));
     disconnect(m_dev, SIGNAL(autoFocusComplete()), debugMode, SLOT(onAutoFocusComplete()));
     m_experiCtrl->startExperiment(m_setting->getExperiId());
@@ -160,6 +170,10 @@ void MainWindow::onShowDataDetail(QString &id)
     ui->stackedWidget->setCurrentIndex(experiResultIndex);
 }
 
+void MainWindow::onReturnToMainPage()
+{
+    ui->stackedWidget->setCurrentIndex(mainIndex);
+}
 
 
 void MainWindow::loadStyleSheet(const QString &styleSheetFile)

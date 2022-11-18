@@ -17,13 +17,16 @@ signals:
     void imageUpdated(unsigned char *data, int width, int height);
     void cameraInitRet(bool);
     void cameraErrorHandle(int error);
+    void cameraConnected(bool);
 
 public slots:
     void cameraInit();
+    void cameraConnect();
     void updateImage();
     void changeResolution(int index);
     void whiteBalance(bool en);
     void autoExplosure(bool en);
+    void cameraDisconnect();
 
 private:
     const static QString errorMsg[20];

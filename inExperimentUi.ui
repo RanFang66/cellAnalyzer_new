@@ -48,7 +48,7 @@
     </sizepolicy>
    </property>
    <property name="text">
-    <string>Pause</string>
+    <string/>
    </property>
   </widget>
   <widget class="QLabel" name="lblNoticeText_1st">

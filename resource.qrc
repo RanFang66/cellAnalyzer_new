@@ -24,5 +24,7 @@
         <file>styles/experiDataStyle.qss</file>
         <file>images/insert_chip.gif</file>
         <file>styles/inExperimentStyle.qss</file>
+        <file>images/suspend.png</file>
+        <file>styles/experiResultStyle.qss</file>
     </qresource>
 </RCC>

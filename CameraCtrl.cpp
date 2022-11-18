@@ -33,6 +33,8 @@ CameraCtrl::~CameraCtrl()
     CameraFree(m_id);
 }
 
+
+
 void CameraCtrl::cameraInit()
 {
     int count;
@@ -54,6 +56,7 @@ void CameraCtrl::cameraInit()
                 CameraGetImageSize(m_id, &m_imgWidth, &m_imgHeight);
                 CameraGetImageBufferSize(m_id, &m_bufLen, CAMERA_IMAGE_RGB24);
                 m_buff = new unsigned char[m_bufLen];
+                cameraDisconnect();
                 ret = true;
             } else {
                 cameraErrorHandle();
@@ -63,6 +66,24 @@ void CameraCtrl::cameraInit()
         }
     }
     emit cameraInitRet(ret);
+}
+
+void CameraCtrl::cameraConnect()
+{
+    int count;
+    bool ret = false;
+    if (API_OK == CameraGetCount(&count)) {
+        if (count > 0) {
+            if (API_OK == CameraInit(m_id)) {
+                ret = true;
+            } else {
+                cameraErrorHandle();
+            }
+        } else {
+            qDebug() << "Camera: can not find any camera!";
+        }
+    }
+    emit cameraConnected(ret);
 }
 
 void CameraCtrl::updateImage()
@@ -91,6 +112,11 @@ void CameraCtrl::whiteBalance(bool en)
 void CameraCtrl::autoExplosure(bool en)
 {
     CameraSetAEC(m_id, en);
+}
+
+void CameraCtrl::cameraDisconnect()
+{
+    CameraFree(m_id);
 }
 
 void CameraCtrl::cameraErrorHandle()

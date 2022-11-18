@@ -81,7 +81,7 @@ ExperiCtrl::ExperiCtrl(QObject *parent) : QObject(parent)
     connect(devCtrl, SIGNAL(chipXMotorStateUpdated()), this, SLOT(experiPosStateTransfer()));
     connect(devCtrl, SIGNAL(filterMotorStateUpdated()), this, SLOT(experiCapStateTransfer()));
     connect(devCtrl, SIGNAL(imageUpdated()), this, SLOT(experiCapStateTransfer()));
-
+    connect(devCtrl, SIGNAL(camInitOk()), this, SLOT(experimentStateTransfer()));
     connect(this, SIGNAL(experimentInitOk()), this, SLOT(experimentStateMachine()));
     connect(this, SIGNAL(experiCapFinished()), this, SLOT(experiPosStateTransfer()));
     connect(this, SIGNAL(experiOnePosFinished()), this, SLOT(experiChamberStateTransfer()));
@@ -113,6 +113,7 @@ ExperiCtrl::ExperiCtrl(DevCtrl *dev, ExperiSetting *setting, ExperiData *data, C
     m_chipPos_X[1] = 1900;
     m_chipPos_X[2] = 2500;
     connect(devCtrl, SIGNAL(chipYMotorStateUpdated()), this, SLOT(experiChamberStateTransfer()));
+     connect(devCtrl, SIGNAL(camInitOk()), this, SLOT(experimentStateTransfer()));
     connect(devCtrl, SIGNAL(chipXMotorStateUpdated()), this, SLOT(experiPosStateTransfer()));
     connect(devCtrl, SIGNAL(filterMotorStateUpdated()), this, SLOT(experiCapStateTransfer()));
     connect(devCtrl, SIGNAL(imageUpdated()), this, SLOT(experiCapStateTransfer()));
@@ -267,10 +268,11 @@ void ExperiCtrl::experiCapStateTransfer()
 
 void ExperiCtrl::initExperiment()
 {
-    m_experiState = getNextState(EXPERI_INIT);
-    m_yPos = getNextChamberPos(m_experiState);
-    m_experiChamberState = EXPERI_CHAMBER_INIT;
-    emit experimentInitOk();
+    devCtrl->connectCamera();
+//    m_experiState = getNextState(EXPERI_INIT);
+//    m_yPos = getNextChamberPos(m_experiState);
+//    m_experiChamberState = EXPERI_CHAMBER_INIT;
+//    emit experimentInitOk();
 }
 
 void ExperiCtrl::experimentStateMachine()       // ctrl the whole experiment: ctrl the Y pos motion
@@ -301,6 +303,7 @@ void ExperiCtrl::experimentStateMachine()       // ctrl the whole experiment: ct
         break;
     case EXPERI_FINISH:
         calcAnalyzeResult();
+        devCtrl->disconnectCamera();
         emit experimentFinished();
         m_experiState = EXPERI_IDLE;
         m_experiChamberState = EXPERI_CHAMBER_IDLE;
@@ -476,8 +479,8 @@ void ExperiCtrl::calcAnalyzeResult()
         cellNum += m_cellNum[i];
         liveCellNum += m_liveCellNum[i];
         deadCellNum += m_deadCellNum[i];
-        avgRadiu += m_liveCellNum[i] * m_avgRadiu[i];
-        avgCompact += m_liveCellNum[i] * m_avgCompact[i];
+        avgRadiu += m_cellNum[i] * m_avgRadiu[i];
+        avgCompact += m_cellNum[i] * m_avgCompact[i];
     }
     avgRadiu /= cellNum;
     avgCompact /= cellNum;

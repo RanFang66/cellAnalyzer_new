@@ -27,6 +27,10 @@ public:
     ~MainWindow();
 
     int *getUserIdPointer(void);
+
+signals:
+    void upanDetected(bool);
+
 private slots:
     void on_btnSysSetting_clicked();
 
@@ -54,6 +58,9 @@ private slots:
     void onExperimentFinished();
 
     void onShowDataDetail(QString &id);
+
+    void onReturnToMainPage();
+
 private:
     Ui::MainWindow      *ui;
     experiSettingUi     *experiSetting;

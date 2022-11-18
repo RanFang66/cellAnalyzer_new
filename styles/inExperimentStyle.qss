@@ -2,7 +2,8 @@ QPushButton#btnPauseExperi{
     min-width: 256px;
     min-height: 140px;
     border-radius: 15px;
-    background: rgba(0, 186, 173, 1);
+    /* background: rgba(0, 186, 173, 1); */
+    border-image: url(:/images/suspend.png);
 
     border: 1px solid rgba(0, 0, 0, 1);
 

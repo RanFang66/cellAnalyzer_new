@@ -4,12 +4,14 @@
 #include <QWidget>
 
 #include <QSqlDatabase>
+#include <QProcess>
 #include <QSqlQuery>
 #include <QSqlQueryModel>
 #include <QItemSelectionModel>
 #include <QSqlRecord>
 #include <QSqlError>
 #include <QVariant>
+#include <QDir>
 namespace Ui {
 class experiDataUi;
 }
@@ -21,6 +23,12 @@ class experiDataUi : public QWidget
 public:
     explicit experiDataUi(QWidget *parent = nullptr);
     ~experiDataUi();
+    void updateExperiDataUi();
+    enum EXPORT_DATA_TYPE {
+        EXPORT_IMAGE = 1,
+        EXPORT_PDF,
+        EXPORT_CSV,
+    };
 
 signals:
     void showDataDetail(QString &experiID);
@@ -29,6 +37,12 @@ private slots:
     void on_btnDeleteData_clicked();
     void onCurrentRowChanged(const QModelIndex &current, const QModelIndex &previous);
     void on_btnDetail_clicked();
+
+    void on_btnPDF_clicked();
+
+    void on_btnExcel_clicked();
+
+    void on_btnJPG_clicked();
 
 private:
     Ui::experiDataUi *ui;
@@ -40,9 +54,13 @@ private:
     QSqlRecord      curRec;
     QString         curExperiID;
 
-
+    bool    m_exportDataFlag = false;
+    int     m_exportType;
     void initExperiDataUi();
     void loadStyleSheet(const QString &styleSheetFile);
+    QString executeShellCmd(QString strCmd, int timeout);
+    QString detectUpan();
+
 };
 
 #endif // EXPERIDATAUI_H

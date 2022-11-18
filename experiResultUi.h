@@ -29,12 +29,17 @@ public:
     void changeImageType(int id);
     void initResultShow(QString experiId);
 
+signals:
+    void returnToMainPage();
+
 private slots:
     void onViewChanged();
     void onImageTypeChanged();
 
 
     void on_cBoxChamberSelect_currentIndexChanged(const QString &arg1);
+
+    void on_btnReturn_clicked();
 
 private:
     Ui::experiResultUi *ui;
@@ -51,6 +56,8 @@ private:
     QString imgPath;
     QImage imgView;
     QString getFileName(int chamberId, int viewId, int imgType);
+    void loadStyleSheet(const QString &styleSheetFile);
+
 };
 
 #endif // EXPERIRESULTUI_H

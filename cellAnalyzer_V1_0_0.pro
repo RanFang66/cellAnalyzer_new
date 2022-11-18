@@ -1,4 +1,4 @@
-QT       += core gui serialport sql
+QT       += core gui serialport sql virtualkeyboard
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -18,10 +18,12 @@ SOURCES += \
     ExperiSetting.cpp \
     QDlgLogin.cpp \
     QSerialWorker.cpp \
+    UserManageUi.cpp \
     debugModeUi.cpp \
     experiDataUi.cpp \
     experiResultUi.cpp \
     experiSettingUi.cpp \
+    exportDataDialog.cpp \
     inExperimentUi.cpp \
     main.cpp \
     MainWindow.cpp
@@ -37,20 +39,24 @@ HEADERS += \
     MainWindow.h \
     QDlgLogin.h \
     QSerialWorker.h \
+    UserManageUi.h \
     debugModeUi.h \
     experiDataUi.h \
     experiResultUi.h \
     experiSettingUi.h \
+    exportDataDialog.h \
     inExperimentUi.h
 
 FORMS += \
     DlgAnimationUi.ui \
     MainWindow.ui \
     QDlgLogin.ui \
+    UserManageUi.ui \
     debugModeUi.ui \
     experiDataUi.ui \
     experiResultUi.ui \
     experiSettingUi.ui \
+    exportDataDialog.ui \
     inExperimentUi.ui
 
 TRANSLATIONS += \

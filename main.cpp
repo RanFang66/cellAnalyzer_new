@@ -1,5 +1,5 @@
 #include "MainWindow.h"
-
+#include <QWindow>
 #include <QApplication>
 #include <QSql>
 #include <QDebug>
@@ -23,22 +23,36 @@ bool createDbConnect()
 
 }
 
-
+static void handleVisibleChanged() {
+    if (!QGuiApplication::inputMethod()->isVisible())
+        return;
+    for (QWindow * w: QGuiApplication::allWindows()) {
+        if (std::strcmp(w->metaObject()->className(), "QtVirtualKeyboard::InputView") == 0) {
+            if (QObject *keyboard = w->findChild<QObject *>("keyboard")) {
+                QRect r = w->geometry();
+                r.moveTop(keyboard->property("y").toDouble());
+                w->setMask(r);
+                return;
+            }
+        }
+    }
+}
 int main(int argc, char *argv[])
 {
-
+    qputenv("QT_IM_MODULE", QByteArray("qtvirtualkeyboard"));
     if (createDbConnect()) {
         QApplication a(argc, argv);
         MainWindow w;
         QDlgLogin *dlgLogin = new QDlgLogin(w.getUserIdPointer());
 
-        w.show();
+        QObject::connect(QGuiApplication::inputMethod(), &QInputMethod::visibleChanged, &handleVisibleChanged);
+
         if (dlgLogin->exec() == QDialog::Accepted) {
+            w.show();
             return a.exec();
         } else {
             return 0;
         }
-        return a.exec();
     } else {
         qDebug()<< "-------System Error: Can not open database!";
     }
