@@ -19,8 +19,8 @@
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <layout class="QHBoxLayout" name="horizontalLayout_11">
-   <item>
+  <layout class="QGridLayout" name="gridLayout_8" columnstretch="1,2">
+   <item row="0" column="0">
     <widget class="QToolBox" name="toolBox">
      <property name="currentIndex">
       <number>0</number>
@@ -30,8 +30,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>528</width>
-        <height>1471</height>
+        <width>352</width>
+        <height>1474</height>
        </rect>
       </property>
       <attribute name="label">
@@ -224,36 +224,58 @@
          <property name="title">
           <string>Led Control</string>
          </property>
-         <layout class="QGridLayout" name="gridLayout_2">
-          <item row="2" column="0">
-           <widget class="QRadioButton" name="rBtnLedGreen">
-            <property name="text">
-             <string>Green</string>
-            </property>
-           </widget>
-          </item>
-          <item row="3" column="1">
-           <widget class="QRadioButton" name="rBtnLedOff">
-            <property name="text">
-             <string>Off</string>
-            </property>
-           </widget>
-          </item>
-          <item row="3" column="0">
-           <widget class="QRadioButton" name="rBtnLedWhite">
-            <property name="text">
-             <string>White</string>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="1">
-           <widget class="QRadioButton" name="rBtnLedBlue">
-            <property name="text">
-             <string>Blue</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
+         <widget class="QRadioButton" name="rBtnLedGreen">
+          <property name="geometry">
+           <rect>
+            <x>12</x>
+            <y>68</y>
+            <width>67</width>
+            <height>28</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>Green</string>
+          </property>
+         </widget>
+         <widget class="QRadioButton" name="rBtnLedOff">
+          <property name="geometry">
+           <rect>
+            <x>163</x>
+            <y>133</y>
+            <width>48</width>
+            <height>28</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>Off</string>
+          </property>
+         </widget>
+         <widget class="QRadioButton" name="rBtnLedWhite">
+          <property name="geometry">
+           <rect>
+            <x>12</x>
+            <y>133</y>
+            <width>66</width>
+            <height>28</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>White</string>
+          </property>
+         </widget>
+         <widget class="QRadioButton" name="rBtnLedBlue">
+          <property name="geometry">
+           <rect>
+            <x>163</x>
+            <y>68</y>
+            <width>56</width>
+            <height>28</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>Blue</string>
+          </property>
+         </widget>
         </widget>
        </item>
        <item>
@@ -328,8 +350,8 @@
            </layout>
           </item>
           <item>
-           <layout class="QHBoxLayout" name="horizontalLayout">
-            <item>
+           <layout class="QGridLayout" name="gridLayout_4">
+            <item row="0" column="0">
              <widget class="QCheckBox" name="cbGain">
               <property name="text">
                <string>Auto</string>
@@ -339,14 +361,14 @@
               </property>
              </widget>
             </item>
-            <item>
+            <item row="0" column="1">
              <widget class="QLabel" name="label_17">
               <property name="text">
                <string>Gain</string>
               </property>
              </widget>
             </item>
-            <item>
+            <item row="0" column="2">
              <widget class="QSlider" name="hsGain">
               <property name="enabled">
                <bool>true</bool>
@@ -371,18 +393,14 @@
               </property>
              </widget>
             </item>
-            <item>
+            <item row="0" column="3">
              <widget class="QLabel" name="lblGain">
               <property name="text">
                <string>TextLabel</string>
               </property>
              </widget>
             </item>
-           </layout>
-          </item>
-          <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_3">
-            <item>
+            <item row="1" column="0">
              <widget class="QCheckBox" name="cbExposure">
               <property name="text">
                <string>Auto</string>
@@ -392,14 +410,14 @@
               </property>
              </widget>
             </item>
-            <item>
+            <item row="1" column="1">
              <widget class="QLabel" name="label_15">
               <property name="text">
                <string>Exposure</string>
               </property>
              </widget>
             </item>
-            <item>
+            <item row="1" column="2">
              <widget class="QSlider" name="hsExposure">
               <property name="enabled">
                <bool>true</bool>
@@ -424,26 +442,25 @@
               </property>
              </widget>
             </item>
-            <item>
+            <item row="1" column="3">
              <widget class="QLabel" name="lblExposure">
               <property name="text">
                <string>TextLabel</string>
               </property>
              </widget>
             </item>
-           </layout>
-          </item>
-          <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_2">
-            <item>
-             <widget class="QLabel" name="label_14">
+            <item row="2" column="1">
+             <widget class="QLabel" name="label_24">
               <property name="text">
-               <string>Contrast</string>
+               <string>AE Target</string>
               </property>
              </widget>
             </item>
-            <item>
-             <widget class="QSlider" name="hsContrast">
+            <item row="2" column="2">
+             <widget class="QSlider" name="hsAutoExpoTarget">
+              <property name="enabled">
+               <bool>true</bool>
+              </property>
               <property name="sizePolicy">
                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                 <horstretch>0</horstretch>
@@ -451,18 +468,21 @@
                </sizepolicy>
               </property>
               <property name="minimum">
-               <number>30</number>
+               <number>0</number>
               </property>
               <property name="maximum">
-               <number>200</number>
+               <number>255</number>
+              </property>
+              <property name="sliderPosition">
+               <number>30</number>
               </property>
               <property name="orientation">
                <enum>Qt::Horizontal</enum>
               </property>
              </widget>
             </item>
-            <item>
-             <widget class="QLabel" name="lblContrast">
+            <item row="2" column="3">
+             <widget class="QLabel" name="lblAETarget">
               <property name="text">
                <string>TextLabel</string>
               </property>
@@ -471,15 +491,15 @@
            </layout>
           </item>
           <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_4">
-            <item>
+           <layout class="QGridLayout" name="gridLayout_2">
+            <item row="0" column="0">
              <widget class="QLabel" name="label_16">
               <property name="text">
                <string>Gamma</string>
               </property>
              </widget>
             </item>
-            <item>
+            <item row="0" column="1" colspan="3">
              <widget class="QSlider" name="hsGamma">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
@@ -501,8 +521,107 @@
               </property>
              </widget>
             </item>
-            <item>
+            <item row="0" column="4">
              <widget class="QLabel" name="lblGamma">
+              <property name="text">
+               <string>TextLabel</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="0">
+             <widget class="QLabel" name="label_14">
+              <property name="text">
+               <string>Contrast</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="1" colspan="3">
+             <widget class="QSlider" name="hsContrast">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="minimum">
+               <number>30</number>
+              </property>
+              <property name="maximum">
+               <number>200</number>
+              </property>
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="4">
+             <widget class="QLabel" name="lblContrast">
+              <property name="text">
+               <string>TextLabel</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="0" colspan="2">
+             <widget class="QLabel" name="label_18">
+              <property name="text">
+               <string>Satruation</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="2" colspan="2">
+             <widget class="QSlider" name="hsSaturation">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="minimum">
+               <number>0</number>
+              </property>
+              <property name="maximum">
+               <number>200</number>
+              </property>
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="4">
+             <widget class="QLabel" name="lblSaturation">
+              <property name="text">
+               <string>TextLabel</string>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="0" colspan="3">
+             <widget class="QLabel" name="label_25">
+              <property name="text">
+               <string>BlackBalance</string>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="3">
+             <widget class="QSlider" name="hsBlackBalance">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="minimum">
+               <number>0</number>
+              </property>
+              <property name="maximum">
+               <number>255</number>
+              </property>
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="4">
+             <widget class="QLabel" name="lblBlackBalance">
               <property name="text">
                <string>TextLabel</string>
               </property>
@@ -511,154 +630,133 @@
            </layout>
           </item>
           <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_8">
-            <item>
-             <widget class="QPushButton" name="btnWB">
+           <layout class="QGridLayout" name="gridLayout">
+            <item row="0" column="0">
+             <widget class="QCheckBox" name="cbAutoWB">
               <property name="text">
-               <string>White Balance</string>
+               <string>Auto WB</string>
+              </property>
+              <property name="checked">
+               <bool>false</bool>
               </property>
              </widget>
             </item>
-            <item>
-             <widget class="QLabel" name="lblClarity">
+            <item row="0" column="1" colspan="2">
+             <widget class="QPushButton" name="btnWB">
               <property name="text">
-               <string>Clarity: </string>
+               <string>White Balance Once</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="0">
+             <widget class="QLabel" name="label_26">
+              <property name="text">
+               <string>Red Gain</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="1">
+             <widget class="QSlider" name="hsRedGain">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="minimum">
+               <number>0</number>
+              </property>
+              <property name="maximum">
+               <number>300</number>
+              </property>
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="2">
+             <widget class="QLabel" name="lblRedGain">
+              <property name="text">
+               <string>TextLabel</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="0">
+             <widget class="QLabel" name="label_27">
+              <property name="text">
+               <string>Green Gain</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="1">
+             <widget class="QSlider" name="hsGreenGain">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="minimum">
+               <number>0</number>
+              </property>
+              <property name="maximum">
+               <number>300</number>
+              </property>
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="2">
+             <widget class="QLabel" name="lblGreenGain">
+              <property name="text">
+               <string>TextLabel</string>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="0">
+             <widget class="QLabel" name="label_28">
+              <property name="text">
+               <string>Blue Gain</string>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="1">
+             <widget class="QSlider" name="hsBlueGain">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="minimum">
+               <number>0</number>
+              </property>
+              <property name="maximum">
+               <number>300</number>
+              </property>
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="2">
+             <widget class="QLabel" name="lblBlueGain">
+              <property name="text">
+               <string>TextLabel</string>
               </property>
              </widget>
             </item>
            </layout>
           </item>
+          <item>
+           <widget class="QLabel" name="lblClarity">
+            <property name="text">
+             <string>Clarity: </string>
+            </property>
+           </widget>
+          </item>
          </layout>
-        </widget>
-       </item>
-       <item>
-        <widget class="QTableWidget" name="tblSysStatus">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <row>
-          <property name="text">
-           <string>Chip Motor X</string>
-          </property>
-         </row>
-         <row>
-          <property name="text">
-           <string>Chip Motor Y</string>
-          </property>
-         </row>
-         <row>
-          <property name="text">
-           <string>Camera Motor</string>
-          </property>
-         </row>
-         <row>
-          <property name="text">
-           <string>FilterMotor</string>
-          </property>
-         </row>
-         <row>
-          <property name="text">
-           <string>Led</string>
-          </property>
-         </row>
-         <row>
-          <property name="text">
-           <string>Chip Tray</string>
-          </property>
-         </row>
-         <column>
-          <property name="text">
-           <string>Status</string>
-          </property>
-         </column>
-         <column>
-          <property name="text">
-           <string>LimitPos</string>
-          </property>
-         </column>
-         <item row="0" column="0">
-          <property name="text">
-           <string>0</string>
-          </property>
-          <property name="textAlignment">
-           <set>AlignCenter</set>
-          </property>
-         </item>
-         <item row="0" column="1">
-          <property name="text">
-           <string>No Limit</string>
-          </property>
-          <property name="textAlignment">
-           <set>AlignCenter</set>
-          </property>
-         </item>
-         <item row="1" column="0">
-          <property name="text">
-           <string>0</string>
-          </property>
-          <property name="textAlignment">
-           <set>AlignCenter</set>
-          </property>
-         </item>
-         <item row="1" column="1">
-          <property name="text">
-           <string>No Limit</string>
-          </property>
-          <property name="textAlignment">
-           <set>AlignCenter</set>
-          </property>
-         </item>
-         <item row="2" column="0">
-          <property name="text">
-           <string>0</string>
-          </property>
-          <property name="textAlignment">
-           <set>AlignCenter</set>
-          </property>
-         </item>
-         <item row="2" column="1">
-          <property name="text">
-           <string>No Limit</string>
-          </property>
-          <property name="textAlignment">
-           <set>AlignCenter</set>
-          </property>
-         </item>
-         <item row="3" column="0">
-          <property name="text">
-           <string>0</string>
-          </property>
-          <property name="textAlignment">
-           <set>AlignCenter</set>
-          </property>
-         </item>
-         <item row="3" column="1">
-          <property name="text">
-           <string>No Limit</string>
-          </property>
-          <property name="textAlignment">
-           <set>AlignCenter</set>
-          </property>
-         </item>
-         <item row="4" column="0">
-          <property name="text">
-           <string>Led Off</string>
-          </property>
-          <property name="textAlignment">
-           <set>AlignCenter</set>
-          </property>
-         </item>
-         <item row="5" column="0">
-          <property name="text">
-           <string>No Chip</string>
-          </property>
-          <property name="textAlignment">
-           <set>AlignCenter</set>
-          </property>
-         </item>
         </widget>
        </item>
       </layout>
@@ -668,8 +766,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>528</width>
-        <height>1471</height>
+        <width>352</width>
+        <height>1474</height>
        </rect>
       </property>
       <attribute name="label">
@@ -746,6 +844,136 @@
             </item>
            </layout>
           </item>
+          <item>
+           <widget class="QTableWidget" name="tblSysStatus">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <row>
+             <property name="text">
+              <string>Chip Motor X</string>
+             </property>
+            </row>
+            <row>
+             <property name="text">
+              <string>Chip Motor Y</string>
+             </property>
+            </row>
+            <row>
+             <property name="text">
+              <string>Camera Motor</string>
+             </property>
+            </row>
+            <row>
+             <property name="text">
+              <string>FilterMotor</string>
+             </property>
+            </row>
+            <row>
+             <property name="text">
+              <string>Led</string>
+             </property>
+            </row>
+            <row>
+             <property name="text">
+              <string>Chip Tray</string>
+             </property>
+            </row>
+            <column>
+             <property name="text">
+              <string>Status</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>LimitPos</string>
+             </property>
+            </column>
+            <item row="0" column="0">
+             <property name="text">
+              <string>0</string>
+             </property>
+             <property name="textAlignment">
+              <set>AlignCenter</set>
+             </property>
+            </item>
+            <item row="0" column="1">
+             <property name="text">
+              <string>No Limit</string>
+             </property>
+             <property name="textAlignment">
+              <set>AlignCenter</set>
+             </property>
+            </item>
+            <item row="1" column="0">
+             <property name="text">
+              <string>0</string>
+             </property>
+             <property name="textAlignment">
+              <set>AlignCenter</set>
+             </property>
+            </item>
+            <item row="1" column="1">
+             <property name="text">
+              <string>No Limit</string>
+             </property>
+             <property name="textAlignment">
+              <set>AlignCenter</set>
+             </property>
+            </item>
+            <item row="2" column="0">
+             <property name="text">
+              <string>0</string>
+             </property>
+             <property name="textAlignment">
+              <set>AlignCenter</set>
+             </property>
+            </item>
+            <item row="2" column="1">
+             <property name="text">
+              <string>No Limit</string>
+             </property>
+             <property name="textAlignment">
+              <set>AlignCenter</set>
+             </property>
+            </item>
+            <item row="3" column="0">
+             <property name="text">
+              <string>0</string>
+             </property>
+             <property name="textAlignment">
+              <set>AlignCenter</set>
+             </property>
+            </item>
+            <item row="3" column="1">
+             <property name="text">
+              <string>No Limit</string>
+             </property>
+             <property name="textAlignment">
+              <set>AlignCenter</set>
+             </property>
+            </item>
+            <item row="4" column="0">
+             <property name="text">
+              <string>Led Off</string>
+             </property>
+             <property name="textAlignment">
+              <set>AlignCenter</set>
+             </property>
+            </item>
+            <item row="5" column="0">
+             <property name="text">
+              <string>No Chip</string>
+             </property>
+             <property name="textAlignment">
+              <set>AlignCenter</set>
+             </property>
+            </item>
+           </widget>
+          </item>
          </layout>
         </widget>
        </item>
@@ -756,8 +984,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>528</width>
-        <height>1471</height>
+        <width>352</width>
+        <height>1474</height>
        </rect>
       </property>
       <attribute name="label">
@@ -779,7 +1007,7 @@
      </widget>
     </widget>
    </item>
-   <item>
+   <item row="0" column="1">
     <widget class="QGraphicsView" name="gvMain"/>
    </item>
   </layout>

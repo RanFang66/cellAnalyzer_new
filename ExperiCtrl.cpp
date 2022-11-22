@@ -50,7 +50,8 @@ enum IMAGE_TYPE_ID {
 
 enum EXPERI_CAP_STATE {
     CAP_IDLE = 0,
-    CAP_INIT,
+    CAP_INIT_FILTER,
+    CAP_INIT_CAMERA,
     CAP_AUTOFOCUS,
     CAP_SNAP,
     CAP_PROCESS,
@@ -101,25 +102,35 @@ ExperiCtrl::ExperiCtrl(DevCtrl *dev, ExperiSetting *setting, ExperiData *data, C
     m_viewId = 1;
     m_imageTypeId = 0;
 
-    m_chipPos_Y[0] = 270;
-    m_chipPos_Y[1] = 2241;
-    m_chipPos_Y[2] = 4080;
-    m_chipPos_Y[3] = 5907;
-    m_chipPos_Y[4] = 7802;
-    m_chipPos_Y[5] = 9767;
+    // for seekgene chip
+//    m_chipPos_Y[0] = 270;
+//    m_chipPos_Y[1] = 2241;
+//    m_chipPos_Y[2] = 4080;
+//    m_chipPos_Y[3] = 5907;
+//    m_chipPos_Y[4] = 7802;
+//    m_chipPos_Y[5] = 9767;
 
+
+    // for CountStar chip
+    m_chipPos_Y[0] = 550;
+    m_chipPos_Y[1] = 2700;
+    m_chipPos_Y[2] = 4800;
+    m_chipPos_Y[3] = 7100;
+    m_chipPos_Y[4] = 9400;
+    m_chipPos_Y[5] = 9600;
 
     m_chipPos_X[0] = 1300;
     m_chipPos_X[1] = 1900;
     m_chipPos_X[2] = 2500;
     connect(devCtrl, SIGNAL(chipYMotorStateUpdated()), this, SLOT(experiChamberStateTransfer()));
-     connect(devCtrl, SIGNAL(camInitOk()), this, SLOT(experimentStateTransfer()));
+//    connect(devCtrl, SIGNAL(camInitOk()), this, SLOT(experimentStateTransfer()));
     connect(devCtrl, SIGNAL(chipXMotorStateUpdated()), this, SLOT(experiPosStateTransfer()));
     connect(devCtrl, SIGNAL(filterMotorStateUpdated()), this, SLOT(experiCapStateTransfer()));
     connect(devCtrl, SIGNAL(imageUpdated()), this, SLOT(experiCapStateTransfer()));
     connect(devCtrl, SIGNAL(autoFocusComplete()), this, SLOT(experiCapStateTransfer()));
     connect(m_algorithm, SIGNAL(markCellsFinished()), this, SLOT(experiCapStateTransfer()));
-    connect(this, SIGNAL(experimentInitOk()), this, SLOT(experimentStateMachine()));
+    connect(devCtrl->m_camCtrl, SIGNAL(cameraParasSetRet()), this, SLOT(experiCapStateTransfer()));
+    connect(this, SIGNAL(experimentInitOk()), this, SLOT(experimentStateTransfer()));
     connect(this, SIGNAL(experiCapFinished()), this, SLOT(experiPosStateTransfer()));
     connect(this, SIGNAL(experiOnePosFinished()), this, SLOT(experiChamberStateTransfer()));
     connect(this, SIGNAL(experiOneChamberFinished()), this, SLOT(experimentStateTransfer()));
@@ -204,7 +215,7 @@ void ExperiCtrl::experiPosStateTransfer()
             m_imageTypeId = IMAGE_BRIGHT;
             m_filterPos = FILTER_BRIGHT_POS;
             m_ledState = DevCtrl::LED_WHITE;
-            m_experiCapState = CAP_INIT;
+            m_experiCapState = CAP_INIT_FILTER;
         }
         break;
     case EXPERI_POS_BRIGHT:
@@ -213,7 +224,7 @@ void ExperiCtrl::experiPosStateTransfer()
         m_imageTypeId = IMAGE_FL1;
         m_filterPos = FILTER_BLUE_POS;
         m_ledState = DevCtrl::LED_BLUE;
-        m_experiCapState = CAP_INIT;
+        m_experiCapState = CAP_INIT_FILTER;
         break;
     case EXPERI_POS_BLUE:
         saveImages(imgFL1, imgMarked);
@@ -221,7 +232,7 @@ void ExperiCtrl::experiPosStateTransfer()
         m_imageTypeId = IMAGE_FL2;
         m_filterPos = FILTER_GREEN_POS;
         m_ledState = DevCtrl::LED_GREEN;
-        m_experiCapState = CAP_INIT;
+        m_experiCapState = CAP_INIT_FILTER;
         break;
     case EXPERI_POS_GREEN:
         saveImages(imgFL2, imgMarked);
@@ -244,10 +255,13 @@ void ExperiCtrl::experiCapStateTransfer()
     switch (m_experiCapState) {
     case CAP_IDLE:
         break;
-    case CAP_INIT:
+    case CAP_INIT_FILTER:
 //        if (devCtrl->filterPos() == m_filterPos) {
-            m_experiCapState = CAP_AUTOFOCUS;
+            m_experiCapState = CAP_INIT_CAMERA;
 //        }
+        break;
+    case CAP_INIT_CAMERA:
+        m_experiCapState = CAP_AUTOFOCUS;
         break;
     case CAP_AUTOFOCUS:
         m_experiCapState = CAP_SNAP;
@@ -268,11 +282,11 @@ void ExperiCtrl::experiCapStateTransfer()
 
 void ExperiCtrl::initExperiment()
 {
-    devCtrl->connectCamera();
+//    devCtrl->connectCamera();
 //    m_experiState = getNextState(EXPERI_INIT);
 //    m_yPos = getNextChamberPos(m_experiState);
 //    m_experiChamberState = EXPERI_CHAMBER_INIT;
-//    emit experimentInitOk();
+    emit experimentInitOk();
 }
 
 void ExperiCtrl::experimentStateMachine()       // ctrl the whole experiment: ctrl the Y pos motion
@@ -369,14 +383,14 @@ void ExperiCtrl::experiCapImageStateMachine()
     switch (m_experiCapState) {
     case CAP_IDLE:
         break;
-    case CAP_INIT:
+    case CAP_INIT_FILTER:
         devCtrl->ledLigthOn(m_ledState);
 //        devCtrl->motorRun(DevCtrl::FILTER_MOTOR, DevCtrl::MOTOR_RUN_POS, m_filterPos);
         break;
+    case CAP_INIT_CAMERA:
+        devCtrl->initCameraParas(m_imageTypeId);
+        break;
     case CAP_AUTOFOCUS:
-        if (m_imageTypeId == IMAGE_BRIGHT) {
-            devCtrl->cameraWhiteBalance();
-        }
         devCtrl->startAutoFocus(true);
         break;
     case CAP_SNAP:
@@ -389,20 +403,16 @@ void ExperiCtrl::experiCapImageStateMachine()
             imgBR = devCtrl->getCVImage();
             imgMarked = imgBR.clone();
             m_algorithm->analyzeCellsBright(imgBR, imgMarked);
-//            saveImages(imgBR, imgMarked);
             break;
         case IMAGE_FL1:
             imgFL1 = devCtrl->getCVImage();
             imgMarked = imgFL1.clone();
             m_algorithm->analyzeCellsFL1(imgFL1, imgMarked);
-//            saveImages(imgFL1, imgMarked);
             break;
         case IMAGE_FL2:
             imgFL2 = devCtrl->getCVImage();
             imgMarked = imgFL2.clone();
             m_algorithm->analyzeCellsFL2(imgFL2, imgMarked);
-//            saveImages(imgFL2, imgMarked);
-//            saveFLImage();
             break;
         default:
             break;

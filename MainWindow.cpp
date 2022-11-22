@@ -109,6 +109,7 @@ void MainWindow::on_btnAOPI_clicked()
 void MainWindow::on_btnDebugPage_clicked()
 {
     if (mainIndex != debugModeIndex) {
+//        m_dev->connectCamera();
         ui->stackedWidget->setCurrentIndex(debugModeIndex);
         mainIndex = debugModeIndex;
     }

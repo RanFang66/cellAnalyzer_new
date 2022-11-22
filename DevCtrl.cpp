@@ -1,8 +1,8 @@
 #include "DevCtrl.h"
 #include <QDebug>
 
-int DevCtrl::autoFocusStartPos = 820;
-int DevCtrl::autoFocusEndPos = 880;
+int DevCtrl::autoFocusStartPos = 560;
+int DevCtrl::autoFocusEndPos = 660;
 int DevCtrl::autoFocusStep = 10;
 DevCtrl::DevCtrl(QObject *parent) : QObject(parent)
 {
@@ -82,13 +82,10 @@ void DevCtrl::onSerialRecvFrame(const char *data, int frameType)
 void DevCtrl::onCamInitRet(bool ok)
 {
     if (ok) {
-        cameraAutoExplosure(true);
         m_resolutionCount = m_camCtrl->getResolutionCount();
-        m_resolutions = new struct CamResolution[m_resolutionCount];
         for (int i = 0; i < m_resolutionCount; i++) {
             m_camCtrl->getGetResolution(i, m_resolutions[i].width, m_resolutions[i].height);
         }
-        //disconnectCamera();
     }
     m_camState = ok;
 
@@ -120,7 +117,6 @@ void DevCtrl::onCamImageUpdate(unsigned char *data, int width, int height)
 void DevCtrl::onCamConnected(bool ok)
 {
     if (ok) {
-        m_camCtrl->autoExplosure(true);
         emit camInitOk();
     } else {
         qDebug() << "camera connect failed!";
@@ -132,16 +128,6 @@ void DevCtrl::onCamConnected(bool ok)
 void DevCtrl::onCamTimerTimeout()
 {
     emit capImage();
-}
-
-void DevCtrl::onFocusTimerTimeout()
-{
-    if (m_autoFocusState == FOCUS_COMPLETE){
-        m_autoFocusState = FOCUS_IDLE;
-        emit autoFocusComplete();
-    } else {
-        emit capImage();
-    }
 }
 
 void DevCtrl::motorRun(int id, int cmd, int pos)
@@ -199,19 +185,15 @@ void DevCtrl::connectCamera()
     emit connectCam();
 }
 
-void DevCtrl::cameraAutoExplosure(bool checked)
-{
-    m_camCtrl->autoExplosure(checked);
-}
-
-void DevCtrl::cameraWhiteBalance()
-{
-    m_camCtrl->whiteBalance(true);
-}
 
 void DevCtrl::camChangeResolution(int index)
 {
     emit changeResolution(index);
+}
+
+void DevCtrl::initCameraParas(int type)
+{
+    emit initCameraParameters(type);
 }
 
 void DevCtrl::startAutoFocus(bool act)
@@ -266,21 +248,17 @@ void DevCtrl::initCameraCtrl()
     connect(this, &DevCtrl::disconnectCam, m_camCtrl, &CameraCtrl::cameraDisconnect);
     connect(this, &DevCtrl::connectCam, m_camCtrl, &CameraCtrl::cameraConnect);
     connect(m_camCtrl, &CameraCtrl::cameraConnected, this, &DevCtrl::onCamConnected);
+    connect(this, &DevCtrl::initCameraParameters, m_camCtrl, &CameraCtrl::onSetCamParas);
     m_camThread->start();
 }
 
 void DevCtrl::initAutoFocus()
 {
-//    m_focusTimer = new QTimer(this);
-//    m_focusTimer->setInterval(4000);
-//    m_focusTimer->stop();
     m_autoFocusState = FOCUS_IDLE;
     m_focusNextPos = autoFocusStartPos;
     m_focusPos = 150;
     m_maxClarity = 0;
     m_clarity = 0;
-
-//    connect(m_focusTimer, SIGNAL(timeout()), this, SLOT(onFocusTimerTimeout()));
 }
 
 double DevCtrl::calcClarity(Mat &img)

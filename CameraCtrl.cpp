@@ -49,14 +49,12 @@ void CameraCtrl::cameraInit()
                 m_camName = QString::fromLatin1(name);
                 m_camModel = QString::fromLatin1(model);
                 CameraGetResolutionCount(m_id, &m_resolutionCount);
-                m_resolutions = new struct ImgResolution[m_resolutionCount];
                 for (int i = 0; i < m_resolutionCount; i++) {
                     CameraGetResolution(m_id, 0, &m_resolutions[i].width, &m_resolutions[i].height);
                 }
                 CameraGetImageSize(m_id, &m_imgWidth, &m_imgHeight);
                 CameraGetImageBufferSize(m_id, &m_bufLen, CAMERA_IMAGE_RGB24);
                 m_buff = new unsigned char[m_bufLen];
-                cameraDisconnect();
                 ret = true;
             } else {
                 cameraErrorHandle();
@@ -104,19 +102,66 @@ void CameraCtrl::changeResolution(int index)
     }
 }
 
-void CameraCtrl::whiteBalance(bool en)
-{
-    CameraOnePushWB(m_id);
-}
-
-void CameraCtrl::autoExplosure(bool en)
-{
-    CameraSetAEC(m_id, en);
-}
 
 void CameraCtrl::cameraDisconnect()
 {
     CameraFree(m_id);
+}
+
+void CameraCtrl::onSetCamParas(int type)
+{
+    switch (type) {
+    case 1:
+        cameraBrightInit();
+        break;
+    case 2:
+        cameraFL1Init();
+        break;
+    case 3:
+        cameraFL2Init();
+        break;
+    default:
+        break;
+    }
+    emit cameraParasSetRet();
+}
+
+void CameraCtrl::cameraBrightInit()
+{
+    CameraSetAEC(m_id, true);
+    CameraSetAETarget(m_id, 100);
+    CameraSetAGC(m_id, true);
+    CameraSetAWB(m_id, true);
+    CameraSetSaturation(m_id, 1);
+    CameraSetContrast(m_id, 1);
+    CameraSetGamma(m_id, 1.33);
+    CameraSetBlackLevel(m_id, 14);
+}
+
+void CameraCtrl::cameraFL1Init()
+{
+    CameraSetAEC(m_id, false);
+    CameraSetExposure(m_id, 32767);
+    CameraSetAGC(m_id, false);
+    CameraSetGain(m_id, 126);
+    CameraSetAWB(m_id, true);
+    CameraSetSaturation(m_id, 1.66);
+    CameraSetContrast(m_id, 1.24);
+    CameraSetGamma(m_id, 1.33);
+    CameraSetBlackLevel(m_id, 52);
+}
+
+void CameraCtrl::cameraFL2Init()
+{
+    CameraSetAEC(m_id, false);
+    CameraSetExposure(m_id, 32767);
+    CameraSetAGC(m_id, false);
+    CameraSetGain(m_id, 45);
+    CameraSetAWB(m_id, true);
+    CameraSetSaturation(m_id, 1.24);
+    CameraSetContrast(m_id, 1.29);
+    CameraSetGamma(m_id, 0.82);
+    CameraSetBlackLevel(m_id, 115);
 }
 
 void CameraCtrl::cameraErrorHandle()

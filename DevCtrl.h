@@ -49,7 +49,6 @@ public slots:
     void onCamImageUpdate(unsigned char *data, int width, int height);
     void onCamConnected(bool ok);
     void onCamTimerTimeout();
-    void onFocusTimerTimeout();
 
 signals:
     void sendDevCmd(int devId, int cmd, int data);
@@ -66,6 +65,7 @@ signals:
     void disconnectCam();
     void camInitOk();
     void camInitFailed();
+    void initCameraParameters(int type);
 
 public:
     void motorRun(int id, int cmd, int data = 0);
@@ -80,11 +80,11 @@ public:
     void cameraStop();
     void disconnectCamera();
     void connectCamera();
-    void cameraAutoExplosure(bool checked);
-    void cameraWhiteBalance();
     int  getCamResolutionsCount();
     void getCamResolution(int index, int &width, int &height);
     void camChangeResolution(int index);
+    void initCameraParas(int type);
+
 
     int getMotorPos(int id);
     int chipPos_X();
@@ -100,6 +100,7 @@ public:
     double getClarity();
 
     void startAutoFocus(bool act);
+    CameraCtrl          *m_camCtrl;
 
 private:
     enum AUTO_FOCUS_STATE {
@@ -118,7 +119,6 @@ private:
     QSerialWorker       *m_serialWorker;
     QThread             *m_serialThread;
 
-    CameraCtrl          *m_camCtrl;
     QThread             *m_camThread;
     QTimer              *m_camTimer;
     QTimer              *m_focusTimer;
@@ -133,7 +133,7 @@ private:
     double  m_clarity = 0.0;
     QImage  m_qImage;
     int     m_resolutionCount;
-    struct  CamResolution *m_resolutions;
+    struct  CamResolution m_resolutions[8];
 
     int     m_autoFocusState = FOCUS_IDLE;
     int     m_focusNextPos;

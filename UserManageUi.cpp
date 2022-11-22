@@ -34,6 +34,13 @@ void UserManageUi::initUserInfoTable()
     ui->tblUserInfo->setModel(tblModel);
     ui->tblUserInfo->setSelectionModel(theSelection);
     ui->tblUserInfo->setColumnHidden(tblModel->fieldIndex("password"), true);
+
+    connect(theSelection, SIGNAL(currentRowChanged(QModelIndex, QModelIndex)), this, SLOT(onCurrentRowChanged(QModelIndex, QModelIndex)));
+
+    dataMapper = new QDataWidgetMapper();
+    dataMapper->setModel(tblModel);
+    dataMapper->setSubmitPolicy(QDataWidgetMapper::AutoSubmit);
+ //   dataMapper->addMapping(ui->editDepartment, )
 }
 
 void UserManageUi::on_btnAddUser_clicked()
@@ -47,6 +54,11 @@ void UserManageUi::on_btnDeleteUser_clicked()
 }
 
 void UserManageUi::on_btnEditUser_clicked()
+{
+
+}
+
+void UserManageUi::onCurrentRowChanged(QModelIndex &curr, QModelIndex &prev)
 {
 
 }

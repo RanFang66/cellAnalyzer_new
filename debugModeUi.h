@@ -79,6 +79,16 @@ private slots:
 
     void on_hsGamma_valueChanged(int value);
 
+    void on_hsSaturation_valueChanged(int value);
+
+    void on_hsBlackBalance_valueChanged(int value);
+
+    void on_cbAutoWB_clicked(bool checked);
+
+    void onRGBGainChanged(int);
+
+    void on_hsAutoExpoTarget_valueChanged(int value);
+
 private:
     Ui::debugModeUi         *ui;
     DevCtrl                 *m_dev;

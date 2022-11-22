@@ -6,6 +6,7 @@
 #include <QSqlError>
 #include <QSqlTableModel>
 #include <QItemSelectionModel>
+#include <QDataWidgetMapper>
 
 namespace Ui {
 class UserManageUi;
@@ -26,6 +27,8 @@ private slots:
 
     void on_btnEditUser_clicked();
 
+    void onCurrentRowChanged(QModelIndex &curr, QModelIndex &prev);
+
 private:
     Ui::UserManageUi *ui;
 
@@ -38,7 +41,7 @@ private:
     QSqlDatabase *userDb;
     QSqlTableModel  *tblModel;
     QItemSelectionModel *theSelection;
-
+    QDataWidgetMapper *dataMapper;
     int editState;
     QString currName;
     QString passwd;

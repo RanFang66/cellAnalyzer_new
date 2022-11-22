@@ -18,15 +18,15 @@ signals:
     void cameraInitRet(bool);
     void cameraErrorHandle(int error);
     void cameraConnected(bool);
+    void cameraParasSetRet();
 
 public slots:
     void cameraInit();
     void cameraConnect();
     void updateImage();
     void changeResolution(int index);
-    void whiteBalance(bool en);
-    void autoExplosure(bool en);
     void cameraDisconnect();
+    void onSetCamParas(int type);
 
 private:
     const static QString errorMsg[20];
@@ -40,13 +40,17 @@ private:
     QString             m_APIVersion;
     QString             m_FirmVersion;
     int                 m_resolutionCount;
-    struct ImgResolution *m_resolutions;
+    struct ImgResolution m_resolutions[8];
     int                 m_imgWidth;
     int                 m_imgHeight;
     int                 m_bufLen;
     unsigned char       *m_buff;
 
     void cameraErrorHandle();
+
+    void cameraBrightInit();
+    void cameraFL1Init();
+    void cameraFL2Init();
 
 public:
     void getGetResolution(int index, int &width, int &height);

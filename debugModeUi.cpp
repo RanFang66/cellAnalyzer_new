@@ -1,6 +1,7 @@
 #include "debugModeUi.h"
 #include "ui_debugModeUi.h"
 #include <QMessageBox>
+#include <JHCap.h>
 debugModeUi::debugModeUi(DevCtrl *dev, QWidget *parent) :
     QWidget(parent),
     ui(new Ui::debugModeUi),
@@ -49,7 +50,7 @@ void debugModeUi::onDevStatusUpdated()
 void debugModeUi::onAutoFocusComplete()
 {
     onDevStatusUpdated();
-    onCamImageUpdated();
+    m_dev->cameraRun();
     QMessageBox::about(this, "Complete", "Auto focus completeed");
 }
 
@@ -112,6 +113,8 @@ void debugModeUi::initDubugModeUi()
     connect(ui->rBtnChipMotorY, SIGNAL(clicked()), this, SLOT(onMotorChanged()));
     connect(ui->rBtnCamMotor, SIGNAL(clicked()), this, SLOT(onMotorChanged()));
     connect(ui->rBtnFilterMotor, SIGNAL(clicked()), this, SLOT(onMotorChanged()));
+
+    connect(ui->hsRedGain, SIGNAL(valueChanged(int)), this, SLOT(onRGBGainChanged(int)));
     updateCamParas();
 }
 
@@ -142,9 +145,21 @@ void debugModeUi::updateCamParas()
     ui->lblContrast->setText(QString("%1").arg(contrast));
     ui->hsContrast->setValue(contrast*100);
 
-    bool aec,agc;
+    double sat;
+    CameraGetSaturation(CAM_INDEX_0, &sat);
+    int satInt = sat * 100;
+    ui->lblSaturation->setText(QString::number(sat));
+    ui->hsContrast->setValue(satInt);
+
+    int  blackLevel;
+    CameraGetBlackLevel(CAM_INDEX_0, &blackLevel);
+    ui->lblBlackBalance->setText(QString::number(blackLevel));
+    ui->hsBlackBalance->setValue(blackLevel);
+
+    bool aec,agc, awb;
     CameraGetAGC(CAM_INDEX_0, &agc);
     CameraGetAEC(CAM_INDEX_0, &aec);
+    CameraGetAWB(CAM_INDEX_0, &awb);
 
     if(agc)
     {
@@ -165,18 +180,48 @@ void debugModeUi::updateCamParas()
 
     if(aec)
     {
+        int aet;
         ui->hsExposure->setEnabled(false);
         ui->cbExposure->setChecked(true);
+        ui->hsAutoExpoTarget->setEnabled(true);
+        CameraGetAETarget(CAM_INDEX_0, &aet);
+        ui->hsAutoExpoTarget->setValue(aet);
+        ui->lblAETarget->setText(QString::number(aet));
     }
     else
     {
-        int exposure;
+        int exposure, aet;
         CameraGetExposure(CAM_INDEX_0, &exposure);
         ui->lblExposure->setText(QString("%1").arg(exposure));
         ui->hsExposure->setValue(exposure);
+//        CameraGetAETarget(CAM_INDEX_0, &aet);
+//        ui->hsAutoExpoTarget->setValue(aet);
+//        ui->lblAETarget->setText(QString::number(aet));
         ui->hsExposure->setEnabled(true);
         ui->cbExposure->setChecked(false);
+        ui->hsAutoExpoTarget->setEnabled(false);
     }
+
+    if (awb) {
+        ui->hsRedGain->setEnabled(false);
+        ui->hsBlueGain->setEnabled(false);
+        ui->hsGreenGain->setEnabled(false);
+        ui->cbAutoWB->setChecked(true);
+    } else {
+        double rg, gg, bg;
+        ui->cbAutoWB->setChecked(false);
+        ui->hsRedGain->setEnabled(true);
+        ui->hsBlueGain->setEnabled(true);
+        ui->hsGreenGain->setEnabled(true);
+        CameraGetWBGain(CAM_INDEX_0, &rg, &gg, &bg);
+        ui->hsRedGain->setValue(rg*100);
+        ui->hsBlueGain->setValue(bg*100);
+        ui->hsGreenGain->setValue(gg*100);
+        ui->lblRedGain->setText(QString::number(rg));
+        ui->lblGreenGain->setText(QString::number(gg));
+        ui->lblBlueGain->setText(QString::number(bg));
+    }
+
 }
 
 void debugModeUi::on_btnMotoRunForward_clicked()
@@ -213,13 +258,15 @@ void debugModeUi::on_btnSetMotoSpeed_clicked()
 
 void debugModeUi::on_btnCamRun_clicked()
 {
+ //   m_dev->connectCamera();
     m_dev->cameraRun();
 
 }
 
 void debugModeUi::on_btnCamStop_clicked()
 {
-    m_dev->cameraStop();
+ //   m_dev->cameraStop();
+    m_dev->disconnectCamera();
 }
 
 void debugModeUi::on_btnUpdateSysStatus_clicked()
@@ -317,13 +364,56 @@ void debugModeUi::on_hsGamma_valueChanged(int value)
 
 void debugModeUi::on_cbExposure_clicked(bool checked)
 {
-    m_dev->cameraAutoExplosure(checked);
+    CameraSetAGC(CAM_INDEX_0, checked);
     updateCamParas();
     ui->hsExposure->setDisabled(checked);
 }
 
 void debugModeUi::on_btnWB_clicked()
 {
-    m_dev->cameraWhiteBalance();
+    CameraOnePushWB(CAM_INDEX_0);
     updateCamParas();
+}
+
+void debugModeUi::on_hsSaturation_valueChanged(int value)
+{
+    double sat = value / 100.0;
+    CameraSetSaturation(0, sat);
+    ui->lblSaturation->setText(QString::number(value));
+}
+
+void debugModeUi::on_hsBlackBalance_valueChanged(int value)
+{
+    CameraSetBlackLevel(0, value);
+    ui->lblBlackBalance->setText(QString::number(value));
+}
+
+void debugModeUi::on_cbAutoWB_clicked(bool checked)
+{
+    CameraSetAWB(0, checked);
+    ui->hsRedGain->setDisabled(checked);
+    ui->hsGreenGain->setDisabled(checked);
+    ui->hsBlueGain->setDisabled(checked);
+    updateCamParas();
+}
+
+
+
+
+void debugModeUi::onRGBGainChanged(int val)
+{
+    double rg = ui->hsRedGain->value() / 100;
+    double gg = ui->hsRedGain->value() / 100;
+    double bg = ui->hsBlueGain->value() / 100;
+
+    ui->lblRedGain->setText(QString::number(rg));
+    ui->lblGreenGain->setText(QString::number(gg));
+    ui->lblBlueGain->setText(QString::number(bg));
+    CameraSetWBGain(0, rg, gg, bg);
+}
+
+void debugModeUi::on_hsAutoExpoTarget_valueChanged(int value)
+{
+    CameraSetAETarget(0, value);
+    ui->lblAETarget->setText(QString::number(value));
 }
