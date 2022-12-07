@@ -49,6 +49,7 @@ public slots:
     void onCamImageUpdate(unsigned char *data, int width, int height);
     void onCamConnected(bool ok);
     void onCamTimerTimeout();
+    void onAutoFocusSet(int low, int high, int step);
 
 signals:
     void sendDevCmd(int devId, int cmd, int data);
@@ -139,9 +140,9 @@ private:
     int     m_focusNextPos;
     int     m_focusPos;
     double  m_maxClarity = 0.0;
-    static  int autoFocusStartPos;
-    static  int autoFocusEndPos;
-    static  int autoFocusStep;
+    int autoFocusStartPos;
+    int autoFocusEndPos;
+    int autoFocusStep;
 
     void initDeviceCtrl();
 

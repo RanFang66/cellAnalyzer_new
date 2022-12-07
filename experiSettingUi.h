@@ -68,6 +68,8 @@ signals:
 private:
     Ui::experiSettingUi *ui;
     ExperiSetting       *m_setting;
+    QSqlDatabase db;
+    QSqlQuery *query;
 
     void loadStyleSheet(const QString &styleSheetFile);
 };

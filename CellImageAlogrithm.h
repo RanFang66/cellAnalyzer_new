@@ -48,7 +48,7 @@ public:
     void getBinaryImage(Mat &imgGray, Mat &imgBIn, int method);
     void filterImage(Mat &imgSrc, Mat &imgDst, int method);
     void enhanceContrast(Mat &imgSrc, Mat &imgDst);
-    int  markCellsInCluster(Mat &cluster, Mat &img, Point2f ltPoint, int radius);
+    int  markCellsInCluster(Mat &cluster, Mat &img, Point ltPoint, int radius);
     void analyzeCellsBright(Mat &img, Mat &imgMarked);
     void analyzeCellsFL1(Mat &img, Mat &imgMarked);
     void analyzeCellsFL2(Mat &img, Mat &imgMarked);
@@ -69,15 +69,15 @@ private:
     int     deadCellNum;
     int     liveCellNum;
     int     avgRadiu;
-    double  avgRegateRate;
+    double  aggregateRate;
     double  avgCompactness;
     QMap<int, int> radiuStat;
 };
 
 inline void CellImageAlogrithm::setCellParameters(int minR, int maxR)
 {
-    minRadiu = minR;
-    maxRadiu = maxR;
+    minRadiu = minR*0.8+0.4;
+    maxRadiu = maxR*0.8+0.4;
     for (int i = minR; i <= maxR; i++) {
         radiuStat[i] = 0;
     }

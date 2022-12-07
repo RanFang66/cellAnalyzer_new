@@ -30,6 +30,8 @@ void QSerialWorker::serialInit()
     bool ret = m_serialPort->open(QIODevice::ReadWrite);
     if (ret) {
         connect(m_serialPort, SIGNAL(readyRead()), this, SLOT(onSerialRecvData()));
+    } else {
+        qDebug() << m_serialPort->errorString();
     }
     emit serialConnected(ret);
 }

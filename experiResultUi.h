@@ -41,6 +41,10 @@ private slots:
 
     void on_btnReturn_clicked();
 
+    void on_btnZoomOut_clicked();
+
+    void on_btnZoomIn_clicked();
+
 private:
     Ui::experiResultUi *ui;
     QGraphicsScene          *m_scene;

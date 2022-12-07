@@ -4,9 +4,13 @@
 #include <QWidget>
 #include <QSqlDatabase>
 #include <QSqlError>
-#include <QSqlTableModel>
+#include <QSqlQueryModel>
+#include <QSqlQuery>
 #include <QItemSelectionModel>
-#include <QDataWidgetMapper>
+#include <QSqlRecord>
+#include <QVariant>
+
+#include "UserInfoEditDialog.h"
 
 namespace Ui {
 class UserManageUi;
@@ -20,6 +24,10 @@ public:
     explicit UserManageUi(QWidget *parent = nullptr);
     ~UserManageUi();
     void initUserInfoTable(void);
+
+signals:
+    void return2sysSetting();
+
 private slots:
     void on_btnAddUser_clicked();
 
@@ -28,6 +36,8 @@ private slots:
     void on_btnEditUser_clicked();
 
     void onCurrentRowChanged(QModelIndex &curr, QModelIndex &prev);
+
+    void on_btnReturn_clicked();
 
 private:
     Ui::UserManageUi *ui;
@@ -38,19 +48,22 @@ private:
         USER_INFO_EDITING
     };
 
-    QSqlDatabase *userDb;
-    QSqlTableModel  *tblModel;
+    QSqlDatabase userDb;
+    QSqlQueryModel  *qryModel;
     QItemSelectionModel *theSelection;
-    QDataWidgetMapper *dataMapper;
-    int editState;
-    QString currName;
-    QString passwd;
-    QString passwdConfirm;
-    QString email;
-    QString department;
-    QString phone;
-    int curID;
-    int authority;
+    QSqlQuery *query;
+//    int editState;
+//    QString currName;
+//    QString passwd;
+//    QString passwdConfirm;
+//    QString email;
+//    QString department;
+//    QString phone;
+//    int curID;
+//    int authority;
+
+    void updateRecord(int recNo);
+    void insertRecord();
 };
 
 #endif // USERMANAGEUI_H

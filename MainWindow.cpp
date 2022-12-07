@@ -12,6 +12,10 @@ MainWindow::MainWindow(QWidget *parent)
 
     loadStyleSheet(":/styles/main.qss");
     ui->setupUi(this);
+
+
+//    this->setWindowFlags(Qt::SplashScreen);
+    this->setWindowFlags(Qt::Window | Qt::FramelessWindowHint);
     QString ret = executeShellCmd("sudo raspi-gpio set 26 op dh && sleep 3");
     if (!ret.isEmpty()) {
         qDebug() << ret;
@@ -23,13 +27,15 @@ MainWindow::MainWindow(QWidget *parent)
     m_algorithm = new CellImageAlogrithm(this);
     m_experiCtrl = new ExperiCtrl(m_dev, m_setting, m_data, m_algorithm, this);
     m_setting->setUserID(m_userId);
+
     executeShellCmd("sleep 3");
 
     experiSetting = new experiSettingUi(m_setting, this);
     experiData = new experiDataUi(this);
     debugMode = new debugModeUi(m_dev, this);
-    inExperiment = new inExperimentUi(this);
+    inExperiment = new inExperimentUi(m_experiCtrl, this);
     experiRes = new experiResultUi(this);
+    userManage = new UserManageUi(this);
 
     initMainWindowUi();
 }
@@ -46,6 +52,7 @@ void MainWindow::initMainWindowUi()
     debugModeIndex = ui->stackedWidget->addWidget(debugMode);
     inExperimentIndex = ui->stackedWidget->addWidget(inExperiment);
     experiResultIndex = ui->stackedWidget->addWidget(experiRes);
+    userManageIndex = ui->stackedWidget->addWidget(userManage);
 
     ui->stackedWidget->setCurrentIndex(appSelcIndex);
     ui->btnExperiApp->setChecked(true);
@@ -56,6 +63,9 @@ void MainWindow::initMainWindowUi()
     connect(m_experiCtrl, SIGNAL(experimentFinished()), this, SLOT(onExperimentFinished()));
     connect(experiData, SIGNAL(showDataDetail(QString&)), this, SLOT(onShowDataDetail(QString&)));
     connect(experiRes, SIGNAL(returnToMainPage()), this, SLOT(onReturnToMainPage()));
+    connect(m_experiCtrl, SIGNAL(experiCapFinished()), inExperiment, SLOT(onUpdateImage()));
+    connect(userManage, SIGNAL(return2SysSetting()), this, SLOT(onReturnSysSetting()));
+    connect(debugMode, SIGNAL(setAutoFocusParameters(int, int, int)), m_dev, SLOT(onAutoFocusSet(int, int, int)));
 }
 
 QString MainWindow::executeShellCmd(QString strCmd)
@@ -76,9 +86,9 @@ void MainWindow::on_btnSysSetting_clicked()
 
 void MainWindow::on_btnExperiData_clicked()
 {
-    if (mainIndex != experiDataIndex) {
-        experiData->updateExperiDataUi();
+    if (mainIndex != experiDataIndex) {        
         ui->stackedWidget->setCurrentIndex(experiDataIndex);
+        experiData->updateExperiDataUi();
         mainIndex = experiDataIndex;
     }
 }
@@ -109,7 +119,6 @@ void MainWindow::on_btnAOPI_clicked()
 void MainWindow::on_btnDebugPage_clicked()
 {
     if (mainIndex != debugModeIndex) {
-//        m_dev->connectCamera();
         ui->stackedWidget->setCurrentIndex(debugModeIndex);
         mainIndex = debugModeIndex;
     }
@@ -142,9 +151,6 @@ void MainWindow::onExperimentStart()
 {
     ui->stackedWidget->setCurrentIndex(inExperimentIndex);
     inExperiment->updateNoticeText("start experiment");
-
-    disconnect(m_dev, SIGNAL(imageUpdated()), debugMode, SLOT(onCamImageUpdated()));
-    disconnect(m_dev, SIGNAL(autoFocusComplete()), debugMode, SLOT(onAutoFocusComplete()));
     m_experiCtrl->startExperiment(m_setting->getExperiId());
 }
 
@@ -189,4 +195,19 @@ void MainWindow::loadStyleSheet(const QString &styleSheetFile)
     } else {
         qDebug() << "Login: Open Style Sheet File Failed!";
     }
+}
+
+void MainWindow::on_btnUserManage_clicked()
+{
+    ui->stackedWidget->setCurrentIndex(userManageIndex);
+}
+
+void MainWindow::onReturnSysSetting()
+{
+    ui->stackedWidget->setCurrentIndex(sysSettingIndex);
+}
+
+void MainWindow::on_btnLanguage_clicked()
+{
+    ui->stackedWidget->setCurrentIndex(languageSelcIndex);
 }

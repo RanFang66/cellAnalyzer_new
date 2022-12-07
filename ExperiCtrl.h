@@ -23,6 +23,10 @@ public:
         CHAMBER_6,
         CHAMBER_FINISH = 99,
     };
+
+    void getCurrentState(int &chamber, int &view, int &imageType);
+    const QImage getCurrImage(void) const;
+
 public slots:
     void startExperiment(const QString &experiId);
     void experimentStateTransfer();
@@ -78,6 +82,7 @@ private:
     int  m_viewId;
     int  m_imageTypeId;
 
+    bool  m_autoFocusFlag = false;
 
     void initExperiment(void);
     void getCellImages();

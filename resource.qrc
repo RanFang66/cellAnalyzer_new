@@ -26,5 +26,17 @@
         <file>styles/inExperimentStyle.qss</file>
         <file>images/suspend.png</file>
         <file>styles/experiResultStyle.qss</file>
+        <file>images/line.png</file>
+        <file>images/eclipse.png</file>
+        <file>images/toolc.png</file>
+        <file>images/angle.png</file>
+        <file>images/dist.png</file>
+        <file>images/circle.png</file>
+        <file>images/zoom_out.png</file>
+        <file>images/b.png</file>
+        <file>images/tool_bkg.png</file>
+        <file>images/blur_bkg.png</file>
+        <file>images/zoom_in.png</file>
+        <file>images/arrow_return.png</file>
     </qresource>
 </RCC>

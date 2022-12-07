@@ -19,6 +19,9 @@ public:
     explicit debugModeUi(DevCtrl *dev, QWidget *parent = nullptr);
     ~debugModeUi();
 
+signals:
+    void setAutoFocusParameters(int low, int high, int step);
+
 public slots:
     void onCamImageUpdated();
     void onDevStatusUpdated();
@@ -88,6 +91,14 @@ private slots:
     void onRGBGainChanged(int);
 
     void on_hsAutoExpoTarget_valueChanged(int value);
+
+    void on_btnBrCamParas_clicked();
+
+    void on_btnFL2CamParas_clicked();
+
+    void on_btnFL1CamParas_clicked();
+
+    void onAFParaSet();
 
 private:
     Ui::debugModeUi         *ui;

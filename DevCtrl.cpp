@@ -1,11 +1,14 @@
 #include "DevCtrl.h"
 #include <QDebug>
 
-int DevCtrl::autoFocusStartPos = 560;
-int DevCtrl::autoFocusEndPos = 660;
-int DevCtrl::autoFocusStep = 10;
+//int DevCtrl::autoFocusStartPos = 620;
+//int DevCtrl::autoFocusEndPos = 660;
+//int DevCtrl::autoFocusStep = 5;
 DevCtrl::DevCtrl(QObject *parent) : QObject(parent)
 {
+    autoFocusStartPos = 450;
+    autoFocusEndPos = 500;
+    autoFocusStep = 5;
     initDeviceCtrl();
     initCameraCtrl();
     initAutoFocus();
@@ -26,9 +29,9 @@ DevCtrl::~DevCtrl()
 
 void DevCtrl::onSerialConnected(bool ok)
 {
-    qDebug() << "Device Ctrl: serial connected!";
+    if (!ok)
+        qDebug() << "Device Ctrl: serial connected failed!";
     m_serialState = ok;
-    motorReset(CAMERA_MOTOR);
 }
 
 void DevCtrl::onSerialRecvFrame(const char *data, int frameType)
@@ -94,7 +97,7 @@ void DevCtrl::onCamInitRet(bool ok)
 void DevCtrl::onCamImageUpdate(unsigned char *data, int width, int height)
 {
     m_cvImage = Mat(height, width, CV_8UC3, data);
-
+    m_qImage = QImage(data, width, height, QImage::Format_BGR888);
     if (m_autoFocusState == FOCUS_PROCESS) {
         m_clarity = calcClarity(m_cvImage);
         if (m_clarity > m_maxClarity) {
@@ -109,7 +112,6 @@ void DevCtrl::onCamImageUpdate(unsigned char *data, int width, int height)
         }
         emit sendDevCmd(CAMERA_MOTOR, MOTOR_RUN_POS, m_focusNextPos);
     } else {
-        m_qImage = QImage(data, width, height, QImage::Format_BGR888);
         emit imageUpdated();
     }
 }
@@ -128,6 +130,13 @@ void DevCtrl::onCamConnected(bool ok)
 void DevCtrl::onCamTimerTimeout()
 {
     emit capImage();
+}
+
+void DevCtrl::onAutoFocusSet(int low, int high, int step)
+{
+    autoFocusStartPos = low;
+    autoFocusEndPos = high;
+    autoFocusStep = step;
 }
 
 void DevCtrl::motorRun(int id, int cmd, int pos)

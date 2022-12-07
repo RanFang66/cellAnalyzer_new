@@ -12,6 +12,7 @@
 #include "ExperiData.h"
 #include "CellImageAlogrithm.h"
 #include "ExperiCtrl.h"
+#include "UserManageUi.h"
 
 
 QT_BEGIN_NAMESPACE
@@ -61,6 +62,12 @@ private slots:
 
     void onReturnToMainPage();
 
+    void on_btnUserManage_clicked();
+
+    void onReturnSysSetting();
+
+    void on_btnLanguage_clicked();
+
 private:
     Ui::MainWindow      *ui;
     experiSettingUi     *experiSetting;
@@ -68,6 +75,7 @@ private:
     debugModeUi         *debugMode;
     inExperimentUi      *inExperiment;
     experiResultUi      *experiRes;
+    UserManageUi        *userManage;
 
     DevCtrl             *m_dev;
     ExperiSetting       *m_setting;
@@ -81,11 +89,13 @@ private:
     int appSelcIndex = 0;
     int sysSettingIndex = 1;
     int helpDocIndex = 2;
+    int languageSelcIndex = 3;
     int experiSettingIndex;
     int experiDataIndex;
     int debugModeIndex;
     int inExperimentIndex;
     int experiResultIndex;
+    int userManageIndex;
 
     int mainIndex;
 

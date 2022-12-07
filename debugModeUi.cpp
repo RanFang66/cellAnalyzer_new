@@ -50,6 +50,7 @@ void debugModeUi::onDevStatusUpdated()
 void debugModeUi::onAutoFocusComplete()
 {
     onDevStatusUpdated();
+    disconnect(m_dev, SIGNAL(autoFocusComplete()), this, SLOT(onAutoFocusComplete()));
     m_dev->cameraRun();
     QMessageBox::about(this, "Complete", "Auto focus completeed");
 }
@@ -98,13 +99,13 @@ void debugModeUi::initDubugModeUi()
         ui->lblCamName->setText(tr("Camera Closed"));
     }
 
-    connect(m_dev, SIGNAL(imageUpdated()), this, SLOT(onCamImageUpdated()));
+
     connect(m_dev, SIGNAL(devStatusUpdated()), this, SLOT(onDevStatusUpdated()));
 //    connect(m_dev, SIGNAL(chipXMotorStateUpdated()), this, SLOT(onDevStatusUpdated()));
 //    connect(m_dev, SIGNAL(chipYMotorStateUpdated()), this, SLOT(onDevStatusUpdated()));
 //    connect(m_dev, SIGNAL(cameraMotorStateUpdated()), this, SLOT(onDevStatusUpdated()));
 //    connect(m_dev, SIGNAL(filterMotorStateUpdated()), this, SLOT(onDevStatusUpdated()));
-    connect(m_dev, SIGNAL(autoFocusComplete()), this, SLOT(onAutoFocusComplete()));
+
     connect(ui->rBtnLedGreen, SIGNAL(clicked()), this, SLOT(onLedChanged()));
     connect(ui->rBtnLedBlue, SIGNAL(clicked()), this, SLOT(onLedChanged()));
     connect(ui->rBtnLedWhite, SIGNAL(clicked()), this, SLOT(onLedChanged()));
@@ -113,7 +114,9 @@ void debugModeUi::initDubugModeUi()
     connect(ui->rBtnChipMotorY, SIGNAL(clicked()), this, SLOT(onMotorChanged()));
     connect(ui->rBtnCamMotor, SIGNAL(clicked()), this, SLOT(onMotorChanged()));
     connect(ui->rBtnFilterMotor, SIGNAL(clicked()), this, SLOT(onMotorChanged()));
-
+    connect(ui->spinAFHighLimit, SIGNAL(valueChanged(int)), this, SLOT(onAFParaSet()));
+    connect(ui->spinAFLowLimit, SIGNAL(valueChanged(int)), this, SLOT(onAFParaSet()));
+    connect(ui->spinAFStep, SIGNAL(valueChanged(int)), this, SLOT(onAFParaSet()));
     connect(ui->hsRedGain, SIGNAL(valueChanged(int)), this, SLOT(onRGBGainChanged(int)));
     updateCamParas();
 }
@@ -260,13 +263,15 @@ void debugModeUi::on_btnCamRun_clicked()
 {
  //   m_dev->connectCamera();
     m_dev->cameraRun();
+    connect(m_dev, SIGNAL(imageUpdated()), this, SLOT(onCamImageUpdated()));
 
 }
 
 void debugModeUi::on_btnCamStop_clicked()
 {
- //   m_dev->cameraStop();
-    m_dev->disconnectCamera();
+    m_dev->cameraStop();
+    disconnect(m_dev, SIGNAL(imageUpdated()), this, SLOT(onCamImageUpdated()));
+//    m_dev->disconnectCamera();
 }
 
 void debugModeUi::on_btnUpdateSysStatus_clicked()
@@ -277,6 +282,7 @@ void debugModeUi::on_btnUpdateSysStatus_clicked()
 void debugModeUi::on_btnAutoFocus_clicked(bool checked)
 {
 //    ui->btnAutoFocus->setDisabled(true);
+    connect(m_dev, SIGNAL(autoFocusComplete()), this, SLOT(onAutoFocusComplete()));
     m_dev->startAutoFocus(checked);
 }
 
@@ -352,19 +358,19 @@ void debugModeUi::on_hsContrast_valueChanged(int value)
 {
     double contrast = value / 100.0;
     CameraSetContrast(0, contrast);
-    ui->lblContrast->setText(QString::number(value));
+    ui->lblContrast->setText(QString::number(contrast));
 }
 
 void debugModeUi::on_hsGamma_valueChanged(int value)
 {
     double gamma = value / 100.0;
     CameraSetGamma(0, gamma);
-    ui->lblGamma->setText(QString::number(value));
+    ui->lblGamma->setText(QString::number(gamma));
 }
 
 void debugModeUi::on_cbExposure_clicked(bool checked)
 {
-    CameraSetAGC(CAM_INDEX_0, checked);
+    CameraSetAEC(CAM_INDEX_0, checked);
     updateCamParas();
     ui->hsExposure->setDisabled(checked);
 }
@@ -379,7 +385,7 @@ void debugModeUi::on_hsSaturation_valueChanged(int value)
 {
     double sat = value / 100.0;
     CameraSetSaturation(0, sat);
-    ui->lblSaturation->setText(QString::number(value));
+    ui->lblSaturation->setText(QString::number(sat));
 }
 
 void debugModeUi::on_hsBlackBalance_valueChanged(int value)
@@ -397,9 +403,6 @@ void debugModeUi::on_cbAutoWB_clicked(bool checked)
     updateCamParas();
 }
 
-
-
-
 void debugModeUi::onRGBGainChanged(int val)
 {
     double rg = ui->hsRedGain->value() / 100;
@@ -416,4 +419,33 @@ void debugModeUi::on_hsAutoExpoTarget_valueChanged(int value)
 {
     CameraSetAETarget(0, value);
     ui->lblAETarget->setText(QString::number(value));
+}
+
+void debugModeUi::on_btnBrCamParas_clicked()
+{
+    m_dev->initCameraParas(1);
+    updateCamParas();
+}
+
+
+
+void debugModeUi::on_btnFL2CamParas_clicked()
+{
+    m_dev->initCameraParas(2);
+    updateCamParas();
+}
+
+void debugModeUi::on_btnFL1CamParas_clicked()
+{
+    m_dev->initCameraParas(3);
+    updateCamParas();
+}
+
+void debugModeUi::onAFParaSet()
+{
+    int low, high, step;
+    low = ui->spinAFHighLimit->value();
+    high = ui->spinAFLowLimit->value();
+    step = ui->spinAFStep->value();
+    emit setAutoFocusParameters(low, high, step);
 }

@@ -195,4 +195,42 @@ QPushButton#btnSysInfo {
     border-radius: 30px;
 }
 
+QLabel#lblLangTitle {
+    left: 36px;
+    top: 278px;
+    width: 236px;
+    height: 71px;
+    font-size: 45px;
+    font-weight: 700;
+    letter-spacing: 0px;
+    line-height: 0px;
+    color: rgba(255, 255, 255, 1);
+    text-align: left;
+    vertical-align: middle;
+}
+
+QPushButton#btnLangReturn {
+    width: 101;
+    height: 62;
+    border-image: url(:/images/arrow_return.png);
+}
+
+QPushButton#btnChinese, 
+QPushButton#btnEnglish {
+    font-size: 45px;
+    font-weight: 400;
+    letter-spacing: 0px;
+    line-height: 0px;
+    color: rgba(255, 255, 255, 1);
+    text-align: left;
+    vertical-align: middle;
+}
+
+QLabel#lblLine1,
+QLabel#lblLine2 {
+    width: 1200px;
+    height: 5px;
+    background: rgba(255, 255, 255, 0.5);
+}
+
 

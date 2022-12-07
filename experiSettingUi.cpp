@@ -11,6 +11,9 @@ experiSettingUi::experiSettingUi(ExperiSetting *setting, QWidget *parent) :
 {
     ui->setupUi(this);
     loadStyleSheet(":/styles/experiSettingStyle.qss");
+
+    db = QSqlDatabase::database("cellDataConn");
+    query = new QSqlQuery(db);
 //    initExperiSettingUi();
 }
 
@@ -35,9 +38,10 @@ void experiSettingUi::initExperiSettingUi()
 
 
     ui->comboCellType->clear();
-    ui->comboCellType->addItem("human blood", CELL_HUMAN_BLOOD);
-    ui->comboCellType->addItem("human bone", CELL_HUMAN_BONE);
-    ui->comboCellType->addItem("mice liver", CELL_MICE_LIVER);
+    query->exec("SELECT cellTypeName from cellType");
+    while (query->next()) {
+        ui->comboCellType->addItem(query->value(0).toString());
+    }
 
     ui->cBoxChannel1->setChecked(false);
     ui->cBoxChannel2->setChecked(false);

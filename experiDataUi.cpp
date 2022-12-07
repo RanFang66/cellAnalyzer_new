@@ -29,6 +29,9 @@ void experiDataUi::updateExperiDataUi()
 
 void experiDataUi::initExperiDataUi()
 {
+    ui->tblExperiData->setSelectionBehavior(QAbstractItemView::SelectRows);
+    ui->tblExperiData->setSelectionMode(QAbstractItemView::MultiSelection);
+    ui->tblExperiData->setAlternatingRowColors(true);
     ui->dateEditStart->setDate(QDate::currentDate().addDays(-1));
     ui->dateEditEnd->setDate(QDate::currentDate());
 
@@ -77,6 +80,8 @@ void experiDataUi::initExperiDataUi()
     ui->tblExperiData->setSelectionModel(theSelection);
     ui->tblExperiData->verticalHeader()->setVisible(false);
     ui->tblExperiData->setColumnHidden(0, true);
+    ui->tblExperiData->resizeColumnsToContents();
+
     theSelection->clear();
     ui->btnDeleteData->setEnabled(false);
     ui->btnDetail->setEnabled(false);

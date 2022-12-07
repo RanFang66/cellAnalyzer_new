@@ -10,7 +10,7 @@
 bool createDbConnect()
 {
     QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE", "cellDataConn");
-    db.setDatabaseName("cellAnalyzerDb.db");
+    db.setDatabaseName("/home/seekgene/gitRepo/cellAnalyzerDb.db");
     bool ok = db.open();
     if (!ok) {
         qDebug() << ": open database error!" + db.lastError().text();
@@ -40,6 +40,7 @@ static void handleVisibleChanged() {
 int main(int argc, char *argv[])
 {
     qputenv("QT_IM_MODULE", QByteArray("qtvirtualkeyboard"));
+
     if (createDbConnect()) {
         QApplication a(argc, argv);
         MainWindow w;

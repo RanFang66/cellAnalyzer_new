@@ -2,6 +2,12 @@
 #include <QDebug>
 CellImageAlogrithm::CellImageAlogrithm(QObject *parent) : QObject(parent)
 {
+    cellNum = 0;
+    liveCellNum = 0;
+    deadCellNum = 0;
+    avgRadiu = 0;
+    avgCompactness = 0;
+    aggregateRate = 0;
 
 }
 
@@ -28,7 +34,7 @@ void CellImageAlogrithm::getBinaryImage(Mat &imgGray, Mat &imgBin, int method)
     case BINARY_OTSU:
     {
         int thresh = 128;
-        thresh = threshold(imgGray, imgBin, thresh, 255, THRESH_BINARY | THRESH_OTSU);
+        thresh = threshold(imgGray, imgBin, thresh, 255, THRESH_BINARY_INV | THRESH_OTSU);
         qDebug() << "--- Image Algorithm: OTSU threshold value: " << thresh;
         break;
     }
@@ -48,7 +54,7 @@ void CellImageAlogrithm::filterImage(Mat &imgSrc, Mat &imgDst, int method)
     switch (method) {
     case MEDIAN_FILTER:
     {
-        medianBlur(imgSrc, imgDst, 3);
+        medianBlur(imgSrc, imgDst, 5);
         break;
     }
     case GAUSSIAN_FILTER:
@@ -76,59 +82,155 @@ void CellImageAlogrithm::enhanceContrast(Mat &imgSrc, Mat &imgDst)
 
 }
 
-int CellImageAlogrithm::markCellsInCluster(Mat &cluster, Mat &img, Point2f ltPoint, int radiu)
+
+using namespace std;
+int CellImageAlogrithm::markCellsInCluster(Mat &cluster, Mat &imgMarked, Point ltPoint, int r)
 {
-    int minRadiu = 2;
-    int radiuLimit = 10;
-    threshold(cluster, cluster, 128, 255, THRESH_BINARY | THRESH_TRIANGLE);
-    std::vector<std::vector<Point>> contours;
-    std::vector<Vec4i> hierarchy;
-    findContours(cluster, contours, hierarchy, RETR_TREE, CHAIN_APPROX_NONE);
-    std::vector<Point2f> centers;
-    std::vector<float> radius;
-    int cellNum = 0;
-    double avgRadiu = 0;
-    unsigned long contourNum = contours.size();
-    for (unsigned long i = 0; i < contourNum; i++) {
-        Point2f center;
-        float radiu;
-        minEnclosingCircle(contours[i], center, radiu);
-        if (radiu > minRadiu && radiu < radiuLimit) {
-            centers.push_back(center);
-            radius.push_back(radiu);
-            avgRadiu += radiu;
+//        vector<Vec3f> circles;
+//        HoughCircles(temp, circles, HOUGH_GRADIENT, 1, HoughMinDist, cannyThres2,  HoughThres, HoughMinRadiu, HoughMaxRadiu);
+
+//        double radiuSum = 0;
+//        for (unsigned long i = 0; i < circles.size(); i++) {
+//            radiuSum += circles[i][2];
+//        }
+//        double radiuMean = radiuSum / circles.size();
+
+//        for (unsigned long i = 0; i < circles.size(); i++) {
+
+//            if (radiuMean*1.5 > circles[i][2])
+//                circle(imgMarked, Point(circles[i][0]+x, circles[i][1]+y), circles[i][2], Scalar(0, 255, 255), 2);
+//        }
+//        QString name = QString("(%1, %2)").arg(x).arg(y);
+//        imshow(name.toStdString(), temp);
+
+    //    QString name = "/home/ran/Documents/clusterCells/"+QString("cluster_(%1, %2)").arg(x).arg(y)+".jpg";
+    //    imwrite(name.toStdString(), temp);
+    //    cvtColor(temp, temp, COLOR_BGR2GRAY);
+
+
+    //    double a = 0;
+
+
+
+    //    for (int i = 1; i < temp.rows-1; i++) {
+    //        for (int j = 1; j < temp.cols-1; j++) {
+    //            Point maxLoc = findKernelMax(temp, i, j, 3, 3);
+    //            if (maxLoc.y > temp.at<uchar>(i, j) + 18) {
+    //                tempBin.at<uchar>(i, j) = 255;
+    //            } else {
+    //                tempBin.at<uchar>(i, j) = 0;
+    //            }
+    //        }
+    //    }
+
+        Mat tempBin;
+        int a = threshold(cluster, tempBin, 130, 255, THRESH_BINARY | THRESH_TRIANGLE);
+ //       qDebug() << "(" << x <<", " << y << ") threshold :" << a << endl;
+
+
+        Mat kernel = getStructuringElement(MORPH_CROSS, Size(3, 3));
+        erode(tempBin, tempBin, kernel);
+
+//        QString name = QString("(%1, %2)").arg(x).arg(y);
+//        imshow(name.toStdString(), tempBin);
+
+    //    //fillHole(temp, temp);
+        vector<vector<Point>>  contou;
+        vector<Vec4i> hier;
+
+
+        findContours(tempBin, contou, hier, RETR_TREE, CHAIN_APPROX_NONE);
+        vector<Point2f> center(contou.size());
+        vector<float> radius(contou.size());
+        for (unsigned long i = 0; i < contou.size(); i++) {
+            minEnclosingCircle(contou[i], center[i], radius[i]);
+
+     //       qDebug() << "(" << center[i].x << ", " << center[i].y << ")" << endl;
         }
-    }
-    avgRadiu /= radius.size();
-    for (unsigned long i = 0; i < radius.size(); i++) {
-        circle(img, centers[i]+ ltPoint, radius[i]+1, Scalar(0, 255, 255), 2, LINE_8, 0);
-        cellNum++;
-    }
-    return cellNum;
+
+        for (unsigned long j = 0; j < contou.size(); j++) {
+            if (radius[j] < minRadiu-1 && contourArea(contou[j]) > 4)
+                circle(imgMarked, center[j] + Point2f(ltPoint), radius[j]+1, Scalar(0, 255, 255), 1);
+        }
+
+//    Mat labels, stats, centroids;
+//    auto num_cells = connectedComponentsWithStats(cluster, labels, stats, centroids);
+
+//    for (int i = 2; i < num_cells; i++) {
+//  //      qDebug() << "Obeject" << i << "with pos: (" << centroids.at<Point2d>(i).x << ", "<< centroids.at<Point2d>(i).y << ")with area" << stats.at<int>(i, CC_STAT_AREA) << endl;
+//        if (stats.at<int>(i, CC_STAT_AREA) > 9 && stats.at<int>(i, CC_STAT_AREA) < 50) {
+//            int width = stats.at<int>(i, CC_STAT_WIDTH);
+//            int height = stats.at<int>(i, CC_STAT_HEIGHT);
+//            int radiu = (width + height) / 2 + 1;
+//            circle(imgMarked, centroids.at<Point2d>(i)+ltPoint, radiu, Scalar(0, 255, 255), 1);
+//        }
+//    }
 }
 
 void CellImageAlogrithm::analyzeCellsBright(Mat &img, Mat &imgMarked)
 {
-//    Mat imgGray;
-//    Mat imgBin;
-//    int cluseterCellNum = 0;
+    Mat imgGray;
+    Mat imgBin;
+    int cluseterCellNum = 0;
 
-//    cvtColor(img, imgGray, COLOR_BGR2GRAY);
+    cellNum = 0;
+    avgRadiu = 0;
+    cvtColor(img, imgGray, COLOR_BGR2GRAY);
 
-//    filterImage(imgGray, imgGray, MEDIAN_FILTER);
-//    getBinaryImage(imgGray, imgBin, BINARY_OTSU);
+    filterImage(imgGray, imgGray, MEDIAN_FILTER);
+    getBinaryImage(imgGray, imgBin, BINARY_OTSU);
 
-//    addBorder(imgBin, 3, 255);
+//    addBorder(imgBin, 3, 0);
 
-//    // get cell contours
-//    std::vector<std::vector<Point>> contours;
-//    std::vector<Vec4i> hierarchy;
-//    findContours(imgBin, contours, hierarchy, RETR_TREE, CHAIN_APPROX_NONE);
+    // get cell contours
+    std::vector<std::vector<Point>> contours;
+    std::vector<Vec4i> hierarchy;
+    findContours(imgBin, contours, hierarchy, RETR_TREE, CHAIN_APPROX_NONE);
 
+    vector<vector<Point>> contours_poly(contours.size());
+    vector<Point2f> centers(contours.size());
+    vector<float> radius(contours.size());
+    Scalar colorRed(0, 0, 255);
+    Scalar colorBlue(255, 0, 0);
+    Scalar colorPurple(255, 0, 255);
+    double radiuSum = 0;
+    for (unsigned long i = 0; i < contours.size(); i++) {
+        approxPolyDP(Mat(contours[i]), contours_poly[i], 3, true);
+        minEnclosingCircle(contours_poly[i], centers[i], radius[i]);
+//        qDebug() << "(" << centers[i].x << ", " << centers[i].y << ")" ;
+    }
 
-//    // fitting the contours with circles
-//    std::vector<Point2f> centers;
-//    std::vector<float> radius;
+    for (unsigned long i = 0; i < contours.size(); i++) {
+        if (radius[i] > minRadiu && radius[i] < maxRadiu) {
+            circle(imgMarked, centers[i], (int)radius[i], colorRed, 2, LINE_8, 0);
+            cellNum++;
+            radiuSum += radius[i];
+
+        } else if (radius[i] > maxRadiu && radius[i] < 3*maxRadiu) {
+            circle(imgMarked, centers[i], (int)radius[i], colorPurple, 2, LINE_8, 0);
+            int Roi_x = centers[i].x - radius[i];
+            int Roi_y = centers[i].y - radius[i];
+
+            int height = radius[i] * 2 + 3;
+            int width = radius[i] * 2 + 3;
+            if (width + Roi_x >= imgGray.cols) {
+                width = imgGray.cols-1-Roi_x;
+            }
+            if (height + Roi_y >= imgGray.rows) {
+                height = imgGray.rows-1-Roi_y;
+            }
+
+            if (Roi_x < 0 ||  Roi_y < 0 || width <= 0 || height <= 0)
+                continue;
+
+            Mat cluster = Mat(height, width, CV_8UC1);
+            Point2d plt(Roi_x, Roi_y);
+            imgGray(Rect(Roi_x, Roi_y, width, height)).copyTo(cluster);
+            markCellsInCluster(cluster, imgMarked, plt, radius[i]);
+        }
+    }
+    avgRadiu = radiuSum / cellNum;
+
 //    unsigned long contourNum = contours.size();
 //    for (unsigned long i = 0; i < contourNum; i++) {
 //        if (hierarchy[i][3] != 0)
@@ -146,45 +248,49 @@ void CellImageAlogrithm::analyzeCellsBright(Mat &img, Mat &imgMarked)
 //        }
 //    }
 //    avgRadiu /= radius.size();
-//    qDebug() << "cell numbers: " << cellNum << ", average radiu: " << avgRadiu << endl;
-//    filterImage(imgMarked, imgMarked, GAUSSIAN_FILTER);
-    cellNum = 1030;
-    avgRadiu = 30;
+    qDebug() << "cell numbers: " << cellNum << ", average radiu: " << avgRadiu;
+    filterImage(imgMarked, imgMarked, GAUSSIAN_FILTER);
+//    cellNum = 1030;
+//    avgRadiu = 30;
     emit markCellsFinished();
 }
 
 void CellImageAlogrithm::analyzeCellsFL1(Mat &img, Mat &imgMarked)
 {
-//    Mat imgGray;
-//    Mat imgBin;
-//    cvtColor(img, imgGray, COLOR_BGR2GRAY);
+    Mat imgGray;
+    Mat imgBin;
 
-//    filterImage(imgGray, imgGray, MEDIAN_FILTER);
-//    getBinaryImage(imgGray, imgBin, BINARY_OTSU);
-//    std::vector<std::vector<Point>> contours;
-//    std::vector<Vec4i> hierarchy;
-//    findContours(imgBin, contours, hierarchy, RETR_TREE, CHAIN_APPROX_NONE);
-//    drawContours(imgMarked, contours, -1, Scalar(255, 255, 255));
-//    liveCellNum = contours.size();
-    liveCellNum = 1000;
+    liveCellNum = 0;
+    cvtColor(img, imgGray, COLOR_BGR2GRAY);
+
+    filterImage(imgGray, imgGray, MEDIAN_FILTER);
+    getBinaryImage(imgGray, imgBin, BINARY_OTSU);
+    std::vector<std::vector<Point>> contours;
+    std::vector<Vec4i> hierarchy;
+    findContours(imgBin, contours, hierarchy, RETR_TREE, CHAIN_APPROX_NONE);
+    drawContours(imgMarked, contours, -1, Scalar(255, 255, 255));
+    liveCellNum = contours.size();
+//    liveCellNum = 1000;
     emit markCellsFinished();
 
 }
 
 void CellImageAlogrithm::analyzeCellsFL2(Mat &img, Mat &imgMarked)
 {
-//    Mat imgGray;
-//    Mat imgBin;
-//    cvtColor(img, imgGray, COLOR_BGR2GRAY);
+    Mat imgGray;
+    Mat imgBin;
 
-//    filterImage(imgGray, imgGray, MEDIAN_FILTER);
-//    getBinaryImage(imgGray, imgBin, BINARY_OTSU);
-//    std::vector<std::vector<Point>> contours;
-//    std::vector<Vec4i> hierarchy;
-//    findContours(imgBin, contours, hierarchy, RETR_TREE, CHAIN_APPROX_NONE);
-//    deadCellNum = contours.size();
-//    drawContours(imgMarked, contours, -1, Scalar(255, 255, 255));
-    deadCellNum = 30;
+    deadCellNum = 0;
+    cvtColor(img, imgGray, COLOR_BGR2GRAY);
+
+    filterImage(imgGray, imgGray, MEDIAN_FILTER);
+    getBinaryImage(imgGray, imgBin, BINARY_OTSU);
+    std::vector<std::vector<Point>> contours;
+    std::vector<Vec4i> hierarchy;
+    findContours(imgBin, contours, hierarchy, RETR_TREE, CHAIN_APPROX_NONE);
+    deadCellNum = contours.size();
+    drawContours(imgMarked, contours, -1, Scalar(255, 255, 255));
+//    deadCellNum = 30;
     emit markCellsFinished();
 }
 

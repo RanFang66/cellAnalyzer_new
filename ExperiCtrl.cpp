@@ -119,9 +119,9 @@ ExperiCtrl::ExperiCtrl(DevCtrl *dev, ExperiSetting *setting, ExperiData *data, C
     m_chipPos_Y[4] = 9400;
     m_chipPos_Y[5] = 9600;
 
-    m_chipPos_X[0] = 1300;
-    m_chipPos_X[1] = 1900;
-    m_chipPos_X[2] = 2500;
+    m_chipPos_X[0] = 700;
+    m_chipPos_X[1] = 1400;
+    m_chipPos_X[2] = 2100;
     connect(devCtrl, SIGNAL(chipYMotorStateUpdated()), this, SLOT(experiChamberStateTransfer()));
 //    connect(devCtrl, SIGNAL(camInitOk()), this, SLOT(experimentStateTransfer()));
     connect(devCtrl, SIGNAL(chipXMotorStateUpdated()), this, SLOT(experiPosStateTransfer()));
@@ -136,6 +136,19 @@ ExperiCtrl::ExperiCtrl(DevCtrl *dev, ExperiSetting *setting, ExperiData *data, C
     connect(this, SIGNAL(experiOneChamberFinished()), this, SLOT(experimentStateTransfer()));
 
 
+}
+
+void ExperiCtrl::getCurrentState(int &chamber, int &view, int &imageType)
+{
+    chamber = m_chamberId;
+    view = m_viewId;
+    imageType = m_imageTypeId;
+
+}
+
+const QImage ExperiCtrl::getCurrImage() const
+{
+    return devCtrl->getQImage();
 }
 
 void ExperiCtrl::startExperiment(const QString &experiId)
@@ -261,10 +274,14 @@ void ExperiCtrl::experiCapStateTransfer()
 //        }
         break;
     case CAP_INIT_CAMERA:
-        m_experiCapState = CAP_AUTOFOCUS;
+//        if (!m_autoFocusFlag)
+            m_experiCapState = CAP_AUTOFOCUS;
+//        else
+//            m_experiCapState = CAP_SNAP;
         break;
     case CAP_AUTOFOCUS:
         m_experiCapState = CAP_SNAP;
+        m_autoFocusFlag = true;
         break;
     case CAP_SNAP:
         m_experiCapState = CAP_PROCESS;
@@ -286,6 +303,7 @@ void ExperiCtrl::initExperiment()
 //    m_experiState = getNextState(EXPERI_INIT);
 //    m_yPos = getNextChamberPos(m_experiState);
 //    m_experiChamberState = EXPERI_CHAMBER_INIT;
+    m_autoFocusFlag = false;
     emit experimentInitOk();
 }
 
@@ -317,7 +335,6 @@ void ExperiCtrl::experimentStateMachine()       // ctrl the whole experiment: ct
         break;
     case EXPERI_FINISH:
         calcAnalyzeResult();
-        devCtrl->disconnectCamera();
         emit experimentFinished();
         m_experiState = EXPERI_IDLE;
         m_experiChamberState = EXPERI_CHAMBER_IDLE;

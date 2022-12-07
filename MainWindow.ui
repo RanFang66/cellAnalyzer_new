@@ -483,6 +483,107 @@
      </widget>
     </widget>
     <widget class="QWidget" name="pageHelpDoc"/>
+    <widget class="QWidget" name="pageLangSelc">
+     <widget class="QLabel" name="lblLangTitle">
+      <property name="geometry">
+       <rect>
+        <x>30</x>
+        <y>40</y>
+        <width>641</width>
+        <height>80</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Language Setting</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="btnLangReturn">
+      <property name="geometry">
+       <rect>
+        <x>900</x>
+        <y>30</y>
+        <width>211</width>
+        <height>91</height>
+       </rect>
+      </property>
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="text">
+       <string>PushButton</string>
+      </property>
+      <property name="flat">
+       <bool>true</bool>
+      </property>
+     </widget>
+     <widget class="QLabel" name="lblLine2">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>140</y>
+        <width>1200</width>
+        <height>5</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="btnChinese">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>190</y>
+        <width>1200</width>
+        <height>140</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Chinese</string>
+      </property>
+      <property name="checkable">
+       <bool>true</bool>
+      </property>
+      <property name="flat">
+       <bool>true</bool>
+      </property>
+     </widget>
+     <widget class="QLabel" name="lblLine1">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>340</y>
+        <width>1200</width>
+        <height>5</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="btnEnglish">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>430</y>
+        <width>1200</width>
+        <height>140</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>English</string>
+      </property>
+      <property name="checkable">
+       <bool>true</bool>
+      </property>
+      <property name="flat">
+       <bool>true</bool>
+      </property>
+     </widget>
+    </widget>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">

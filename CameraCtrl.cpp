@@ -1,5 +1,6 @@
 #include "CameraCtrl.h"
 #include <QDebug>
+#include <QElapsedTimer>
 
 const QString CameraCtrl::errorMsg[] = {
     "API OK",
@@ -123,45 +124,64 @@ void CameraCtrl::onSetCamParas(int type)
     default:
         break;
     }
+    QElapsedTimer delay;
+    delay.start();
+    while(delay.elapsed() < 5000)
+        ;
     emit cameraParasSetRet();
 }
 
 void CameraCtrl::cameraBrightInit()
 {
+    //CameraSetAWB(m_id, true);
+//    CameraSetSaturation(m_id, 1);
+//    CameraSetContrast(m_id, 1);
+//    CameraSetGamma(m_id, 1.33);
+    CameraSetBlackLevel(m_id, 14);
     CameraSetAEC(m_id, true);
     CameraSetAETarget(m_id, 100);
     CameraSetAGC(m_id, true);
-    CameraSetAWB(m_id, true);
-    CameraSetSaturation(m_id, 1);
-    CameraSetContrast(m_id, 1);
-    CameraSetGamma(m_id, 1.33);
-    CameraSetBlackLevel(m_id, 14);
+    CameraSetWBGain(m_id, 1.47, 1, 1.83);
+//    CameraOnePushWB(m_id);
 }
 
 void CameraCtrl::cameraFL1Init()
 {
-    CameraSetAEC(m_id, false);
-    CameraSetExposure(m_id, 32767);
-    CameraSetAGC(m_id, false);
-    CameraSetGain(m_id, 126);
-    CameraSetAWB(m_id, true);
-    CameraSetSaturation(m_id, 1.66);
-    CameraSetContrast(m_id, 1.24);
-    CameraSetGamma(m_id, 1.33);
-    CameraSetBlackLevel(m_id, 52);
+//    CameraSetSaturation(m_id, 1);
+//    CameraSetContrast(m_id, 1);
+//    CameraSetGamma(m_id, 1.33);
+    CameraSetBlackLevel(m_id, 50);
+//    CameraSetAEC(m_id, true);
+//    CameraSetAETarget(m_id, 100);
+//    CameraSetAGC(m_id, true);
+//    CameraSetWBGain(m_id, 1.47, 1, 1.83);
+//    CameraSetAGC(m_id, false);
+//    CameraSetAEC(m_id, false);
+//    CameraSetExposure(m_id, 32767);
+//    CameraSetGain(m_id, 120);
+//    //CameraSetAWB(m_id, true);
+//    CameraSetSaturation(m_id, 1.66);
+//    CameraSetContrast(m_id, 1.24);
+//    CameraSetGamma(m_id, 1.33);
+//    CameraSetBlackLevel(m_id, 52);
 }
 
 void CameraCtrl::cameraFL2Init()
 {
-    CameraSetAEC(m_id, false);
-    CameraSetExposure(m_id, 32767);
-    CameraSetAGC(m_id, false);
-    CameraSetGain(m_id, 45);
-    CameraSetAWB(m_id, true);
-    CameraSetSaturation(m_id, 1.24);
-    CameraSetContrast(m_id, 1.29);
-    CameraSetGamma(m_id, 0.82);
-    CameraSetBlackLevel(m_id, 115);
+    CameraSetBlackLevel(m_id, 50);
+//    CameraSetAEC(m_id, true);
+//    CameraSetAETarget(m_id, 100);
+//    CameraSetAGC(m_id, true);
+
+//    CameraSetAGC(m_id, false);
+//    CameraSetAEC(m_id, false);
+//    CameraSetExposure(m_id, 32767);
+//    CameraSetGain(m_id, 40);
+//    CameraSetAWB(m_id, true);
+//    CameraSetSaturation(m_id, 1.24);
+//    CameraSetContrast(m_id, 1.29);
+//    CameraSetGamma(m_id, 0.82);
+//    CameraSetBlackLevel(m_id, 115);
 }
 
 void CameraCtrl::cameraErrorHandle()

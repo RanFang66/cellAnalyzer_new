@@ -11,8 +11,9 @@ QDlgLogin::QDlgLogin(int *userId, QWidget *parent) :
     ui->setupUi(this);
 
     this->setAttribute(Qt::WA_DeleteOnClose);
-    this->setWindowFlags(Qt::SplashScreen);
-    this->setWindowFlags(Qt::FramelessWindowHint);
+    this->setAttribute(Qt::WA_InputMethodEnabled);
+
+    this->setWindowFlags(Qt::Window | Qt::FramelessWindowHint);
 
     db = QSqlDatabase::database("cellDataConn");
     qDebug() << db.databaseName() << db.tables();
@@ -41,7 +42,7 @@ void QDlgLogin::on_btnLogin_clicked()
     if (pswd.isEmpty()) {
         QMessageBox::warning(this, tr("Error"), tr("password can't be void"));
     }
-    QString queryStr = QString("SELECT userId FROM userInfo WHERE name='%1' AND password='%2'").arg(user).arg(pswd);
+    QString queryStr = QString("SELECT userId FROM userInfo WHERE name='%1' AND password='%2'").arg(user).arg(encryptPSWD);
     qDebug() << queryStr;
     if (query->exec(queryStr) && query->next()) {
         *m_userId = query->value(0).toInt();

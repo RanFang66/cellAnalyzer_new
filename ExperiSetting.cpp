@@ -50,7 +50,7 @@ void ExperiSetting::initSetting(int userId, int experiTypeId)
         m_minRadiu = query->value(2).toInt();
         m_maxRadiu = query->value(3).toInt();
     } else {
-        m_cellType = "Human Blood";
+        m_cellType = "cell_2_to_15um";
         m_minRadiu = 15;
         m_maxRadiu = 30;
     }
@@ -65,7 +65,7 @@ void ExperiSetting::setCellTypeID(int newCellTypeID)
         m_minRadiu = query->value(2).toInt();
         m_maxRadiu = query->value(3).toInt();
     } else {
-        m_cellType = "Human Blood";
+        m_cellType = "cell_2_to_15um";
         m_minRadiu = 15;
         m_maxRadiu = 30;
     }

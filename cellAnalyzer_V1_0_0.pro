@@ -11,6 +11,7 @@ CONFIG += c++11
 SOURCES += \
     CameraCtrl.cpp \
     CellImageAlogrithm.cpp \
+    DateTimeSetUi.cpp \
     DevCtrl.cpp \
     DlgAnimationUi.cpp \
     ExperiCtrl.cpp \
@@ -18,6 +19,7 @@ SOURCES += \
     ExperiSetting.cpp \
     QDlgLogin.cpp \
     QSerialWorker.cpp \
+    UserInfoEditDialog.cpp \
     UserManageUi.cpp \
     debugModeUi.cpp \
     experiDataUi.cpp \
@@ -31,6 +33,7 @@ SOURCES += \
 HEADERS += \
     CameraCtrl.h \
     CellImageAlogrithm.h \
+    DateTimeSetUi.h \
     DevCtrl.h \
     DlgAnimationUi.h \
     ExperiCtrl.h \
@@ -39,6 +42,7 @@ HEADERS += \
     MainWindow.h \
     QDlgLogin.h \
     QSerialWorker.h \
+    UserInfoEditDialog.h \
     UserManageUi.h \
     debugModeUi.h \
     experiDataUi.h \
@@ -48,9 +52,11 @@ HEADERS += \
     inExperimentUi.h
 
 FORMS += \
+    DateTimeSetUi.ui \
     DlgAnimationUi.ui \
     MainWindow.ui \
     QDlgLogin.ui \
+    UserInfoEditDialog.ui \
     UserManageUi.ui \
     debugModeUi.ui \
     experiDataUi.ui \

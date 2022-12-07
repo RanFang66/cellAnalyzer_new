@@ -1,5 +1,5 @@
 .QLabel {
-    font-size: 35px;
+    font-size: 30px;
     font-weight: 400;
     letter-spacing: 0px;
     line-height: 0px;
@@ -38,12 +38,14 @@ QComboBox#cBoxChamberSelect {
     border:none;
 } */
 
-QGroupBox::title {
+
+
+.GroupBox::title {
     font-size: 28px;
     font-weight: 400;
     letter-spacing: 0px;
     line-height: 22px;
-    color: rgba(255, 255, 255, 0.7);
+    color: rgba(10, 247, 231, 1);
     
     /* background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
                                       stop: 0 #FF0ECE, stop: 1 #FFFFFF); */
@@ -51,7 +53,7 @@ QGroupBox::title {
 
 
 .QRadioButton {
-    font-size: 35px;
+    font-size: 32px;
     font-weight: 400;
     letter-spacing: 0px;
     line-height: 0px;
@@ -71,6 +73,50 @@ QRadioButton::indicator:checked {
 QPushButton#btnReturn {
     min-width: 100px;
     min-height: 100px;
+    max-width: 100px;
+    max-height: 100px;
     border-radius: 3px;
     border-image: url(:/images/return_icon.png);
+}
+
+QPushButton#btnLine {
+    min-width: 59;
+    min-height: 58;
+    border-image: url(:/images/line.png);
+}
+
+QPushButton#btnDist {
+    min-width: 59;
+    min-height: 58;
+    border-image: url(:/images/dist.png);
+}
+
+QPushButton#btnAngle {
+    min-width: 59;
+    min-height: 58;
+    border-image: url(:/images/angle.png);
+}
+
+QPushButton#btnCircle {
+    min-width: 59;
+    min-height: 58;
+    border-image: url(:/images/circle.png);
+}
+
+QPushButton#btnEclipse {
+    min-width: 59;
+    min-height: 58;
+    border-image: url(:/images/eclipse.png);
+}
+
+QPushButton#btnZoomIn {
+    min-width: 59;
+    min-height: 59;
+    border-image: url(:/images/zoom_in.png);
+}
+
+QPushButton#btnZoomOut {
+    min-width: 59;
+    min-height: 59;
+    border-image: url(:/images/zoom_out.png);
 }

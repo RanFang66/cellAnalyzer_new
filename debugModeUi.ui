@@ -20,10 +20,140 @@
    <string>Form</string>
   </property>
   <layout class="QGridLayout" name="gridLayout_8" columnstretch="1,2">
-   <item row="0" column="0">
+   <item row="3" column="1">
+    <widget class="QTableWidget" name="tblSysStatus">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <row>
+      <property name="text">
+       <string>Chip Motor X</string>
+      </property>
+     </row>
+     <row>
+      <property name="text">
+       <string>Chip Motor Y</string>
+      </property>
+     </row>
+     <row>
+      <property name="text">
+       <string>Camera Motor</string>
+      </property>
+     </row>
+     <row>
+      <property name="text">
+       <string>FilterMotor</string>
+      </property>
+     </row>
+     <row>
+      <property name="text">
+       <string>Led</string>
+      </property>
+     </row>
+     <row>
+      <property name="text">
+       <string>Chip Tray</string>
+      </property>
+     </row>
+     <column>
+      <property name="text">
+       <string>Status</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>LimitPos</string>
+      </property>
+     </column>
+     <item row="0" column="0">
+      <property name="text">
+       <string>0</string>
+      </property>
+      <property name="textAlignment">
+       <set>AlignCenter</set>
+      </property>
+     </item>
+     <item row="0" column="1">
+      <property name="text">
+       <string>No Limit</string>
+      </property>
+      <property name="textAlignment">
+       <set>AlignCenter</set>
+      </property>
+     </item>
+     <item row="1" column="0">
+      <property name="text">
+       <string>0</string>
+      </property>
+      <property name="textAlignment">
+       <set>AlignCenter</set>
+      </property>
+     </item>
+     <item row="1" column="1">
+      <property name="text">
+       <string>No Limit</string>
+      </property>
+      <property name="textAlignment">
+       <set>AlignCenter</set>
+      </property>
+     </item>
+     <item row="2" column="0">
+      <property name="text">
+       <string>0</string>
+      </property>
+      <property name="textAlignment">
+       <set>AlignCenter</set>
+      </property>
+     </item>
+     <item row="2" column="1">
+      <property name="text">
+       <string>No Limit</string>
+      </property>
+      <property name="textAlignment">
+       <set>AlignCenter</set>
+      </property>
+     </item>
+     <item row="3" column="0">
+      <property name="text">
+       <string>0</string>
+      </property>
+      <property name="textAlignment">
+       <set>AlignCenter</set>
+      </property>
+     </item>
+     <item row="3" column="1">
+      <property name="text">
+       <string>No Limit</string>
+      </property>
+      <property name="textAlignment">
+       <set>AlignCenter</set>
+      </property>
+     </item>
+     <item row="4" column="0">
+      <property name="text">
+       <string>Led Off</string>
+      </property>
+      <property name="textAlignment">
+       <set>AlignCenter</set>
+      </property>
+     </item>
+     <item row="5" column="0">
+      <property name="text">
+       <string>No Chip</string>
+      </property>
+      <property name="textAlignment">
+       <set>AlignCenter</set>
+      </property>
+     </item>
+    </widget>
+   </item>
+   <item row="0" column="0" rowspan="4">
     <widget class="QToolBox" name="toolBox">
      <property name="currentIndex">
-      <number>0</number>
+      <number>1</number>
      </property>
      <widget class="QWidget" name="page">
       <property name="geometry">
@@ -31,13 +161,13 @@
         <x>0</x>
         <y>0</y>
         <width>352</width>
-        <height>1474</height>
+        <height>1510</height>
        </rect>
       </property>
       <attribute name="label">
        <string>Motor / Led</string>
       </attribute>
-      <layout class="QVBoxLayout" name="verticalLayout_2">
+      <layout class="QVBoxLayout" name="verticalLayout_2" stretch="1,4,2,2,9">
        <item>
         <widget class="QGroupBox" name="groupBox_7">
          <property name="sizePolicy">
@@ -224,58 +354,36 @@
          <property name="title">
           <string>Led Control</string>
          </property>
-         <widget class="QRadioButton" name="rBtnLedGreen">
-          <property name="geometry">
-           <rect>
-            <x>12</x>
-            <y>68</y>
-            <width>67</width>
-            <height>28</height>
-           </rect>
-          </property>
-          <property name="text">
-           <string>Green</string>
-          </property>
-         </widget>
-         <widget class="QRadioButton" name="rBtnLedOff">
-          <property name="geometry">
-           <rect>
-            <x>163</x>
-            <y>133</y>
-            <width>48</width>
-            <height>28</height>
-           </rect>
-          </property>
-          <property name="text">
-           <string>Off</string>
-          </property>
-         </widget>
-         <widget class="QRadioButton" name="rBtnLedWhite">
-          <property name="geometry">
-           <rect>
-            <x>12</x>
-            <y>133</y>
-            <width>66</width>
-            <height>28</height>
-           </rect>
-          </property>
-          <property name="text">
-           <string>White</string>
-          </property>
-         </widget>
-         <widget class="QRadioButton" name="rBtnLedBlue">
-          <property name="geometry">
-           <rect>
-            <x>163</x>
-            <y>68</y>
-            <width>56</width>
-            <height>28</height>
-           </rect>
-          </property>
-          <property name="text">
-           <string>Blue</string>
-          </property>
-         </widget>
+         <layout class="QGridLayout" name="gridLayout_9">
+          <item row="0" column="0">
+           <widget class="QRadioButton" name="rBtnLedGreen">
+            <property name="text">
+             <string>Green</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QRadioButton" name="rBtnLedBlue">
+            <property name="text">
+             <string>Blue</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QRadioButton" name="rBtnLedWhite">
+            <property name="text">
+             <string>White</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QRadioButton" name="rBtnLedOff">
+            <property name="text">
+             <string>Off</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
         </widget>
        </item>
        <item>
@@ -289,7 +397,7 @@
          <property name="title">
           <string>Camera Control</string>
          </property>
-         <layout class="QVBoxLayout" name="verticalLayout">
+         <layout class="QVBoxLayout" name="verticalLayout" stretch="1,1,1,4,4,4,1">
           <item>
            <layout class="QHBoxLayout" name="horizontalLayout_7">
             <item>
@@ -767,7 +875,7 @@
         <x>0</x>
         <y>0</y>
         <width>352</width>
-        <height>1474</height>
+        <height>1510</height>
        </rect>
       </property>
       <attribute name="label">
@@ -781,197 +889,84 @@
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_5">
           <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_9">
-            <item>
-             <widget class="QPushButton" name="btnZoomIn">
-              <property name="maximumSize">
-               <size>
-                <width>40</width>
-                <height>16777215</height>
-               </size>
-              </property>
-              <property name="text">
-               <string>+</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QPushButton" name="btnZoomOut">
-              <property name="maximumSize">
-               <size>
-                <width>40</width>
-                <height>16777215</height>
-               </size>
-              </property>
-              <property name="text">
-               <string>-</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QPushButton" name="btnResetView">
-              <property name="maximumSize">
-               <size>
-                <width>40</width>
-                <height>16777215</height>
-               </size>
-              </property>
-              <property name="text">
-               <string>=</string>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </item>
-          <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_10">
-            <item>
-             <widget class="QCheckBox" name="cbHFlip">
-              <property name="text">
-               <string>H Flip</string>
-              </property>
-              <property name="checked">
-               <bool>false</bool>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QCheckBox" name="cbVFlip">
-              <property name="text">
-               <string>V Flip</string>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </item>
-          <item>
-           <widget class="QTableWidget" name="tblSysStatus">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
+           <widget class="QPushButton" name="btnBrCamParas">
+            <property name="text">
+             <string>Bright Camera Parameters</string>
             </property>
-            <row>
-             <property name="text">
-              <string>Chip Motor X</string>
-             </property>
-            </row>
-            <row>
-             <property name="text">
-              <string>Chip Motor Y</string>
-             </property>
-            </row>
-            <row>
-             <property name="text">
-              <string>Camera Motor</string>
-             </property>
-            </row>
-            <row>
-             <property name="text">
-              <string>FilterMotor</string>
-             </property>
-            </row>
-            <row>
-             <property name="text">
-              <string>Led</string>
-             </property>
-            </row>
-            <row>
-             <property name="text">
-              <string>Chip Tray</string>
-             </property>
-            </row>
-            <column>
-             <property name="text">
-              <string>Status</string>
-             </property>
-            </column>
-            <column>
-             <property name="text">
-              <string>LimitPos</string>
-             </property>
-            </column>
-            <item row="0" column="0">
-             <property name="text">
-              <string>0</string>
-             </property>
-             <property name="textAlignment">
-              <set>AlignCenter</set>
-             </property>
-            </item>
-            <item row="0" column="1">
-             <property name="text">
-              <string>No Limit</string>
-             </property>
-             <property name="textAlignment">
-              <set>AlignCenter</set>
-             </property>
-            </item>
-            <item row="1" column="0">
-             <property name="text">
-              <string>0</string>
-             </property>
-             <property name="textAlignment">
-              <set>AlignCenter</set>
-             </property>
-            </item>
-            <item row="1" column="1">
-             <property name="text">
-              <string>No Limit</string>
-             </property>
-             <property name="textAlignment">
-              <set>AlignCenter</set>
-             </property>
-            </item>
-            <item row="2" column="0">
-             <property name="text">
-              <string>0</string>
-             </property>
-             <property name="textAlignment">
-              <set>AlignCenter</set>
-             </property>
-            </item>
-            <item row="2" column="1">
-             <property name="text">
-              <string>No Limit</string>
-             </property>
-             <property name="textAlignment">
-              <set>AlignCenter</set>
-             </property>
-            </item>
-            <item row="3" column="0">
-             <property name="text">
-              <string>0</string>
-             </property>
-             <property name="textAlignment">
-              <set>AlignCenter</set>
-             </property>
-            </item>
-            <item row="3" column="1">
-             <property name="text">
-              <string>No Limit</string>
-             </property>
-             <property name="textAlignment">
-              <set>AlignCenter</set>
-             </property>
-            </item>
-            <item row="4" column="0">
-             <property name="text">
-              <string>Led Off</string>
-             </property>
-             <property name="textAlignment">
-              <set>AlignCenter</set>
-             </property>
-            </item>
-            <item row="5" column="0">
-             <property name="text">
-              <string>No Chip</string>
-             </property>
-             <property name="textAlignment">
-              <set>AlignCenter</set>
-             </property>
-            </item>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="btnFL2CamParas">
+            <property name="text">
+             <string>FL1 Camera Parameters</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="btnFL1CamParas">
+            <property name="text">
+             <string>FL2 Camera Parameters</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item row="1" column="0">
+        <widget class="QGroupBox" name="groupBox_4">
+         <property name="title">
+          <string>Auto Focus</string>
+         </property>
+         <layout class="QFormLayout" name="formLayout">
+          <item row="0" column="0">
+           <widget class="QLabel" name="label">
+            <property name="text">
+             <string>Low Limit</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QSpinBox" name="spinAFLowLimit">
+            <property name="maximum">
+             <number>2000</number>
+            </property>
+            <property name="value">
+             <number>600</number>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QLabel" name="label_2">
+            <property name="text">
+             <string>High Limit</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QSpinBox" name="spinAFHighLimit">
+            <property name="maximum">
+             <number>2500</number>
+            </property>
+            <property name="value">
+             <number>800</number>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="0">
+           <widget class="QLabel" name="label_3">
+            <property name="text">
+             <string>Step</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1">
+           <widget class="QSpinBox" name="spinAFStep">
+            <property name="minimum">
+             <number>2</number>
+            </property>
+            <property name="value">
+             <number>5</number>
+            </property>
            </widget>
           </item>
          </layout>
@@ -979,36 +974,74 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="page_4">
-      <property name="geometry">
-       <rect>
-        <x>0</x>
-        <y>0</y>
-        <width>352</width>
-        <height>1474</height>
-       </rect>
-      </property>
-      <attribute name="label">
-       <string>Operations</string>
-      </attribute>
-      <widget class="QProgressBar" name="progressAutoFocus">
-       <property name="geometry">
-        <rect>
-         <x>9</x>
-         <y>1095</y>
-         <width>99</width>
-         <height>30</height>
-        </rect>
-       </property>
-       <property name="value">
-        <number>0</number>
-       </property>
-      </widget>
-     </widget>
     </widget>
    </item>
    <item row="0" column="1">
     <widget class="QGraphicsView" name="gvMain"/>
+   </item>
+   <item row="2" column="1">
+    <layout class="QHBoxLayout" name="horizontalLayout_9">
+     <item>
+      <widget class="QPushButton" name="btnZoomIn">
+       <property name="maximumSize">
+        <size>
+         <width>40</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>+</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="btnZoomOut">
+       <property name="maximumSize">
+        <size>
+         <width>40</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>-</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="btnResetView">
+       <property name="maximumSize">
+        <size>
+         <width>40</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>=</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item row="1" column="1">
+    <layout class="QHBoxLayout" name="horizontalLayout_10">
+     <item>
+      <widget class="QCheckBox" name="cbHFlip">
+       <property name="text">
+        <string>H Flip</string>
+       </property>
+       <property name="checked">
+        <bool>false</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QCheckBox" name="cbVFlip">
+       <property name="text">
+        <string>V Flip</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
    </item>
   </layout>
  </widget>

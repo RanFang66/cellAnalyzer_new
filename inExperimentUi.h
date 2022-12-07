@@ -3,6 +3,9 @@
 
 #include <QWidget>
 #include <QMovie>
+#include "ExperiCtrl.h"
+#include <QGraphicsScene>
+#include <QGraphicsPixmapItem>
 
 namespace Ui {
 class inExperimentUi;
@@ -13,11 +16,13 @@ class inExperimentUi : public QWidget
     Q_OBJECT
 
 public:
-    explicit inExperimentUi(QWidget *parent = nullptr);
+    explicit inExperimentUi(ExperiCtrl *experiCtrl, QWidget *parent = nullptr);
     ~inExperimentUi();
 
 public slots:
     void updateNoticeText(QString notice);
+
+    void onUpdateImage(void);
 
 
 signals:
@@ -30,6 +35,11 @@ private:
     Ui::inExperimentUi *ui;
 
     QMovie *m_waitingGif;
+
+    ExperiCtrl *experi;
+
+    QGraphicsScene          *m_scene;
+    QGraphicsPixmapItem     *m_image_item;
 
     void loadStyleSheet(const QString &styleSheetFile);
 };

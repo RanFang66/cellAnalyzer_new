@@ -183,3 +183,13 @@ void experiResultUi::on_btnReturn_clicked()
 {
      emit returnToMainPage();
 }
+
+void experiResultUi::on_btnZoomOut_clicked()
+{
+    ui->gvCellImage->scale(1.2, 1.2);
+}
+
+void experiResultUi::on_btnZoomIn_clicked()
+{
+    ui->gvCellImage->scale(1/1.2, 1/1.2);
+}
