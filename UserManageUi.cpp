@@ -169,5 +169,5 @@ void UserManageUi::insertRecord()
 
 void UserManageUi::on_btnReturn_clicked()
 {
-    emit return2sysSetting();
+    emit return2SysSetting();
 }

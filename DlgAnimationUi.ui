@@ -83,21 +83,5 @@
     </hint>
    </hints>
   </connection>
-  <connection>
-   <sender>btnOk</sender>
-   <signal>clicked()</signal>
-   <receiver>DlgAnimationUi</receiver>
-   <slot>accept()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>248</x>
-     <y>695</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>399</x>
-     <y>360</y>
-    </hint>
-   </hints>
-  </connection>
  </connections>
 </ui>

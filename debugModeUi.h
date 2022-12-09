@@ -88,8 +88,6 @@ private slots:
 
     void on_cbAutoWB_clicked(bool checked);
 
-    void onRGBGainChanged(int);
-
     void on_hsAutoExpoTarget_valueChanged(int value);
 
     void on_btnBrCamParas_clicked();
@@ -99,6 +97,12 @@ private slots:
     void on_btnFL1CamParas_clicked();
 
     void onAFParaSet();
+
+    void on_hsRedGain_valueChanged(int value);
+
+    void on_hsGreenGain_valueChanged(int value);
+
+    void on_hsBlueGain_valueChanged(int value);
 
 private:
     Ui::debugModeUi         *ui;

@@ -60,6 +60,7 @@ signals:
     void chipXMotorStateUpdated();
     void chipYMotorStateUpdated();
     void filterMotorStateUpdated();
+    void chipStateUpdated(int state);
     void autoFocusComplete();
     void changeResolution(int index);
     void connectCam();
@@ -73,6 +74,8 @@ public:
     void motorStop(int id);
     void motorSetSpeed(int id, int speed);
     void motorReset(int id);
+    void resetPos();
+    void stopAllMotor();
     void ledLigthOn(int color);
     void ledLightOff();
     void updateDevStatus();

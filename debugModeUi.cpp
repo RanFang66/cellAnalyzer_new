@@ -45,6 +45,14 @@ void debugModeUi::onDevStatusUpdated()
     limit = m_dev->getMotorLimitState(DevCtrl::FILTER_MOTOR);
     ui->tblSysStatus->item(3, 0)->setText(QString::number(pos));
     ui->tblSysStatus->item(3, 1)->setText(QString::number(limit));
+    bool chip = m_dev->getChipState();
+    QString chipString;
+    if (chip) {
+        chipString = "with chip";
+    } else {
+        chipString = "No chip";
+    }
+    ui->tblSysStatus->item(5, 0)->setText(chipString);
 }
 
 void debugModeUi::onAutoFocusComplete()
@@ -117,7 +125,6 @@ void debugModeUi::initDubugModeUi()
     connect(ui->spinAFHighLimit, SIGNAL(valueChanged(int)), this, SLOT(onAFParaSet()));
     connect(ui->spinAFLowLimit, SIGNAL(valueChanged(int)), this, SLOT(onAFParaSet()));
     connect(ui->spinAFStep, SIGNAL(valueChanged(int)), this, SLOT(onAFParaSet()));
-    connect(ui->hsRedGain, SIGNAL(valueChanged(int)), this, SLOT(onRGBGainChanged(int)));
     updateCamParas();
 }
 
@@ -403,17 +410,6 @@ void debugModeUi::on_cbAutoWB_clicked(bool checked)
     updateCamParas();
 }
 
-void debugModeUi::onRGBGainChanged(int val)
-{
-    double rg = ui->hsRedGain->value() / 100;
-    double gg = ui->hsRedGain->value() / 100;
-    double bg = ui->hsBlueGain->value() / 100;
-
-    ui->lblRedGain->setText(QString::number(rg));
-    ui->lblGreenGain->setText(QString::number(gg));
-    ui->lblBlueGain->setText(QString::number(bg));
-    CameraSetWBGain(0, rg, gg, bg);
-}
 
 void debugModeUi::on_hsAutoExpoTarget_valueChanged(int value)
 {
@@ -448,4 +444,34 @@ void debugModeUi::onAFParaSet()
     high = ui->spinAFLowLimit->value();
     step = ui->spinAFStep->value();
     emit setAutoFocusParameters(low, high, step);
+}
+
+void debugModeUi::on_hsRedGain_valueChanged(int value)
+{
+    double rg = value / 100.0;
+    double gg = ui->hsGreenGain->value() / 100.0;
+    double bg = ui->hsBlueGain->value() /100.0;
+
+    ui->lblRedGain->setText(QString::number(rg));
+    CameraSetWBGain(CAM_INDEX_0, rg, gg, bg);
+}
+
+void debugModeUi::on_hsGreenGain_valueChanged(int value)
+{
+    double gg = value / 100.0;
+    double rg = ui->hsRedGain->value() / 100.0;
+    double bg = ui->hsBlueGain->value() /100.0;
+
+    ui->lblGreenGain->setText(QString::number(gg));
+    CameraSetWBGain(CAM_INDEX_0, rg, gg, bg);
+}
+
+void debugModeUi::on_hsBlueGain_valueChanged(int value)
+{
+    double bg = value / 100.0;
+    double rg = ui->hsRedGain->value() / 100.0;
+    double gg = ui->hsGreenGain->value() / 100.0;
+
+    ui->lblBlueGain->setText(QString::number(bg));
+    CameraSetWBGain(CAM_INDEX_0, rg, gg, bg);
 }

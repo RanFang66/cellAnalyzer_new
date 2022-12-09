@@ -194,19 +194,23 @@ void CellImageAlogrithm::analyzeCellsBright(Mat &img, Mat &imgMarked)
     Scalar colorBlue(255, 0, 0);
     Scalar colorPurple(255, 0, 255);
     double radiuSum = 0;
-    for (unsigned long i = 0; i < contours.size(); i++) {
+    int contourSize = contours.size();
+    if (contourSize > 2000) {
+        contourSize = 2000;
+    }
+    for (unsigned long i = 0; i < contourSize; i++) {
         approxPolyDP(Mat(contours[i]), contours_poly[i], 3, true);
         minEnclosingCircle(contours_poly[i], centers[i], radius[i]);
 //        qDebug() << "(" << centers[i].x << ", " << centers[i].y << ")" ;
     }
 
-    for (unsigned long i = 0; i < contours.size(); i++) {
+    for (unsigned long i = 0; i < contourSize; i++) {
         if (radius[i] > minRadiu && radius[i] < maxRadiu) {
             circle(imgMarked, centers[i], (int)radius[i], colorRed, 2, LINE_8, 0);
             cellNum++;
             radiuSum += radius[i];
 
-        } else if (radius[i] > maxRadiu && radius[i] < 3*maxRadiu) {
+        } else if (radius[i] > maxRadiu && radius[i] < 4*maxRadiu) {
             circle(imgMarked, centers[i], (int)radius[i], colorPurple, 2, LINE_8, 0);
             int Roi_x = centers[i].x - radius[i];
             int Roi_y = centers[i].y - radius[i];
@@ -268,9 +272,13 @@ void CellImageAlogrithm::analyzeCellsFL1(Mat &img, Mat &imgMarked)
     std::vector<std::vector<Point>> contours;
     std::vector<Vec4i> hierarchy;
     findContours(imgBin, contours, hierarchy, RETR_TREE, CHAIN_APPROX_NONE);
-    drawContours(imgMarked, contours, -1, Scalar(255, 255, 255));
     liveCellNum = contours.size();
-//    liveCellNum = 1000;
+    if (liveCellNum > 2000) {
+        liveCellNum = 2000;
+    }
+    for (int i = 0; i < liveCellNum; i++) {
+        drawContours(imgMarked, contours, i, Scalar(255, 255, 255));
+    }
     emit markCellsFinished();
 
 }
@@ -289,9 +297,40 @@ void CellImageAlogrithm::analyzeCellsFL2(Mat &img, Mat &imgMarked)
     std::vector<Vec4i> hierarchy;
     findContours(imgBin, contours, hierarchy, RETR_TREE, CHAIN_APPROX_NONE);
     deadCellNum = contours.size();
-    drawContours(imgMarked, contours, -1, Scalar(255, 255, 255));
-//    deadCellNum = 30;
+    if (deadCellNum > 2000) {
+        deadCellNum = 2000;
+    }
+    for (int i = 0; i < deadCellNum; i++) {
+        drawContours(imgMarked, contours, i, Scalar(255, 255, 255));
+    }
     emit markCellsFinished();
+}
+
+void CellImageAlogrithm::markCells(int imgType, Mat &img, Mat &imgMarked)
+{
+    switch (imgType) {
+    case 1:
+        analyzeCellsBright(img, imgMarked);
+        break;
+    case 2:
+        analyzeCellsFL1(img, imgMarked);
+        break;
+    case 3:
+        analyzeCellsFL2(img, imgMarked);
+        break;
+    default:
+        break;
+    }
+}
+
+void CellImageAlogrithm::initAlgorithm()
+{
+    cellNum = 0;
+    liveCellNum = 0;
+    deadCellNum = 0;
+    avgRadiu = 0;
+    avgCompactness = 0;
+    aggregateRate = 0;
 }
 
 

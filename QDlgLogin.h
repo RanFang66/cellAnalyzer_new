@@ -19,6 +19,8 @@ public:
     explicit QDlgLogin(int *userId, QWidget *parent = nullptr);
     ~QDlgLogin();
 
+    int getUserId();
+
 
 private slots:
     void on_btnLogin_clicked();

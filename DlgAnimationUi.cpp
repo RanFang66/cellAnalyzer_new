@@ -6,7 +6,7 @@ DlgAnimationUi::DlgAnimationUi(QWidget *parent) :
     ui(new Ui::DlgAnimationUi)
 {
     ui->setupUi(this);
-
+    m_chipState = false;
     m_movie = new QMovie(":/images/insert_chip.gif", QByteArray(), this);
     m_movie->setCacheMode(QMovie::CacheAll);
     ui->lblMovie->setMovie(m_movie);
@@ -19,4 +19,12 @@ DlgAnimationUi::DlgAnimationUi(QWidget *parent) :
 DlgAnimationUi::~DlgAnimationUi()
 {
     delete ui;
+}
+
+void DlgAnimationUi::on_btnOk_clicked()
+{
+    if (m_chipState == 1) {
+        this->accept();
+    }
+//    this->accept();
 }

@@ -3,6 +3,7 @@
 
 #include <QWidget>
 #include <ExperiSetting.h>
+#include <DlgAnimationUi.h>
 
 const QString EXPERI_TYPE[] = {
     "AOPI Viability",
@@ -39,6 +40,10 @@ public:
     explicit experiSettingUi(ExperiSetting *setting, QWidget *parent = nullptr);
     ~experiSettingUi();
     void initExperiSettingUi();
+
+public slots:
+    void setChipState(int state);
+
 private slots:
     void on_btnNextStep_clicked();
 
@@ -68,10 +73,20 @@ signals:
 private:
     Ui::experiSettingUi *ui;
     ExperiSetting       *m_setting;
+    DlgAnimationUi      *animation;
+    bool m_chipState;
     QSqlDatabase db;
     QSqlQuery *query;
 
     void loadStyleSheet(const QString &styleSheetFile);
 };
+
+inline void experiSettingUi::setChipState(int state)
+{
+    m_chipState = state;
+    if (animation) {
+        animation->setChipState(state);
+    }
+}
 
 #endif // EXPERISETTINGUI_H

@@ -22,7 +22,7 @@
   <widget class="QLabel" name="lblWaittingGif">
    <property name="geometry">
     <rect>
-     <x>290</x>
+     <x>400</x>
      <y>430</y>
      <width>400</width>
      <height>400</height>
@@ -112,6 +112,12 @@
     <string/>
    </property>
   </widget>
+  <zorder>btnPauseExperi</zorder>
+  <zorder>lblNoticeText_1st</zorder>
+  <zorder>lblNoticeText_2nd</zorder>
+  <zorder>lblNoticeText_3rd</zorder>
+  <zorder>lblImage</zorder>
+  <zorder>lblWaittingGif</zorder>
  </widget>
  <resources/>
  <connections/>

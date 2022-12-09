@@ -26,7 +26,7 @@ public:
     void initUserInfoTable(void);
 
 signals:
-    void return2sysSetting();
+    void return2SysSetting();
 
 private slots:
     void on_btnAddUser_clicked();

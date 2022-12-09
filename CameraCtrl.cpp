@@ -126,7 +126,7 @@ void CameraCtrl::onSetCamParas(int type)
     }
     QElapsedTimer delay;
     delay.start();
-    while(delay.elapsed() < 5000)
+    while(delay.elapsed() < 500)
         ;
     emit cameraParasSetRet();
 }
@@ -150,7 +150,7 @@ void CameraCtrl::cameraFL1Init()
 //    CameraSetSaturation(m_id, 1);
 //    CameraSetContrast(m_id, 1);
 //    CameraSetGamma(m_id, 1.33);
-    CameraSetBlackLevel(m_id, 50);
+    CameraSetBlackLevel(m_id, 30);
 //    CameraSetAEC(m_id, true);
 //    CameraSetAETarget(m_id, 100);
 //    CameraSetAGC(m_id, true);
@@ -168,7 +168,7 @@ void CameraCtrl::cameraFL1Init()
 
 void CameraCtrl::cameraFL2Init()
 {
-    CameraSetBlackLevel(m_id, 50);
+    CameraSetBlackLevel(m_id, 30);
 //    CameraSetAEC(m_id, true);
 //    CameraSetAETarget(m_id, 100);
 //    CameraSetAGC(m_id, true);

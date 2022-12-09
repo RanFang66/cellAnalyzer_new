@@ -8,12 +8,13 @@ QDlgLogin::QDlgLogin(int *userId, QWidget *parent) :
     ui(new Ui::QDlgLogin),
     m_userId(userId)
 {
+    qputenv("QT_IM_MODULE", QByteArray("qtvirtualkeyboard"));
     ui->setupUi(this);
 
     this->setAttribute(Qt::WA_DeleteOnClose);
     this->setAttribute(Qt::WA_InputMethodEnabled);
 
-    this->setWindowFlags(Qt::Window | Qt::FramelessWindowHint);
+    this->setWindowFlags(Qt::Window | Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint);
 
     db = QSqlDatabase::database("cellDataConn");
     qDebug() << db.databaseName() << db.tables();
@@ -27,6 +28,11 @@ QDlgLogin::QDlgLogin(int *userId, QWidget *parent) :
 QDlgLogin::~QDlgLogin()
 {
     delete ui;
+}
+
+int QDlgLogin::getUserId()
+{
+    return *m_userId;
 }
 
 void QDlgLogin::on_btnLogin_clicked()

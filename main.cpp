@@ -44,16 +44,23 @@ int main(int argc, char *argv[])
     if (createDbConnect()) {
         QApplication a(argc, argv);
         MainWindow w;
-        QDlgLogin *dlgLogin = new QDlgLogin(w.getUserIdPointer());
+        QDlgLogin *dlgLogin = new QDlgLogin(w.getUserIdPointer(), &w);
 
         QObject::connect(QGuiApplication::inputMethod(), &QInputMethod::visibleChanged, &handleVisibleChanged);
 
-        if (dlgLogin->exec() == QDialog::Accepted) {
-            w.show();
-            return a.exec();
-        } else {
-            return 0;
-        }
+
+        w.show();
+        dlgLogin->show();
+        return a.exec();
+
+
+
+//        if (dlgLogin->exec() == QDialog::Accepted) {
+//            w.show();
+//            return a.exec();
+//        } else {
+//            return 0;
+//        }
     } else {
         qDebug()<< "-------System Error: Can not open database!";
     }

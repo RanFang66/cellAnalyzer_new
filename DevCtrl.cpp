@@ -1,13 +1,13 @@
 #include "DevCtrl.h"
 #include <QDebug>
-
+#include <QElapsedTimer>
 //int DevCtrl::autoFocusStartPos = 620;
 //int DevCtrl::autoFocusEndPos = 660;
 //int DevCtrl::autoFocusStep = 5;
 DevCtrl::DevCtrl(QObject *parent) : QObject(parent)
 {
-    autoFocusStartPos = 450;
-    autoFocusEndPos = 500;
+    autoFocusStartPos = 930;
+    autoFocusEndPos = 1010;
     autoFocusStep = 5;
     initDeviceCtrl();
     initCameraCtrl();
@@ -52,9 +52,9 @@ void DevCtrl::onSerialRecvFrame(const char *data, int frameType)
     case QSerialWorker::CAMERA_MOTOR_STATE:
         m_motorPos[2] = str2int(data, 4);
         m_motorLimitState[2] = data[4] - '0';
-        if (m_autoFocusState == FOCUS_PROCESS && m_motorPos[2] >= m_focusNextPos) {
+        if (m_autoFocusState == FOCUS_PROCESS) { //&& m_motorPos[2] >= m_focusNextPos) {
             emit capImage();
-        } else if (m_autoFocusState == FOCUS_COMPLETE && m_motorPos[2] >= m_focusNextPos) {
+        } else if (m_autoFocusState == FOCUS_COMPLETE) { //&& m_motorPos[2] >= m_focusNextPos) {
             m_autoFocusState = FOCUS_IDLE;
             emit autoFocusComplete();
         } else {
@@ -67,7 +67,10 @@ void DevCtrl::onSerialRecvFrame(const char *data, int frameType)
         m_motorLimitState[3] = data[4] - '0';
         emit filterMotorStateUpdated();
         break;
-
+    case QSerialWorker::CHIP_STATE:
+        m_chipState = data[0]-'0';
+        emit chipStateUpdated(m_chipState);
+        break;
     case QSerialWorker::DEV_STATUS:
         for (int i = 0; i < 4; i++) {
             m_motorPos[i] = str2int(data + 5*i, 4);
@@ -159,6 +162,16 @@ void DevCtrl::motorReset(int id)
     emit sendDevCmd(id, MOTOR_RESET, 0);
 }
 
+void DevCtrl::resetPos()
+{
+    emit sendDevCmd(9, 0, 0);
+}
+
+void DevCtrl::stopAllMotor()
+{
+    emit sendDevCmd(10, 0, 0);
+}
+
 void DevCtrl::ledLigthOn(int color)
 {
     emit sendDevCmd(LED, color, 0);
@@ -213,6 +226,10 @@ void DevCtrl::startAutoFocus(bool act)
         m_focusNextPos = autoFocusStartPos;
         motorRun(CAMERA_MOTOR, MOTOR_RUN_POS, m_focusNextPos);
         m_autoFocusState = FOCUS_PROCESS;
+    } else {
+        m_focusNextPos = autoFocusEndPos+1;
+        m_autoFocusState = FOCUS_PROCESS;
+        emit capImage();
     }
 }
 

@@ -59,6 +59,11 @@ public:
     int getDeadCellNum() const;
     double getAvgRadiu() const;
     double getCompactness() const;
+
+public slots:
+    void markCells(int imgType, Mat &img, Mat &imgMarked);
+    void initAlgorithm();
+
 private:
 //    struct experiDataRes m_result;
     int minRadiu = 10;

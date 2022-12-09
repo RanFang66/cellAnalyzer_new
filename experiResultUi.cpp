@@ -19,6 +19,7 @@ experiResultUi::experiResultUi(QWidget *parent) :
     m_scene = new QGraphicsScene(this);
     m_imageItem = m_scene->addPixmap(QPixmap(600, 1000));
     ui->gvCellImage->setScene(m_scene);
+    ui->gvCellImage->scale(1/1.728, 1/1.728);
     imgPath = "/cellImages/";
     currentChamberId = 1;
     currentViewId = 1;

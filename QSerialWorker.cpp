@@ -144,6 +144,12 @@ void QSerialWorker::recvDataSm(const char ch)
             recvDataLen = 0;
             recvState = RECV_DATA;
             break;
+        case 'C':
+            recvFrameType = CHIP_STATE;
+            recvFrameLength = 1;
+            recvDataLen = 0;
+            recvState = RECV_DATA;
+            break;
         default:
             return ;
         }

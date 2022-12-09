@@ -2,6 +2,7 @@
 #define EXPERICTRL_H
 
 #include <QObject>
+#include <QThread>
 #include <DevCtrl.h>
 #include <CellImageAlogrithm.h>
 #include <ExperiSetting.h>
@@ -13,7 +14,7 @@ class ExperiCtrl : public QObject
     Q_OBJECT
 public:
     explicit ExperiCtrl(QObject *parent = nullptr);
-    ExperiCtrl(DevCtrl *dev, ExperiSetting *setting, ExperiData *data, CellImageAlogrithm *algo, QObject *parent = nullptr);
+    ExperiCtrl(DevCtrl *dev, ExperiSetting *setting, ExperiData *data, QObject *parent = nullptr);
     enum CHAMBER_ID {
         CHAMBER_1 = 1,
         CHAMBER_2,
@@ -46,12 +47,14 @@ signals:
     void experiOnePosFinished();
     void experiCapFinished();
     void experimentInitOk();
+    void analyzeImage(int, Mat&, Mat&);
 
 private:
     DevCtrl *devCtrl;
     ExperiSetting *m_setting;
     ExperiData  *m_data;
     CellImageAlogrithm *m_algorithm;
+    QThread *m_algoThread;
 
     int m_experiState;
     int m_experiChamberState;
@@ -81,10 +84,12 @@ private:
     int  m_chamberId;
     int  m_viewId;
     int  m_imageTypeId;
+    bool  m_pauseFlag;
 
     bool  m_autoFocusFlag = false;
 
     void initExperiment(void);
+    void endExperiment(void);
     void getCellImages();
     int  getNextState(int currentState);
     int  getNextChamberPos(int state);

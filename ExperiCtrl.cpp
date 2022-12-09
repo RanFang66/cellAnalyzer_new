@@ -90,8 +90,8 @@ ExperiCtrl::ExperiCtrl(QObject *parent) : QObject(parent)
 
 }
 
-ExperiCtrl::ExperiCtrl(DevCtrl *dev, ExperiSetting *setting, ExperiData *data, CellImageAlogrithm *algo, QObject *parent)
-    : devCtrl(dev), m_data(data), m_setting(setting), m_algorithm(algo), QObject(parent)
+ExperiCtrl::ExperiCtrl(DevCtrl *dev, ExperiSetting *setting, ExperiData *data, QObject *parent)
+    : devCtrl(dev), m_data(data), m_setting(setting), QObject(parent)
 {
     m_experiState = EXPERI_IDLE;
     m_experiChamberState = EXPERI_CHAMBER_IDLE;
@@ -101,7 +101,16 @@ ExperiCtrl::ExperiCtrl(DevCtrl *dev, ExperiSetting *setting, ExperiData *data, C
     m_chamberId = 1;
     m_viewId = 1;
     m_imageTypeId = 0;
+    m_algorithm = new CellImageAlogrithm();
+    m_algoThread = new QThread();
 
+    m_algorithm->moveToThread(m_algoThread);
+    qRegisterMetaType<Mat>("Mat");
+    qRegisterMetaType<Mat>("Mat&");
+    connect(this, SIGNAL(analyzeImage(int, Mat&, Mat&)), m_algorithm, SLOT(markCells(int ,Mat&, Mat&)));
+    connect(m_algoThread, &QThread::finished, m_algorithm, &QObject::deleteLater);
+    connect(m_algoThread, &QThread::started, m_algorithm, &CellImageAlogrithm::initAlgorithm);
+    m_algoThread->start();
     // for seekgene chip
 //    m_chipPos_Y[0] = 270;
 //    m_chipPos_Y[1] = 2241;
@@ -122,18 +131,7 @@ ExperiCtrl::ExperiCtrl(DevCtrl *dev, ExperiSetting *setting, ExperiData *data, C
     m_chipPos_X[0] = 700;
     m_chipPos_X[1] = 1400;
     m_chipPos_X[2] = 2100;
-    connect(devCtrl, SIGNAL(chipYMotorStateUpdated()), this, SLOT(experiChamberStateTransfer()));
-//    connect(devCtrl, SIGNAL(camInitOk()), this, SLOT(experimentStateTransfer()));
-    connect(devCtrl, SIGNAL(chipXMotorStateUpdated()), this, SLOT(experiPosStateTransfer()));
-    connect(devCtrl, SIGNAL(filterMotorStateUpdated()), this, SLOT(experiCapStateTransfer()));
-    connect(devCtrl, SIGNAL(imageUpdated()), this, SLOT(experiCapStateTransfer()));
-    connect(devCtrl, SIGNAL(autoFocusComplete()), this, SLOT(experiCapStateTransfer()));
-    connect(m_algorithm, SIGNAL(markCellsFinished()), this, SLOT(experiCapStateTransfer()));
-    connect(devCtrl->m_camCtrl, SIGNAL(cameraParasSetRet()), this, SLOT(experiCapStateTransfer()));
-    connect(this, SIGNAL(experimentInitOk()), this, SLOT(experimentStateTransfer()));
-    connect(this, SIGNAL(experiCapFinished()), this, SLOT(experiPosStateTransfer()));
-    connect(this, SIGNAL(experiOnePosFinished()), this, SLOT(experiChamberStateTransfer()));
-    connect(this, SIGNAL(experiOneChamberFinished()), this, SLOT(experimentStateTransfer()));
+
 
 
 }
@@ -172,11 +170,20 @@ void ExperiCtrl::startExperiment(const QString &experiId)
 
 void ExperiCtrl::experimentStateTransfer()
 {
-    int nextState = getNextState(m_experiState);
-    m_experiState = nextState;
-    m_yPos = getNextChamberPos(nextState);
-    m_experiChamberState = EXPERI_CHAMBER_INIT;
-    experimentStateMachine();
+    if (m_experiState == EXPERI_FINISH) {
+        disconnect(devCtrl, SIGNAL(chipYMotorStateUpdated()), this, SLOT(experimentStateTransfer()));
+        devCtrl->motorRun(DevCtrl::INSERT_MOTOR, 2);
+        m_experiState = EXPERI_IDLE;
+        m_experiChamberState = EXPERI_CHAMBER_IDLE;
+        m_experiPosState = EXPERI_POS_IDLE;
+        m_experiCapState = CAP_IDLE;
+    } else {
+        int nextState = getNextState(m_experiState);
+        m_experiState = nextState;
+        m_yPos = getNextChamberPos(nextState);
+        m_experiChamberState = EXPERI_CHAMBER_INIT;
+        experimentStateMachine();
+    }
 }
 
 void ExperiCtrl::experiChamberStateTransfer()
@@ -212,6 +219,7 @@ void ExperiCtrl::experiChamberStateTransfer()
         m_experiPosState = EXPERI_POS_IDLE;
         break;
     case EXPERI_CHAMBER_FINISH:
+        m_experiChamberState = EXPERI_CHAMBER_IDLE;
         break;
     }
     experimentStateMachine();
@@ -274,14 +282,10 @@ void ExperiCtrl::experiCapStateTransfer()
 //        }
         break;
     case CAP_INIT_CAMERA:
-//        if (!m_autoFocusFlag)
-            m_experiCapState = CAP_AUTOFOCUS;
-//        else
-//            m_experiCapState = CAP_SNAP;
+        m_experiCapState = CAP_AUTOFOCUS;
         break;
     case CAP_AUTOFOCUS:
         m_experiCapState = CAP_SNAP;
-        m_autoFocusFlag = true;
         break;
     case CAP_SNAP:
         m_experiCapState = CAP_PROCESS;
@@ -298,13 +302,38 @@ void ExperiCtrl::experiCapStateTransfer()
 
 
 void ExperiCtrl::initExperiment()
-{
-//    devCtrl->connectCamera();
-//    m_experiState = getNextState(EXPERI_INIT);
-//    m_yPos = getNextChamberPos(m_experiState);
-//    m_experiChamberState = EXPERI_CHAMBER_INIT;
+{   
+    connect(devCtrl, SIGNAL(chipYMotorStateUpdated()), this, SLOT(experiChamberStateTransfer()));
+    connect(devCtrl, SIGNAL(chipXMotorStateUpdated()), this, SLOT(experiPosStateTransfer()));
+    connect(devCtrl, SIGNAL(filterMotorStateUpdated()), this, SLOT(experiCapStateTransfer()));
+    connect(devCtrl, SIGNAL(imageUpdated()), this, SLOT(experiCapStateTransfer()));
+    connect(devCtrl, SIGNAL(autoFocusComplete()), this, SLOT(experiCapStateTransfer()));
+    connect(m_algorithm, SIGNAL(markCellsFinished()), this, SLOT(experiCapStateTransfer()));
+    connect(devCtrl->m_camCtrl, SIGNAL(cameraParasSetRet()), this, SLOT(experiCapStateTransfer()));
+    connect(this, SIGNAL(experimentInitOk()), this, SLOT(experimentStateTransfer()));
+    connect(this, SIGNAL(experiCapFinished()), this, SLOT(experiPosStateTransfer()));
+    connect(this, SIGNAL(experiOnePosFinished()), this, SLOT(experiChamberStateTransfer()));
+    connect(this, SIGNAL(experiOneChamberFinished()), this, SLOT(experimentStateTransfer()));
     m_autoFocusFlag = false;
+    m_pauseFlag = false;
     emit experimentInitOk();
+}
+
+void ExperiCtrl::endExperiment()
+{
+    disconnect(devCtrl, SIGNAL(chipYMotorStateUpdated()), this, SLOT(experiChamberStateTransfer()));
+    disconnect(devCtrl, SIGNAL(chipXMotorStateUpdated()), this, SLOT(experiPosStateTransfer()));
+    disconnect(devCtrl, SIGNAL(filterMotorStateUpdated()), this, SLOT(experiCapStateTransfer()));
+    disconnect(devCtrl, SIGNAL(imageUpdated()), this, SLOT(experiCapStateTransfer()));
+    disconnect(devCtrl, SIGNAL(autoFocusComplete()), this, SLOT(experiCapStateTransfer()));
+    disconnect(m_algorithm, SIGNAL(markCellsFinished()), this, SLOT(experiCapStateTransfer()));
+    disconnect(devCtrl->m_camCtrl, SIGNAL(cameraParasSetRet()), this, SLOT(experiCapStateTransfer()));
+    disconnect(this, SIGNAL(experimentInitOk()), this, SLOT(experimentStateTransfer()));
+    disconnect(this, SIGNAL(experiCapFinished()), this, SLOT(experiPosStateTransfer()));
+    disconnect(this, SIGNAL(experiOnePosFinished()), this, SLOT(experiChamberStateTransfer()));
+    disconnect(this, SIGNAL(experiOneChamberFinished()), this, SLOT(experimentStateTransfer()));
+    devCtrl->resetPos();
+    connect(devCtrl, SIGNAL(chipYMotorStateUpdated()), this, SLOT(experimentStateTransfer()));
 }
 
 void ExperiCtrl::experimentStateMachine()       // ctrl the whole experiment: ctrl the Y pos motion
@@ -333,13 +362,24 @@ void ExperiCtrl::experimentStateMachine()       // ctrl the whole experiment: ct
     case EXPERI_CHAMBER6:
         experiChamberStateMachine();
         break;
+
+//    case EXPERI_X_RESET:
+//        devCtrl->motorRun(DevCtrl::CHIP_MOTOR_X, DevCtrl::MOTOR_RUN_POS, 1750);
+//        break;
+
+//    case EXPERI_Y_RESET:
+//        devCtrl->motorReset(DevCtrl::CHIP_MOTOR_Y);
+//        break;
     case EXPERI_FINISH:
-        calcAnalyzeResult();
-        emit experimentFinished();
-        m_experiState = EXPERI_IDLE;
-        m_experiChamberState = EXPERI_CHAMBER_IDLE;
-        m_experiPosState = EXPERI_POS_IDLE;
-        m_experiCapState = CAP_IDLE;
+        if (!m_pauseFlag){
+            calcAnalyzeResult();
+            emit experimentFinished();
+        }
+        endExperiment();
+//        m_experiState = EXPERI_IDLE;
+//        m_experiChamberState = EXPERI_CHAMBER_IDLE;
+//        m_experiPosState = EXPERI_POS_IDLE;
+//        m_experiCapState = CAP_IDLE;
         break;
     }
 }
@@ -408,7 +448,12 @@ void ExperiCtrl::experiCapImageStateMachine()
         devCtrl->initCameraParas(m_imageTypeId);
         break;
     case CAP_AUTOFOCUS:
-        devCtrl->startAutoFocus(true);
+        if (!m_autoFocusFlag) {
+            devCtrl->startAutoFocus(true);
+            m_autoFocusFlag = true;
+        } else {
+            devCtrl->startAutoFocus(false);
+        }
         break;
     case CAP_SNAP:
         devCtrl->camSnap();
@@ -419,17 +464,20 @@ void ExperiCtrl::experiCapImageStateMachine()
         case IMAGE_BRIGHT:
             imgBR = devCtrl->getCVImage();
             imgMarked = imgBR.clone();
-            m_algorithm->analyzeCellsBright(imgBR, imgMarked);
+            emit analyzeImage(m_imageTypeId, imgBR, imgMarked);
+ //           m_algorithm->analyzeCellsBright(imgBR, imgMarked);
             break;
         case IMAGE_FL1:
             imgFL1 = devCtrl->getCVImage();
             imgMarked = imgFL1.clone();
-            m_algorithm->analyzeCellsFL1(imgFL1, imgMarked);
+//            m_algorithm->analyzeCellsFL1(imgFL1, imgMarked);
+            emit analyzeImage(m_imageTypeId, imgFL1, imgMarked);
             break;
         case IMAGE_FL2:
             imgFL2 = devCtrl->getCVImage();
             imgMarked = imgFL2.clone();
-            m_algorithm->analyzeCellsFL2(imgFL2, imgMarked);
+ //           m_algorithm->analyzeCellsFL2(imgFL2, imgMarked);
+            emit analyzeImage(m_imageTypeId, imgFL2, imgMarked);
             break;
         default:
             break;
@@ -517,8 +565,12 @@ void ExperiCtrl::calcAnalyzeResult()
 
 void ExperiCtrl::pauseExperiment()
 {
-    m_experiState = EXPERI_IDLE;
-    m_experiChamberState = EXPERI_CHAMBER_IDLE;
-    m_experiPosState = EXPERI_POS_IDLE;
-    m_experiCapState = CAP_IDLE;
+    devCtrl->stopAllMotor();
+    m_pauseFlag = true;
+    m_experiState = EXPERI_FINISH;
+    experimentStateMachine();
+
+//    m_experiChamberState = EXPERI_CHAMBER_IDLE;
+//    m_experiPosState = EXPERI_POS_IDLE;
+//    m_experiCapState = CAP_IDLE;
 }

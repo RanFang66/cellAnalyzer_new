@@ -3,7 +3,7 @@
 #include <QDateTime>
 #include <QFile>
 #include <QDebug>
-#include <DlgAnimationUi.h>
+
 experiSettingUi::experiSettingUi(ExperiSetting *setting, QWidget *parent) :
     QWidget(parent),
     ui(new Ui::experiSettingUi),
@@ -73,13 +73,19 @@ void experiSettingUi::loadStyleSheet(const QString &styleSheetFile)
 
 void experiSettingUi::on_btnNextStep_clicked()
 {
-    DlgAnimationUi *animation = new DlgAnimationUi(this);
-    animation->setAttribute(Qt::WA_DeleteOnClose);
-    Qt::WindowFlags flags = animation->windowFlags();
-    animation->setWindowFlags(flags | Qt::WindowStaysOnTopHint);
+    if (m_chipState == 1) {
+         emit startExperiment();
+    } else {
+        animation = new DlgAnimationUi(this);
+        animation->setAttribute(Qt::WA_DeleteOnClose);
+        Qt::WindowFlags flags = animation->windowFlags();
+        animation->setWindowFlags(flags | Qt::WindowStaysOnTopHint);
 
-    if (animation->exec() == QDialog::Accepted) {
-        emit startExperiment();
+        if (animation->exec() == QDialog::Accepted) {
+            emit startExperiment();
+        } else {
+            return;
+        }
     }
 }
 

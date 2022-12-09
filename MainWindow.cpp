@@ -4,6 +4,7 @@
 #include <QMessageBox>
 #include <QProcess>
 #include <QFile>
+#include <QDlgLogin.h>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -12,9 +13,9 @@ MainWindow::MainWindow(QWidget *parent)
 
     loadStyleSheet(":/styles/main.qss");
     ui->setupUi(this);
+//    QDlgLogin *dlgLogin = new QDlgLogin(&m_userId, this);
 
 
-//    this->setWindowFlags(Qt::SplashScreen);
     this->setWindowFlags(Qt::Window | Qt::FramelessWindowHint);
     QString ret = executeShellCmd("sudo raspi-gpio set 26 op dh && sleep 3");
     if (!ret.isEmpty()) {
@@ -24,11 +25,10 @@ MainWindow::MainWindow(QWidget *parent)
     m_dev = new DevCtrl(this);
     m_setting = new ExperiSetting(this);
     m_data = new ExperiData(m_setting, this);
-    m_algorithm = new CellImageAlogrithm(this);
-    m_experiCtrl = new ExperiCtrl(m_dev, m_setting, m_data, m_algorithm, this);
+    m_experiCtrl = new ExperiCtrl(m_dev, m_setting, m_data, this);
     m_setting->setUserID(m_userId);
 
-    executeShellCmd("sleep 3");
+//    executeShellCmd("sleep 3");
 
     experiSetting = new experiSettingUi(m_setting, this);
     experiData = new experiDataUi(this);
@@ -42,6 +42,7 @@ MainWindow::MainWindow(QWidget *parent)
 
 MainWindow::~MainWindow()
 {
+    executeShellCmd("sudo raspi-gpio set 26 op dl");
     delete ui;
 }
 
@@ -66,6 +67,7 @@ void MainWindow::initMainWindowUi()
     connect(m_experiCtrl, SIGNAL(experiCapFinished()), inExperiment, SLOT(onUpdateImage()));
     connect(userManage, SIGNAL(return2SysSetting()), this, SLOT(onReturnSysSetting()));
     connect(debugMode, SIGNAL(setAutoFocusParameters(int, int, int)), m_dev, SLOT(onAutoFocusSet(int, int, int)));
+    connect(m_dev, SIGNAL(chipStateUpdated(int)), experiSetting, SLOT(setChipState(int)));
 }
 
 QString MainWindow::executeShellCmd(QString strCmd)

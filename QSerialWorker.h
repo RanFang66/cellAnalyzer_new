@@ -39,6 +39,7 @@ public:
         CHIP_Y_MOTOR_STATE,
         CAMERA_MOTOR_STATE,
         FILTER_MOTOR_STATE,
+        CHIP_STATE,
         DEV_STATUS = 10,
     };
 
