@@ -151,6 +151,11 @@ void MainWindow::onCameraInitRet(bool camOk)
 
 void MainWindow::onExperimentStart()
 {
+    ui->btnSysSetting->setEnabled(false);
+    ui->btnExperiData->setEnabled(false);
+    ui->btnExperiApp->setEnabled(false);
+    ui->btnHelpDoc->setEnabled(false);
+    ui->btnDebugPage->setEnabled(false);
     ui->stackedWidget->setCurrentIndex(inExperimentIndex);
     inExperiment->updateNoticeText("start experiment");
     m_experiCtrl->startExperiment(m_setting->getExperiId());
@@ -158,8 +163,17 @@ void MainWindow::onExperimentStart()
 
 void MainWindow::onExperimentPaused()
 {
-    m_experiCtrl->pauseExperiment();
-    ui->stackedWidget->setCurrentIndex(appSelcIndex);
+    QMessageBox::StandardButton ret = QMessageBox::question(this, "Pause Experiment", "Sure to pause this experiment?");
+
+    if (ret == QMessageBox::Yes) {
+        ui->btnSysSetting->setEnabled(true);
+        ui->btnExperiData->setEnabled(true);
+        ui->btnExperiApp->setEnabled(true);
+        ui->btnHelpDoc->setEnabled(true);
+        ui->btnDebugPage->setEnabled(true);
+        m_experiCtrl->pauseExperiment();
+        ui->stackedWidget->setCurrentIndex(appSelcIndex);
+    }
 }
 
 void MainWindow::onExitExperiSetting()
@@ -169,6 +183,11 @@ void MainWindow::onExitExperiSetting()
 
 void MainWindow::onExperimentFinished()
 {
+    ui->btnSysSetting->setEnabled(true);
+    ui->btnExperiData->setEnabled(true);
+    ui->btnExperiApp->setEnabled(true);
+    ui->btnHelpDoc->setEnabled(true);
+    ui->btnDebugPage->setEnabled(true);
     experiRes->initResultShow(m_setting->getExperiId());
     ui->stackedWidget->setCurrentIndex(experiResultIndex);
 }
@@ -212,4 +231,12 @@ void MainWindow::onReturnSysSetting()
 void MainWindow::on_btnLanguage_clicked()
 {
     ui->stackedWidget->setCurrentIndex(languageSelcIndex);
+}
+
+void MainWindow::on_btnShutdown_clicked()
+{
+    QMessageBox::StandardButton ret = QMessageBox::critical(this, "shutdown", "Sure to shutdown?");
+    if (ret == QMessageBox::Ok) {
+        qApp->exit(0);
+    }
 }

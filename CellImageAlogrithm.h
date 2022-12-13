@@ -55,6 +55,7 @@ public:
     void setCellParameters(int minR, int maxR);
 //    struct experiDataRes *getImageProcessResult();
     int getCellNum() const;
+    int getClusterCellNum() const;
     int getLiveCellNum() const;
     int getDeadCellNum() const;
     double getAvgRadiu() const;
@@ -71,6 +72,7 @@ private:
 
 
     int     cellNum;
+    int     clusterNum;
     int     deadCellNum;
     int     liveCellNum;
     int     avgRadiu;
@@ -91,6 +93,11 @@ inline void CellImageAlogrithm::setCellParameters(int minR, int maxR)
 inline int CellImageAlogrithm::getCellNum() const
 {
     return cellNum;
+}
+
+inline int CellImageAlogrithm::getClusterCellNum() const
+{
+    return clusterNum;
 }
 
 inline int CellImageAlogrithm::getLiveCellNum() const

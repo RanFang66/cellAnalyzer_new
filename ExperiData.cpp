@@ -9,7 +9,7 @@ ExperiData::ExperiData(ExperiSetting *setting, QObject *parent) : QObject(parent
 {
     db = QSqlDatabase::database("cellDataConn");
     query = new QSqlQuery(db);
-    m_sampleVolume = 0.02;
+    m_sampleVolume = 2560.776;          // every ml
 }
 //struct experiDataRes{
 //    int cellConc;
@@ -86,7 +86,7 @@ void ExperiData::deleteExperimentData(int experiID)
     }
 }
 
-void ExperiData::updateData(int cellNum, int liveCellNum, int deadCellNum, double avgDiameter, double avgCompact)
+void ExperiData::updateData(int cellNum, int liveCellNum, int deadCellNum, double aggreRate, double avgDiameter, double avgCompact)
 {
     m_cellNum = cellNum;
     m_liveCellNum = liveCellNum;
@@ -94,10 +94,10 @@ void ExperiData::updateData(int cellNum, int liveCellNum, int deadCellNum, doubl
     m_avgDiameter = avgDiameter;
     m_avgCompactness = avgCompact;
     m_viability = (double)m_liveCellNum / m_cellNum * 100;
-    m_liveCellConc = m_liveCellNum / m_sampleVolume;
-    m_deadCellConc = m_deadCellNum / m_sampleVolume;
-    m_cellConc = m_cellNum / m_sampleVolume;
-    m_aggregateRate = 5;
+    m_liveCellConc = m_liveCellNum * m_sampleVolume;
+    m_deadCellConc = m_deadCellNum * m_sampleVolume;
+    m_cellConc = m_cellNum * m_sampleVolume;
+    m_aggregateRate = aggreRate;
     insertExperimentData();
 }
 

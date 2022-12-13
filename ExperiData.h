@@ -20,7 +20,7 @@ public slots:
     void insertExperimentData();
     void deleteExperimentData(int experiID);
     void updateData(int cellNum, int liveCellNum,
-                    int deadCellNum, double avgDiameter, double avgCompact);
+                    int deadCellNum, double aggreRate, double avgDiameter, double avgCompact);
 
 signals:
 

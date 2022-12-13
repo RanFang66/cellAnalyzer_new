@@ -481,14 +481,49 @@
        <string/>
       </property>
      </widget>
+     <widget class="QPushButton" name="btnShutdown">
+      <property name="geometry">
+       <rect>
+        <x>700</x>
+        <y>370</y>
+        <width>160</width>
+        <height>160</height>
+       </rect>
+      </property>
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_9">
+      <property name="geometry">
+       <rect>
+        <x>680</x>
+        <y>540</y>
+        <width>200</width>
+        <height>36</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Shutdown</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
+     </widget>
     </widget>
     <widget class="QWidget" name="pageHelpDoc"/>
     <widget class="QWidget" name="pageLangSelc">
      <widget class="QLabel" name="lblLangTitle">
       <property name="geometry">
        <rect>
-        <x>30</x>
-        <y>40</y>
+        <x>50</x>
+        <y>71</y>
         <width>641</width>
         <height>80</height>
        </rect>
@@ -500,10 +535,10 @@
      <widget class="QPushButton" name="btnLangReturn">
       <property name="geometry">
        <rect>
-        <x>900</x>
-        <y>30</y>
-        <width>211</width>
-        <height>91</height>
+        <x>1000</x>
+        <y>60</y>
+        <width>150</width>
+        <height>82</height>
        </rect>
       </property>
       <property name="sizePolicy">
@@ -513,7 +548,7 @@
        </sizepolicy>
       </property>
       <property name="text">
-       <string>PushButton</string>
+       <string/>
       </property>
       <property name="flat">
        <bool>true</bool>
@@ -523,7 +558,7 @@
       <property name="geometry">
        <rect>
         <x>0</x>
-        <y>140</y>
+        <y>189</y>
         <width>1200</width>
         <height>5</height>
        </rect>
@@ -536,7 +571,7 @@
       <property name="geometry">
        <rect>
         <x>0</x>
-        <y>190</y>
+        <y>207</y>
         <width>1200</width>
         <height>140</height>
        </rect>
@@ -555,7 +590,7 @@
       <property name="geometry">
        <rect>
         <x>0</x>
-        <y>340</y>
+        <y>336</y>
         <width>1200</width>
         <height>5</height>
        </rect>
@@ -568,7 +603,7 @@
       <property name="geometry">
        <rect>
         <x>0</x>
-        <y>430</y>
+        <y>354</y>
         <width>1200</width>
         <height>140</height>
        </rect>

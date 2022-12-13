@@ -76,6 +76,7 @@ private:
     Mat     imgMarked;
 
     int  m_cellNum[VIEW_NUM];
+    int  m_clusterCellNum[VIEW_NUM];
     int  m_liveCellNum[VIEW_NUM];
     int  m_deadCellNum[VIEW_NUM];
     double m_avgRadiu[VIEW_NUM];

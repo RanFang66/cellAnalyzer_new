@@ -5,6 +5,7 @@ CellImageAlogrithm::CellImageAlogrithm(QObject *parent) : QObject(parent)
     cellNum = 0;
     liveCellNum = 0;
     deadCellNum = 0;
+    clusterNum = 0;
     avgRadiu = 0;
     avgCompactness = 0;
     aggregateRate = 0;
@@ -124,6 +125,7 @@ int CellImageAlogrithm::markCellsInCluster(Mat &cluster, Mat &imgMarked, Point l
     //    }
 
         Mat tempBin;
+        int clusterCellNum = 0;
         int a = threshold(cluster, tempBin, 130, 255, THRESH_BINARY | THRESH_TRIANGLE);
  //       qDebug() << "(" << x <<", " << y << ") threshold :" << a << endl;
 
@@ -144,15 +146,16 @@ int CellImageAlogrithm::markCellsInCluster(Mat &cluster, Mat &imgMarked, Point l
         vector<float> radius(contou.size());
         for (unsigned long i = 0; i < contou.size(); i++) {
             minEnclosingCircle(contou[i], center[i], radius[i]);
-
      //       qDebug() << "(" << center[i].x << ", " << center[i].y << ")" << endl;
         }
 
         for (unsigned long j = 0; j < contou.size(); j++) {
-            if (radius[j] < minRadiu-1 && contourArea(contou[j]) > 4)
+            if (radius[j] < maxRadiu && contourArea(contou[j]) > 4) {
                 circle(imgMarked, center[j] + Point2f(ltPoint), radius[j]+1, Scalar(0, 255, 255), 1);
+                clusterCellNum++;
+            }
         }
-
+      return clusterCellNum;
 //    Mat labels, stats, centroids;
 //    auto num_cells = connectedComponentsWithStats(cluster, labels, stats, centroids);
 
@@ -211,7 +214,6 @@ void CellImageAlogrithm::analyzeCellsBright(Mat &img, Mat &imgMarked)
             radiuSum += radius[i];
 
         } else if (radius[i] > maxRadiu && radius[i] < 4*maxRadiu) {
-            circle(imgMarked, centers[i], (int)radius[i], colorPurple, 2, LINE_8, 0);
             int Roi_x = centers[i].x - radius[i];
             int Roi_y = centers[i].y - radius[i];
 
@@ -230,7 +232,12 @@ void CellImageAlogrithm::analyzeCellsBright(Mat &img, Mat &imgMarked)
             Mat cluster = Mat(height, width, CV_8UC1);
             Point2d plt(Roi_x, Roi_y);
             imgGray(Rect(Roi_x, Roi_y, width, height)).copyTo(cluster);
-            markCellsInCluster(cluster, imgMarked, plt, radius[i]);
+            int ret = markCellsInCluster(cluster, imgMarked, plt, radius[i]);
+            if (ret > 1) {
+                circle(imgMarked, centers[i], (int)radius[i], colorPurple, 2, LINE_8, 0);
+                clusterNum += ret;
+                cellNum += ret;
+            }
         }
     }
     avgRadiu = radiuSum / cellNum;
@@ -328,6 +335,7 @@ void CellImageAlogrithm::initAlgorithm()
     cellNum = 0;
     liveCellNum = 0;
     deadCellNum = 0;
+    clusterNum = 0;
     avgRadiu = 0;
     avgCompactness = 0;
     aggregateRate = 0;

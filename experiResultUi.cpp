@@ -107,7 +107,7 @@ void experiResultUi::initResultShow(QString experiID)
     ui->rBtnBright->setChecked(true);
 
     double val = rec.value("viability").toDouble();
-    ui->lblViability->setText(QString::number(val, 'f', 2));
+    ui->lblViability->setText(QString::number(val, 'f', 2) + "%");
     val = rec.value("cellConc").toDouble();
     ui->lblCellConc->setText(QString::number(val, 'e', 2));
     val = rec.value("liveCellConc").toDouble();
@@ -121,7 +121,7 @@ void experiResultUi::initResultShow(QString experiID)
     val = rec.value("avgDiameter").toDouble();
     ui->lblAvgDiameter->setText(QString::number(val, 'f', 2));
     val = rec.value("aggregateRate").toDouble();
-    ui->lblAggregateRate->setText(QString::number(val, 'f', 2));
+    ui->lblAggregateRate->setText(QString::number(val, 'f', 2) + "%");
     val = rec.value("avgCompactness").toDouble();
     ui->lblAvgRoundness->setText(QString::number(val, 'f', 2));
     showCellImage();

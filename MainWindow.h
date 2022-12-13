@@ -68,6 +68,8 @@ private slots:
 
     void on_btnLanguage_clicked();
 
+    void on_btnShutdown_clicked();
+
 private:
     Ui::MainWindow      *ui;
     experiSettingUi     *experiSetting;

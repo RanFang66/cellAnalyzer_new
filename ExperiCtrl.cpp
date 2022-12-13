@@ -128,8 +128,8 @@ ExperiCtrl::ExperiCtrl(DevCtrl *dev, ExperiSetting *setting, ExperiData *data, Q
     m_chipPos_Y[4] = 9400;
     m_chipPos_Y[5] = 9600;
 
-    m_chipPos_X[0] = 700;
-    m_chipPos_X[1] = 1400;
+    m_chipPos_X[0] = 900;
+    m_chipPos_X[1] = 1500;
     m_chipPos_X[2] = 2100;
 
 
@@ -157,8 +157,10 @@ void ExperiCtrl::startExperiment(const QString &experiId)
         dir.mkdir(imgFilePath);
     }
     m_algorithm->setCellParameters(m_setting->getCellMinRadiu(), m_setting->getCellMaxRadiu());
+    m_algorithm->initAlgorithm();
     for (int i = 0; i < VIEW_3; i++) {
         m_cellNum[i] = 0;
+        m_clusterCellNum[i] = 0;
         m_liveCellNum[i] = 0;
         m_deadCellNum[i] = 0;
         m_avgRadiu[i] = 0;
@@ -465,18 +467,15 @@ void ExperiCtrl::experiCapImageStateMachine()
             imgBR = devCtrl->getCVImage();
             imgMarked = imgBR.clone();
             emit analyzeImage(m_imageTypeId, imgBR, imgMarked);
- //           m_algorithm->analyzeCellsBright(imgBR, imgMarked);
             break;
         case IMAGE_FL1:
             imgFL1 = devCtrl->getCVImage();
             imgMarked = imgFL1.clone();
-//            m_algorithm->analyzeCellsFL1(imgFL1, imgMarked);
             emit analyzeImage(m_imageTypeId, imgFL1, imgMarked);
             break;
         case IMAGE_FL2:
             imgFL2 = devCtrl->getCVImage();
             imgMarked = imgFL2.clone();
- //           m_algorithm->analyzeCellsFL2(imgFL2, imgMarked);
             emit analyzeImage(m_imageTypeId, imgFL2, imgMarked);
             break;
         default:
@@ -536,6 +535,7 @@ void ExperiCtrl::saveFLImage()
 void ExperiCtrl::getAnalyzeResult()
 {
     m_cellNum[m_viewId-1] = m_algorithm->getCellNum();
+    m_clusterCellNum[m_viewId-1] = m_algorithm->getClusterCellNum();
     m_liveCellNum[m_viewId-1] = m_algorithm->getLiveCellNum();
     m_deadCellNum[m_viewId-1] = m_algorithm->getDeadCellNum();
     m_avgRadiu[m_viewId-1] = m_algorithm->getAvgRadiu();
@@ -545,13 +545,16 @@ void ExperiCtrl::getAnalyzeResult()
 void ExperiCtrl::calcAnalyzeResult()
 {
     int cellNum = 0;
+    int clusterCellNum = 0;
     int liveCellNum = 0;
     int deadCellNum = 0;
 
     double avgRadiu = 0;
     double avgCompact = 0;
+    double aggregateRate = 0;
     for (int i = 0; i < VIEW_3; i++) {
         cellNum += m_cellNum[i];
+        clusterCellNum += m_clusterCellNum[i];
         liveCellNum += m_liveCellNum[i];
         deadCellNum += m_deadCellNum[i];
         avgRadiu += m_cellNum[i] * m_avgRadiu[i];
@@ -559,7 +562,8 @@ void ExperiCtrl::calcAnalyzeResult()
     }
     avgRadiu /= cellNum;
     avgCompact /= cellNum;
-    m_data->updateData(cellNum, liveCellNum, deadCellNum, avgRadiu, avgCompact);
+    aggregateRate = clusterCellNum / cellNum * 100;
+    m_data->updateData(cellNum, liveCellNum, deadCellNum, aggregateRate, avgRadiu, avgCompact);
 }
 
 
