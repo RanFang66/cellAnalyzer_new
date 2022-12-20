@@ -10,6 +10,11 @@
 #include <QSqlDatabase>
 #include <QSqlRecord>
 #include <QVariant>
+
+#include <QGesture>
+#include <QGestureEvent>
+#include <QPinchGesture>
+
 namespace Ui {
 class experiResultUi;
 }
@@ -61,7 +66,9 @@ private:
     QImage imgView;
     QString getFileName(int chamberId, int viewId, int imgType);
     void loadStyleSheet(const QString &styleSheetFile);
-
+    bool event(QEvent *event) override;
+    bool gestureEvent(QGestureEvent *event);
+    void pinchTriggered(QPinchGesture *);
 };
 
 #endif // EXPERIRESULTUI_H

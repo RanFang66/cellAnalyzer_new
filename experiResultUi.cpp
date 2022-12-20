@@ -16,6 +16,7 @@ experiResultUi::experiResultUi(QWidget *parent) :
 {
     ui->setupUi(this);
     loadStyleSheet(":/styles/experiResultStyle.qss");
+    grabGesture(Qt::PinchGesture);
     m_scene = new QGraphicsScene(this);
     m_imageItem = m_scene->addPixmap(QPixmap(600, 1000));
     ui->gvCellImage->setScene(m_scene);
@@ -146,6 +147,41 @@ void experiResultUi::loadStyleSheet(const QString &styleSheetFile)
         file.close();
     } else {
         qDebug() << "Login: Open Style Sheet File Failed!";
+    }
+}
+
+bool experiResultUi::event(QEvent *event)
+{
+    if (event->type() == QEvent::Gesture) {
+        return gestureEvent(static_cast<QGestureEvent *>(event));
+    }
+    return QWidget::event(event);
+}
+
+bool experiResultUi::gestureEvent(QGestureEvent *event)
+{
+    if (QGesture *pinch = event->gesture(Qt::PinchGesture)) {
+        pinchTriggered(static_cast<QPinchGesture *>(pinch));
+    }
+    return true;
+}
+
+void experiResultUi::pinchTriggered(QPinchGesture *gesture)
+{
+    QPinchGesture::ChangeFlags changeFlags = gesture->changeFlags();
+
+    qreal m_scale = 1;
+    if (changeFlags & QPinchGesture::ScaleFactorChanged) {
+        m_scale = gesture->totalScaleFactor();
+        if (m_scale > 1) {
+            m_scale = 1.2;
+        } else {
+            m_scale = 1/1.2;
+        }
+    }
+    if (gesture->state() == Qt::GestureFinished) {
+        ui->gvCellImage->scale(m_scale, m_scale);
+        m_scale = 1;
     }
 }
 
