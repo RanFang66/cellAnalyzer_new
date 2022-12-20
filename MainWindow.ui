@@ -316,7 +316,7 @@
        </rect>
       </property>
       <property name="text">
-       <string>Language</string>
+       <string>语言选择</string>
       </property>
       <property name="alignment">
        <set>Qt::AlignCenter</set>
@@ -332,7 +332,7 @@
        </rect>
       </property>
       <property name="text">
-       <string>Information</string>
+       <string>产品信息</string>
       </property>
       <property name="alignment">
        <set>Qt::AlignCenter</set>
@@ -348,7 +348,7 @@
        </rect>
       </property>
       <property name="text">
-       <string>Date Time</string>
+       <string>日期时间</string>
       </property>
       <property name="alignment">
        <set>Qt::AlignCenter</set>
@@ -364,7 +364,7 @@
        </rect>
       </property>
       <property name="text">
-       <string>User Manage</string>
+       <string>用户管理</string>
       </property>
       <property name="alignment">
        <set>Qt::AlignCenter</set>
@@ -380,7 +380,7 @@
        </rect>
       </property>
       <property name="text">
-       <string>Storage</string>
+       <string>存储信息</string>
       </property>
       <property name="alignment">
        <set>Qt::AlignCenter</set>
@@ -510,7 +510,7 @@
        </rect>
       </property>
       <property name="text">
-       <string>Shutdown</string>
+       <string>关机</string>
       </property>
       <property name="alignment">
        <set>Qt::AlignCenter</set>
@@ -529,7 +529,7 @@
        </rect>
       </property>
       <property name="text">
-       <string>Language Setting</string>
+       <string>语言选择</string>
       </property>
      </widget>
      <widget class="QPushButton" name="btnLangReturn">
@@ -577,7 +577,7 @@
        </rect>
       </property>
       <property name="text">
-       <string>Chinese</string>
+       <string>中文</string>
       </property>
       <property name="checkable">
        <bool>true</bool>
@@ -627,7 +627,7 @@
      <x>0</x>
      <y>0</y>
      <width>1200</width>
-     <height>27</height>
+     <height>22</height>
     </rect>
    </property>
   </widget>

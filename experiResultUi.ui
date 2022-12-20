@@ -25,7 +25,7 @@
      <item>
       <widget class="QGroupBox" name="groupBox">
        <property name="title">
-        <string>Tools</string>
+        <string>工具</string>
        </property>
        <layout class="QVBoxLayout" name="verticalLayout">
         <item>
@@ -85,7 +85,7 @@
    <item row="3" column="0" colspan="4">
     <widget class="QGroupBox" name="groupBox_4">
      <property name="title">
-      <string>Data</string>
+      <string>分析结果</string>
      </property>
      <layout class="QGridLayout" name="gridLayout">
       <item row="3" column="1">
@@ -95,57 +95,8 @@
         </property>
        </widget>
       </item>
-      <item row="0" column="0">
-       <widget class="QLabel" name="label_2">
-        <property name="text">
-         <string>Viability:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="0">
-       <widget class="QLabel" name="label_3">
-        <property name="text">
-         <string>Cell Conc:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="0">
-       <widget class="QLabel" name="label_5">
-        <property name="text">
-         <string>Dead Cell Conc:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="3">
-       <widget class="QLabel" name="lblLiveCellNum">
-        <property name="text">
-         <string>0</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="0">
-       <widget class="QLabel" name="label_4">
-        <property name="text">
-         <string>Live Cell Conc:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="4" column="2">
-       <widget class="QLabel" name="label_11">
-        <property name="text">
-         <string>Aggregate Rate:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="4" column="1">
-       <widget class="QLabel" name="lblAvgRoundness">
-        <property name="text">
-         <string>0</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="3">
-       <widget class="QLabel" name="lblCellNum">
+      <item row="1" column="1">
+       <widget class="QLabel" name="lblCellConc">
         <property name="text">
          <string>0</string>
         </property>
@@ -158,6 +109,13 @@
         </property>
        </widget>
       </item>
+      <item row="4" column="1">
+       <widget class="QLabel" name="lblAvgRoundness">
+        <property name="text">
+         <string>0</string>
+        </property>
+       </widget>
+      </item>
       <item row="0" column="1">
        <widget class="QLabel" name="lblViability">
         <property name="text">
@@ -165,24 +123,31 @@
         </property>
        </widget>
       </item>
-      <item row="4" column="0">
-       <widget class="QLabel" name="label_10">
+      <item row="0" column="0">
+       <widget class="QLabel" name="label_2">
         <property name="text">
-         <string>Average Roundnesss:</string>
+         <string>细胞活率:</string>
         </property>
        </widget>
       </item>
-      <item row="3" column="2">
-       <widget class="QLabel" name="label_8">
+      <item row="4" column="2">
+       <widget class="QLabel" name="label_11">
         <property name="text">
-         <string>Dead Cell Number:</string>
+         <string>结团率:</string>
         </property>
        </widget>
       </item>
-      <item row="1" column="1">
-       <widget class="QLabel" name="lblCellConc">
+      <item row="1" column="2">
+       <widget class="QLabel" name="label_6">
         <property name="text">
-         <string>0</string>
+         <string>细胞数量:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0">
+       <widget class="QLabel" name="label_4">
+        <property name="text">
+         <string>活细胞浓度:</string>
         </property>
        </widget>
       </item>
@@ -193,24 +158,24 @@
         </property>
        </widget>
       </item>
-      <item row="2" column="2">
-       <widget class="QLabel" name="label_7">
+      <item row="4" column="3">
+       <widget class="QLabel" name="lblAggregateRate">
         <property name="text">
-         <string>Live Cell Number:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="2">
-       <widget class="QLabel" name="label_6">
-        <property name="text">
-         <string>Cell Number:</string>
+         <string>0</string>
         </property>
        </widget>
       </item>
       <item row="0" column="2">
        <widget class="QLabel" name="label_9">
         <property name="text">
-         <string>Average Diameter:</string>
+         <string>平均直径:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="0">
+       <widget class="QLabel" name="label_10">
+        <property name="text">
+         <string>平均圆度:</string>
         </property>
        </widget>
       </item>
@@ -221,8 +186,57 @@
         </property>
        </widget>
       </item>
-      <item row="4" column="3">
-       <widget class="QLabel" name="lblAggregateRate">
+      <item row="3" column="0">
+       <widget class="QLabel" name="label_5">
+        <property name="text">
+         <string>死细胞浓度:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="label_3">
+        <property name="text">
+         <string>细胞浓度:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="2">
+       <widget class="QLabel" name="label_8">
+        <property name="text">
+         <string>死细胞数量:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="3">
+       <widget class="QLabel" name="lblLiveCellNum">
+        <property name="text">
+         <string>0</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="2">
+       <widget class="QLabel" name="label_7">
+        <property name="text">
+         <string>活细胞数量:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="3">
+       <widget class="QLabel" name="lblCellNum">
+        <property name="text">
+         <string>0</string>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="0">
+       <widget class="QLabel" name="label_12">
+        <property name="text">
+         <string>有核率:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="1">
+       <widget class="QLabel" name="lblNucleusRate">
         <property name="text">
          <string>0</string>
         </property>
@@ -241,27 +255,27 @@
    <item row="2" column="0" colspan="4">
     <widget class="QGroupBox" name="groupBox_3">
      <property name="title">
-      <string>Image Type</string>
+      <string>图像选择</string>
      </property>
      <layout class="QHBoxLayout" name="horizontalLayout">
       <item>
        <widget class="QRadioButton" name="rBtnBright">
         <property name="text">
-         <string>Bright</string>
+         <string>明场图像</string>
         </property>
        </widget>
       </item>
       <item>
        <widget class="QRadioButton" name="rBtnFluore">
         <property name="text">
-         <string>Fluorescence</string>
+         <string>荧光图像</string>
         </property>
        </widget>
       </item>
       <item>
        <widget class="QRadioButton" name="rBtnMarked">
         <property name="text">
-         <string>Marked</string>
+         <string>细胞标记图像</string>
         </property>
        </widget>
       </item>
@@ -271,34 +285,34 @@
    <item row="0" column="0">
     <widget class="QLabel" name="label">
      <property name="text">
-      <string>Chamber Select:</string>
+      <string>槽位选择</string>
      </property>
     </widget>
    </item>
    <item row="1" column="0" colspan="4">
     <widget class="QGroupBox" name="groupBox_2">
      <property name="title">
-      <string>View Select</string>
+      <string>视野选择</string>
      </property>
      <layout class="QHBoxLayout" name="horizontalLayout_2">
       <item>
        <widget class="QRadioButton" name="rBtnView1">
         <property name="text">
-         <string>View1</string>
+         <string>视野1</string>
         </property>
        </widget>
       </item>
       <item>
        <widget class="QRadioButton" name="rBtnView2">
         <property name="text">
-         <string>View2</string>
+         <string>视野2</string>
         </property>
        </widget>
       </item>
       <item>
        <widget class="QRadioButton" name="rBtnView3">
         <property name="text">
-         <string>View3</string>
+         <string>视野3</string>
         </property>
        </widget>
       </item>

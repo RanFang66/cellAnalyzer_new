@@ -32,7 +32,7 @@
      <item>
       <widget class="QPushButton" name="btnAddUser">
        <property name="text">
-        <string>Add User</string>
+        <string>增加</string>
        </property>
        <property name="checkable">
         <bool>false</bool>
@@ -55,7 +55,7 @@
      <item>
       <widget class="QPushButton" name="btnEditUser">
        <property name="text">
-        <string>Edit User</string>
+        <string>编辑</string>
        </property>
       </widget>
      </item>
@@ -75,7 +75,7 @@
      <item>
       <widget class="QPushButton" name="btnDeleteUser">
        <property name="text">
-        <string>Delete User</string>
+        <string>删除</string>
        </property>
       </widget>
      </item>
@@ -95,7 +95,7 @@
      <item>
       <widget class="QPushButton" name="btnReturn">
        <property name="text">
-        <string>return</string>
+        <string>返回</string>
        </property>
       </widget>
      </item>
