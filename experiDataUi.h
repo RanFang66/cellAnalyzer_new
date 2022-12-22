@@ -44,6 +44,14 @@ private slots:
 
     void on_btnJPG_clicked();
 
+    void on_btnFirstPage_clicked();
+
+    void on_btnPrevPage_clicked();
+
+    void on_btnNextPage_clicked();
+
+    void on_spinPageNum_valueChanged(int arg1);
+
 private:
     Ui::experiDataUi *ui;
 
@@ -56,6 +64,9 @@ private:
 
     bool    m_exportDataFlag = false;
     int     m_exportType;
+    int     m_pageIndex;
+    int     m_recordsPerPage;
+    int     m_recordsNum;
     void initExperiDataUi();
     void loadStyleSheet(const QString &styleSheetFile);
     QString executeShellCmd(QString strCmd, int timeout);

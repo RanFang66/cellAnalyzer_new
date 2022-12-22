@@ -1,7 +1,7 @@
 #include "inExperimentUi.h"
 #include "ui_inExperimentUi.h"
 #include <QFile>
-
+#include <QDebug>
 inExperimentUi::inExperimentUi(ExperiCtrl *experiCtrl, QWidget *parent) :
     QWidget(parent),
     ui(new Ui::inExperimentUi),

@@ -38,5 +38,6 @@
         <file>images/blur_bkg.png</file>
         <file>images/zoom_in.png</file>
         <file>images/arrow_return.png</file>
+        <file>images/shutdown.png</file>
     </qresource>
 </RCC>

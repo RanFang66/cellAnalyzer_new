@@ -11,7 +11,10 @@ experiDataUi::experiDataUi(QWidget *parent) :
     loadStyleSheet(":/styles/experiDataStyle.qss");
     db = QSqlDatabase::database("cellDataConn");
     query = new QSqlQuery(db);
+    m_pageIndex = 0;
+    m_recordsPerPage = 40;
     initExperiDataUi();
+
 }
 
 experiDataUi::~experiDataUi()
@@ -30,7 +33,7 @@ void experiDataUi::updateExperiDataUi()
 void experiDataUi::initExperiDataUi()
 {
     ui->tblExperiData->setSelectionBehavior(QAbstractItemView::SelectRows);
-    ui->tblExperiData->setSelectionMode(QAbstractItemView::MultiSelection);
+    ui->tblExperiData->setSelectionMode(QAbstractItemView::SingleSelection);
     ui->tblExperiData->setAlternatingRowColors(true);
     ui->dateEditStart->setDate(QDate::currentDate().addDays(-1));
     ui->dateEditEnd->setDate(QDate::currentDate());
@@ -47,32 +50,40 @@ void experiDataUi::initExperiDataUi()
         ui->comboUser->addItem(query->value(0).toString());
     }
 
+    query->exec("SELECT experiID FROM experiData");
+    m_recordsNum = query->record().count();
+    int pageNum = m_recordsNum / m_recordsPerPage + 1;
+    ui->spinPageNum->setMaximum(pageNum);
+    ui->spinPageNum->setMinimum(1);
+
+
     qryModel = new QSqlQueryModel(this);
-    qryModel->setQuery("SELECT * FROM experiData ORDER BY endTime DESC", db);
+    QString qryString = QString("SELECT * FROM experiData ORDER BY endTime DESC LIMIT %1 OFFSET %2").arg(m_recordsPerPage).arg(m_pageIndex*m_recordsPerPage);
+    qryModel->setQuery(qryString, db);
     if (qryModel->lastError().isValid()) {
         QMessageBox::critical(this, "Error", "Query Data Failed\n"+qryModel->lastError().text());
         return;
     }
 
     qryModel->setHeaderData(0, Qt::Horizontal, "ID");
-    qryModel->setHeaderData(1, Qt::Horizontal, "Name");
-    qryModel->setHeaderData(2, Qt::Horizontal, "User");
-    qryModel->setHeaderData(3, Qt::Horizontal, "Type");
-    qryModel->setHeaderData(4, Qt::Horizontal, "Cell Type");
-    qryModel->setHeaderData(5, Qt::Horizontal, "Chamber");
-    qryModel->setHeaderData(6, Qt::Horizontal, "Sample ID");
-    qryModel->setHeaderData(7, Qt::Horizontal, "Dilution Ratio");
-    qryModel->setHeaderData(8, Qt::Horizontal, "Cell Conc");
-    qryModel->setHeaderData(9, Qt::Horizontal, "Live Cell Conc");
-    qryModel->setHeaderData(10, Qt::Horizontal, "Dead Cell Conc");
-    qryModel->setHeaderData(11, Qt::Horizontal, "Viability");
-    qryModel->setHeaderData(12, Qt::Horizontal, "Cell Number");
-    qryModel->setHeaderData(13, Qt::Horizontal, "Live Cell Number");
-    qryModel->setHeaderData(14, Qt::Horizontal, "Dead Cell Number");
-    qryModel->setHeaderData(15, Qt::Horizontal, "Average Diameter");
-    qryModel->setHeaderData(16, Qt::Horizontal, "Average Compactness");
-    qryModel->setHeaderData(17, Qt::Horizontal, "Aggregate Rate");
-    qryModel->setHeaderData(18, Qt::Horizontal, "Time");
+    qryModel->setHeaderData(1, Qt::Horizontal, "实验名称");
+    qryModel->setHeaderData(2, Qt::Horizontal, "用户名");
+    qryModel->setHeaderData(3, Qt::Horizontal, "实验类型");
+    qryModel->setHeaderData(4, Qt::Horizontal, "细胞类型");
+    qryModel->setHeaderData(5, Qt::Horizontal, "槽位");
+    qryModel->setHeaderData(6, Qt::Horizontal, "样本ID");
+    qryModel->setHeaderData(7, Qt::Horizontal, "稀释比例");
+    qryModel->setHeaderData(8, Qt::Horizontal, "细胞浓度");
+    qryModel->setHeaderData(9, Qt::Horizontal, "活细胞浓度");
+    qryModel->setHeaderData(10, Qt::Horizontal, "死细胞浓度");
+    qryModel->setHeaderData(11, Qt::Horizontal, "细胞活率");
+    qryModel->setHeaderData(12, Qt::Horizontal, "细胞数");
+    qryModel->setHeaderData(13, Qt::Horizontal, "活细胞数");
+    qryModel->setHeaderData(14, Qt::Horizontal, "死细胞数");
+    qryModel->setHeaderData(15, Qt::Horizontal, "平均直径");
+    qryModel->setHeaderData(16, Qt::Horizontal, "平均圆度");
+    qryModel->setHeaderData(17, Qt::Horizontal, "结团率");
+    qryModel->setHeaderData(18, Qt::Horizontal, "实验时间");
 
     theSelection = new QItemSelectionModel(qryModel);
     connect(theSelection, SIGNAL(currentRowChanged(QModelIndex, QModelIndex)), this, SLOT(onCurrentRowChanged(QModelIndex, QModelIndex)));
@@ -250,3 +261,49 @@ void experiDataUi::on_btnJPG_clicked()
     }
     m_exportType = EXPORT_IMAGE;
 }
+
+void experiDataUi::on_btnFirstPage_clicked()
+{
+    m_pageIndex = 0;
+    QString qryString = QString("SELECT * FROM experiData ORDER BY endTime DESC LIMIT %1 OFFSET %2").arg(m_recordsPerPage).arg(m_pageIndex*m_recordsPerPage);
+    qryModel->setQuery(qryString, db);
+    qryModel->query().exec();
+}
+
+
+
+
+
+
+void experiDataUi::on_btnPrevPage_clicked()
+{
+    if (m_pageIndex > 0) {
+        m_pageIndex--;
+        QString qryString = QString("SELECT * FROM experiData ORDER BY endTime DESC LIMIT %1 OFFSET %2").arg(m_recordsPerPage).arg(m_pageIndex*m_recordsPerPage);
+        qryModel->setQuery(qryString, db);
+        qryModel->query().exec();
+    }
+}
+
+
+void experiDataUi::on_btnNextPage_clicked()
+{
+    query->exec("SELECT experiID FROM experiData");
+    m_recordsNum = query->record().count();
+    if (m_pageIndex * m_recordsPerPage < m_recordsNum) {
+        m_pageIndex++;
+        QString qryString = QString("SELECT * FROM experiData ORDER BY endTime DESC LIMIT %1 OFFSET %2").arg(m_recordsPerPage).arg(m_pageIndex*m_recordsPerPage);
+        qryModel->setQuery(qryString, db);
+        qryModel->query().exec();
+    }
+}
+
+
+void experiDataUi::on_spinPageNum_valueChanged(int arg1)
+{
+    m_pageIndex = arg1-1;
+    QString qryString = QString("SELECT * FROM experiData ORDER BY endTime DESC LIMIT %1 OFFSET %2").arg(m_recordsPerPage).arg(m_pageIndex*m_recordsPerPage);
+    qryModel->setQuery(qryString, db);
+    qryModel->query().exec();
+}
+

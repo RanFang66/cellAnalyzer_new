@@ -70,7 +70,9 @@ QGroupBox#mainButtonGroup QPushButton:checked {
     height: 174px; */
     min-width: 110px;
     min-height: 174;
-    max-width: 200px;
+    max-width: 2QString qryString = QString("SELECT * FROM experiData ORDER BY endTime DESC LIMIT %1 OFFSET %2").arg(m_recordsPerPage).arg(m_pageIndex*m_recordsPerPage);
+    qryModel->setQuery(qryString, db);
+    qryModel->query().exec();00px;
     max-height: 174px;
     border-bottom-left-radius: 50px;
     border-bottom-right-radius: 50px;
@@ -184,6 +186,19 @@ QPushButton#btnLanguage {
 
 QPushButton#btnSysInfo {
     background-image: url(:/images/language.png);
+    left: 695px;
+    top:  87px;
+    width: 160px;
+    height: 160px;
+    min-width: 160px;
+    min-height: 160px;
+    max-width: 160px;
+    max-height: 160px;
+    border-radius: 30px;
+}
+
+QPushButton#btnShutdown {
+    background-image: url(:/images/shutdown.png);
     left: 695px;
     top:  87px;
     width: 160px;
