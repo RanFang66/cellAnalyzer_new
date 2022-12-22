@@ -235,8 +235,10 @@ void MainWindow::on_btnLanguage_clicked()
 
 void MainWindow::on_btnShutdown_clicked()
 {
-    QMessageBox::StandardButton ret = QMessageBox::critical(this, "shutdown", "Sure to shutdown?");
-    if (ret == QMessageBox::Ok) {
+    QMessageBox::StandardButton ret = QMessageBox::question(this, "shutdown", "Sure to shutdown?");
+    if (ret == QMessageBox::Yes) {
         qApp->exit(0);
+    } else {
+        return;
     }
 }
