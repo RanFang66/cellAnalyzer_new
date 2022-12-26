@@ -52,6 +52,7 @@ HEADERS += \
     inExperimentUi.h
 
 FORMS += \
+    DataExportDialog.ui \
     DateTimeSetUi.ui \
     DlgAnimationUi.ui \
     MainWindow.ui \

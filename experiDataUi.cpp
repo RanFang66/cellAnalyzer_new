@@ -3,6 +3,7 @@
 #include <QFile>
 #include <QDebug>
 #include <QMessageBox>
+#include <exportDataDialog.h>
 experiDataUi::experiDataUi(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::experiDataUi)
@@ -127,7 +128,7 @@ QString experiDataUi::detectUpan()
 {
     QString upanName;
     int retryCount = 0;
-    QString ret = executeShellCmd("sudo raspi-gpio set 26 op dl", 5000);
+//    QString ret = executeShellCmd("sudo raspi-gpio set 26 op dl", 5000);
     while (upanName.isEmpty()) {
         upanName = executeShellCmd("sleep 1 && ls /media/seekgene/", 5000);
         if (retryCount++ >= 10)
@@ -225,42 +226,44 @@ void experiDataUi::on_btnExcel_clicked()
 
 void experiDataUi::on_btnJPG_clicked()
 {
-    QString upan = detectUpan();
-    if (upan.isEmpty()) {
-        QMessageBox::critical(this, "Error", "Can not find upan, please retry");
-        return;
-    }
-    QString dirName = "seekgene_share_" + QDateTime::currentDateTime().toString("yyyyMMdd");
-    QString path = "/media/seekgene/" + upan +"/"+ dirName;
+    exportDataDialog *exportDialog = new exportDataDialog(0, curExperiID, this);
+    exportDialog->exec();
+//    QString upan = detectUpan();
+//    if (upan.isEmpty()) {
+//        QMessageBox::critical(this, "Error", "Can not find upan, please retry");
+//        return;
+//    }
+//    QString dirName = "seekgene_share_" + QDateTime::currentDateTime().toString("yyyyMMdd");
+//    QString path = "/media/seekgene/" + upan +"/"+ dirName;
 
-    QDir dir(path);
-    qDebug() << path;
-    if (!dir.exists()) {
-        if (dir.mkdir(path)) {
-            qDebug() << "create dir " << path;
-        } else {
-            qDebug() << "create dir failed " << path;
-        }
-    }
-    QString pathImage = path + "/imageData";
-    qDebug() << pathImage;
-    QDir dirImage(pathImage);
-    if (!dirImage.exists()) {
-        if (dirImage.mkdir(path)) {
-            qDebug() << "create dir " << pathImage;
-        } else {
-            qDebug() << "create dir failed " << pathImage;
-        }
-    }
+//    QDir dir(path);
+//    qDebug() << path;
+//    if (!dir.exists()) {
+//        if (dir.mkdir(path)) {
+//            qDebug() << "create dir " << path;
+//        } else {
+//            qDebug() << "create dir failed " << path;
+//        }
+//    }
+//    QString pathImage = path + "/imageData";
+//    qDebug() << pathImage;
+//    QDir dirImage(pathImage);
+//    if (!dirImage.exists()) {
+//        if (dirImage.mkdir(path)) {
+//            qDebug() << "create dir " << pathImage;
+//        } else {
+//            qDebug() << "create dir failed " << pathImage;
+//        }
+//    }
 
-    QString cmd = QString("cp -r /cellImages/%1/ %2/").arg(curExperiID).arg(pathImage);
-    qDebug() << cmd;
-    QString ret = executeShellCmd(cmd, 30000);
-    //qDebug() << ret;
-    if (ret.isEmpty()) {
-        QMessageBox::information(this, "Export Ok", "Export image data ok!");
-    }
-    m_exportType = EXPORT_IMAGE;
+//    QString cmd = QString("cp -r /cellImages/%1/ %2/").arg(curExperiID).arg(pathImage);
+//    qDebug() << cmd;
+//    QString ret = executeShellCmd(cmd, 30000);
+//    //qDebug() << ret;
+//    if (ret.isEmpty()) {
+//        QMessageBox::information(this, "Export Ok", "Export image data ok!");
+//    }
+//    m_exportType = EXPORT_IMAGE;
 }
 
 void experiDataUi::on_btnFirstPage_clicked()
