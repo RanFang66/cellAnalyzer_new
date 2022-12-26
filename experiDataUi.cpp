@@ -12,7 +12,7 @@ experiDataUi::experiDataUi(QWidget *parent) :
     db = QSqlDatabase::database("cellDataConn");
     query = new QSqlQuery(db);
     m_pageIndex = 0;
-    m_recordsPerPage = 30;
+    m_recordsPerPage = 35;
     initExperiDataUi();
 
 }
@@ -291,7 +291,7 @@ void experiDataUi::on_btnPrevPage_clicked()
 
 void experiDataUi::on_btnNextPage_clicked()
 {
-    if (m_pageIndex * m_recordsPerPage < m_recordsNum) {
+    if ((m_pageIndex+1) * m_recordsPerPage < m_recordsNum) {
         m_pageIndex++;
         QString qryString = QString("SELECT * FROM experiData ORDER BY endTime DESC LIMIT %1 OFFSET %2").arg(m_recordsPerPage).arg(m_pageIndex*m_recordsPerPage);
         qryModel->setQuery(qryString, db);
