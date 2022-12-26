@@ -52,6 +52,8 @@ private slots:
 
     void on_spinPageNum_valueChanged(int arg1);
 
+    void on_btnLastPage_clicked();
+
 private:
     Ui::experiDataUi *ui;
 

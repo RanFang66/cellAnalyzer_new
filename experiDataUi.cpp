@@ -12,7 +12,7 @@ experiDataUi::experiDataUi(QWidget *parent) :
     db = QSqlDatabase::database("cellDataConn");
     query = new QSqlQuery(db);
     m_pageIndex = 0;
-    m_recordsPerPage = 40;
+    m_recordsPerPage = 30;
     initExperiDataUi();
 
 }
@@ -37,6 +37,7 @@ void experiDataUi::initExperiDataUi()
     ui->tblExperiData->setAlternatingRowColors(true);
     ui->dateEditStart->setDate(QDate::currentDate().addDays(-1));
     ui->dateEditEnd->setDate(QDate::currentDate());
+    ui->spinPageNum->setValue(1);
 
     ui->comboType->clear();
     query->exec("SELECT cellTypeName from cellType");
@@ -49,13 +50,6 @@ void experiDataUi::initExperiDataUi()
     while (query->next()) {
         ui->comboUser->addItem(query->value(0).toString());
     }
-
-    query->exec("SELECT experiID FROM experiData");
-    m_recordsNum = query->record().count();
-    int pageNum = m_recordsNum / m_recordsPerPage + 1;
-    ui->spinPageNum->setMaximum(pageNum);
-    ui->spinPageNum->setMinimum(1);
-
 
     qryModel = new QSqlQueryModel(this);
     QString qryString = QString("SELECT * FROM experiData ORDER BY endTime DESC LIMIT %1 OFFSET %2").arg(m_recordsPerPage).arg(m_pageIndex*m_recordsPerPage);
@@ -97,6 +91,13 @@ void experiDataUi::initExperiDataUi()
     ui->btnDeleteData->setEnabled(false);
     ui->btnDetail->setEnabled(false);
 
+    query->exec("SELECT experiID FROM experiData");
+    query->last();
+
+    m_recordsNum = query->at() + 1;
+    int pageNum = m_recordsNum / m_recordsPerPage + 1;
+    ui->spinPageNum->setMaximum(pageNum);
+    ui->spinPageNum->setMinimum(1);
 }
 
 void experiDataUi::loadStyleSheet(const QString &styleSheetFile)
@@ -268,6 +269,7 @@ void experiDataUi::on_btnFirstPage_clicked()
     QString qryString = QString("SELECT * FROM experiData ORDER BY endTime DESC LIMIT %1 OFFSET %2").arg(m_recordsPerPage).arg(m_pageIndex*m_recordsPerPage);
     qryModel->setQuery(qryString, db);
     qryModel->query().exec();
+    ui->spinPageNum->setValue(1);
 }
 
 
@@ -282,19 +284,19 @@ void experiDataUi::on_btnPrevPage_clicked()
         QString qryString = QString("SELECT * FROM experiData ORDER BY endTime DESC LIMIT %1 OFFSET %2").arg(m_recordsPerPage).arg(m_pageIndex*m_recordsPerPage);
         qryModel->setQuery(qryString, db);
         qryModel->query().exec();
+        ui->spinPageNum->setValue(m_pageIndex+1);
     }
 }
 
 
 void experiDataUi::on_btnNextPage_clicked()
 {
-    query->exec("SELECT experiID FROM experiData");
-    m_recordsNum = query->record().count();
     if (m_pageIndex * m_recordsPerPage < m_recordsNum) {
         m_pageIndex++;
         QString qryString = QString("SELECT * FROM experiData ORDER BY endTime DESC LIMIT %1 OFFSET %2").arg(m_recordsPerPage).arg(m_pageIndex*m_recordsPerPage);
         qryModel->setQuery(qryString, db);
         qryModel->query().exec();
+        ui->spinPageNum->setValue(m_pageIndex+1);
     }
 }
 
@@ -307,3 +309,12 @@ void experiDataUi::on_spinPageNum_valueChanged(int arg1)
     qryModel->query().exec();
 }
 
+
+void experiDataUi::on_btnLastPage_clicked()
+{
+    m_pageIndex = m_recordsNum / m_recordsPerPage;
+    QString qryString = QString("SELECT * FROM experiData ORDER BY endTime DESC LIMIT %1 OFFSET %2").arg(m_recordsPerPage).arg(m_pageIndex*m_recordsPerPage);
+    qryModel->setQuery(qryString, db);
+    qryModel->query().exec();
+    ui->spinPageNum->setValue(m_pageIndex+1);
+}

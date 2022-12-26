@@ -17,10 +17,10 @@ MainWindow::MainWindow(QWidget *parent)
 
 
     this->setWindowFlags(Qt::Window | Qt::FramelessWindowHint);
-    QString ret = executeShellCmd("sudo raspi-gpio set 26 op dh && sleep 3");
-    if (!ret.isEmpty()) {
-        qDebug() << ret;
-    }
+//    QString ret = executeShellCmd("sudo raspi-gpio set 26 op dh && sleep 3");
+//    if (!ret.isEmpty()) {
+//        qDebug() << ret;
+//    }
 
     m_dev = new DevCtrl(this);
     m_setting = new ExperiSetting(this);
@@ -42,7 +42,7 @@ MainWindow::MainWindow(QWidget *parent)
 
 MainWindow::~MainWindow()
 {
-    executeShellCmd("sudo raspi-gpio set 26 op dl");
+//    executeShellCmd("sudo raspi-gpio set 26 op dl");
     delete ui;
 }
 
@@ -235,8 +235,10 @@ void MainWindow::on_btnLanguage_clicked()
 
 void MainWindow::on_btnShutdown_clicked()
 {
-    QMessageBox::StandardButton ret = QMessageBox::critical(this, "shutdown", "Sure to shutdown?");
-    if (ret == QMessageBox::Ok) {
+    QMessageBox::StandardButton ret = QMessageBox::question(this, "shutdown", "Sure to shutdown?");
+    if (ret == QMessageBox::Yes) {
         qApp->exit(0);
+    } else {
+        return;
     }
 }

@@ -173,11 +173,11 @@ void experiResultUi::pinchTriggered(QPinchGesture *gesture)
     qreal m_scale = 1;
     if (changeFlags & QPinchGesture::ScaleFactorChanged) {
         m_scale = gesture->totalScaleFactor();
-        if (m_scale > 1) {
-            m_scale = 1.2;
-        } else {
-            m_scale = 1/1.2;
-        }
+//        if (m_scale > 1) {
+//            m_scale = 1.2;
+//        } else {
+//            m_scale = 1/1.2;
+//        }
     }
     if (gesture->state() == Qt::GestureFinished) {
         ui->gvCellImage->scale(m_scale, m_scale);
