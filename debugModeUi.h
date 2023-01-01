@@ -5,7 +5,10 @@
 #include <QGraphicsScene>
 #include <QGraphicsItem>
 #include <DevCtrl.h>
-
+#include <QSqlDatabase>
+#include <QSqlQuery>
+#include <QSqlRecord>
+#include <QVariant>
 
 namespace Ui {
 class debugModeUi;
@@ -104,11 +107,20 @@ private slots:
 
     void on_hsBlueGain_valueChanged(int value);
 
+    void on_btnSaveBrParas_clicked();
+
+    void on_btnSaveFL1Paras_clicked();
+
+    void on_btnSaveFL2Paras_clicked();
+
 private:
     Ui::debugModeUi         *ui;
     DevCtrl                 *m_dev;
     QGraphicsScene          *m_scene;
     QGraphicsPixmapItem     *m_image_item;
+
+    QSqlDatabase            db;
+    QSqlQuery               *query;
 
     int  m_motorId;
 

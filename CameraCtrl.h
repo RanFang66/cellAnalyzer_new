@@ -3,6 +3,8 @@
 
 #include <QObject>
 #include "JHCap.h"
+#include <QSqlDatabase>
+#include <QSqlQuery>
 
 #define CAM_INDEX_0         (0)
 
@@ -35,6 +37,8 @@ private:
         int height;
     };
     int                 m_id = CAM_INDEX_0;
+    QSqlDatabase        db;
+    QSqlQuery           *query;
     QString             m_camName;
     QString             m_camModel;
     QString             m_APIVersion;

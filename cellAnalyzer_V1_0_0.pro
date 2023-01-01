@@ -74,12 +74,28 @@ qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
-unix:!macx: LIBS += -L$$PWD/cam_sdk/arm64/ -lJHCap
-unix:!maxx: LIBS += /usr/lib/aarch64-linux-gnu/libopencv*.so
+unix:!macx: {
+    contains(QT_ARCH, arm64){
+        LIBS += -L$$PWD/cam_sdk/arm64/ -lJHCap
+        LIBS += /usr/lib/aarch64-linux-gnu/libopencv*.so
+        INCLUDEPATH += $$PWD/cam_sdk/arm64 \
+                       /usr/include/opencv4/.
+        DEPENDPATH += $$PWD/cam_sdk/arm64
+    }else{
+        LIBS += -L$$PWD/cam_sdk/linux_x64/ -lJHCap
+        LIBS += /usr/local/lib/libopencv*.so
+        INCLUDEPATH += $$PWD/cam_sdk/linux_x64 \
+                        /usr/local/include/opencv4/.
+        DEPENDPATH += $$PWD/cam_sdk/linux_x64
+    }
+}
 
-INCLUDEPATH += $$PWD/cam_sdk/arm64 \
-               /usr/include/opencv4/.
-DEPENDPATH += $$PWD/cam_sdk/arm64
+#unix:!macx: LIBS += -L$$PWD/cam_sdk/arm64/ -lJHCap
+#unix:!maxx: LIBS += /usr/lib/aarch64-linux-gnu/libopencv*.so
+
+#INCLUDEPATH += $$PWD/cam_sdk/arm64 \
+#               /usr/include/opencv4/.
+#DEPENDPATH += $$PWD/cam_sdk/arm64
 
 RESOURCES += \
     resource.qrc

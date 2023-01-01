@@ -26,7 +26,8 @@ const QString CameraCtrl::errorMsg[] = {
 
 CameraCtrl::CameraCtrl(QObject *parent) : QObject(parent)
 {
-
+    db = QSqlDatabase::database("cellDataConn");
+    query = new QSqlQuery(db);
 }
 
 CameraCtrl::~CameraCtrl()
@@ -133,55 +134,129 @@ void CameraCtrl::onSetCamParas(int type)
 
 void CameraCtrl::cameraBrightInit()
 {
-    //CameraSetAWB(m_id, true);
-//    CameraSetSaturation(m_id, 1);
-//    CameraSetContrast(m_id, 1);
-//    CameraSetGamma(m_id, 1.33);
-    CameraSetBlackLevel(m_id, 14);
-    CameraSetAEC(m_id, true);
-    CameraSetAETarget(m_id, 100);
-    CameraSetAGC(m_id, true);
-    CameraSetWBGain(m_id, 1.47, 1, 1.83);
-//    CameraOnePushWB(m_id);
+    QString qryStr = QString("SELECT * FROM camParas WHERE paraId=%1").arg(1);
+    if (query->exec(qryStr)&& query->next()) {
+        int aec = query->value(2).toInt();
+        int agc = query->value(3).toInt();
+        int awb = query->value(4).toInt();
+        int expoTime = query->value(5).toInt();
+        int expoGain = query->value(6).toInt();
+        int aeTarget = query->value(7).toInt();
+        double gamma = query->value(8).toDouble();
+        double contrast = query->value(9).toDouble();
+        double sat = query->value(10).toDouble();
+        int blackLevel = query->value(11).toInt();
+        double rg = query->value(12).toDouble();
+        double gg = query->value(13).toDouble();
+        double bg = query->value(14).toDouble();
+
+        CameraSetAEC(m_id, aec);
+        CameraSetAGC(m_id, agc);
+        CameraSetAWB(m_id, awb);
+
+        if (!aec)
+            CameraSetExposure(m_id, expoTime);
+        else
+            CameraSetAETarget(m_id, aeTarget);
+
+        if (!agc)
+            CameraSetGain(m_id, expoGain);
+
+
+        CameraSetSaturation(m_id, sat);
+        CameraSetContrast(m_id, contrast);
+        CameraSetGamma(m_id, gamma);
+        CameraSetBlackLevel(m_id, blackLevel);
+
+        if (!awb)
+            CameraSetWBGain(m_id, rg, gg, bg);
+//        CameraOnePushWB(m_id);
+    }
+
 }
 
 void CameraCtrl::cameraFL1Init()
 {
-//    CameraSetSaturation(m_id, 1);
-//    CameraSetContrast(m_id, 1);
-//    CameraSetGamma(m_id, 1.33);
-    CameraSetBlackLevel(m_id, 30);
-//    CameraSetAEC(m_id, true);
-//    CameraSetAETarget(m_id, 100);
-//    CameraSetAGC(m_id, true);
-//    CameraSetWBGain(m_id, 1.47, 1, 1.83);
-//    CameraSetAGC(m_id, false);
-//    CameraSetAEC(m_id, false);
-//    CameraSetExposure(m_id, 32767);
-//    CameraSetGain(m_id, 120);
-//    //CameraSetAWB(m_id, true);
-//    CameraSetSaturation(m_id, 1.66);
-//    CameraSetContrast(m_id, 1.24);
-//    CameraSetGamma(m_id, 1.33);
-//    CameraSetBlackLevel(m_id, 52);
+    QString qryStr = QString("SELECT * FROM camParas WHERE paraId=%1").arg(2);
+    if (query->exec(qryStr)&& query->next()) {
+        int aec = query->value(2).toInt();
+        int agc = query->value(3).toInt();
+        int awb = query->value(4).toInt();
+        int expoTime = query->value(5).toInt();
+        int expoGain = query->value(6).toInt();
+        int aeTarget = query->value(7).toInt();
+        double gamma = query->value(8).toDouble();
+        double contrast = query->value(9).toDouble();
+        double sat = query->value(10).toDouble();
+        int blackLevel = query->value(11).toInt();
+        double rg = query->value(12).toDouble();
+        double gg = query->value(13).toDouble();
+        double bg = query->value(14).toDouble();
+
+        CameraSetAEC(m_id, aec);
+        CameraSetAGC(m_id, agc);
+        CameraSetAWB(m_id, awb);
+
+        if (!aec)
+            CameraSetExposure(m_id, expoTime);
+        else
+            CameraSetAETarget(m_id, aeTarget);
+
+        if (!agc)
+            CameraSetGain(m_id, expoGain);
+
+
+        CameraSetSaturation(m_id, sat);
+        CameraSetContrast(m_id, contrast);
+        CameraSetGamma(m_id, gamma);
+        CameraSetBlackLevel(m_id, blackLevel);
+
+        if (!awb)
+            CameraSetWBGain(m_id, rg, gg, bg);
+//        CameraOnePushWB(m_id);
+    }
 }
 
 void CameraCtrl::cameraFL2Init()
 {
-    CameraSetBlackLevel(m_id, 30);
-//    CameraSetAEC(m_id, true);
-//    CameraSetAETarget(m_id, 100);
-//    CameraSetAGC(m_id, true);
+    QString qryStr = QString("SELECT * FROM camParas WHERE paraId=%1").arg(3);
+    if (query->exec(qryStr)&& query->next()) {
+        int aec = query->value(2).toInt();
+        int agc = query->value(3).toInt();
+        int awb = query->value(4).toInt();
+        int expoTime = query->value(5).toInt();
+        int expoGain = query->value(6).toInt();
+        int aeTarget = query->value(7).toInt();
+        double gamma = query->value(8).toDouble();
+        double contrast = query->value(9).toDouble();
+        double sat = query->value(10).toDouble();
+        int blackLevel = query->value(11).toInt();
+        double rg = query->value(12).toDouble();
+        double gg = query->value(13).toDouble();
+        double bg = query->value(14).toDouble();
 
-//    CameraSetAGC(m_id, false);
-//    CameraSetAEC(m_id, false);
-//    CameraSetExposure(m_id, 32767);
-//    CameraSetGain(m_id, 40);
-//    CameraSetAWB(m_id, true);
-//    CameraSetSaturation(m_id, 1.24);
-//    CameraSetContrast(m_id, 1.29);
-//    CameraSetGamma(m_id, 0.82);
-//    CameraSetBlackLevel(m_id, 115);
+        CameraSetAEC(m_id, aec);
+        CameraSetAGC(m_id, agc);
+        CameraSetAWB(m_id, awb);
+
+        if (!aec)
+            CameraSetExposure(m_id, expoTime);
+        else
+            CameraSetAETarget(m_id, aeTarget);
+
+        if (!agc)
+            CameraSetGain(m_id, expoGain);
+
+
+        CameraSetSaturation(m_id, sat);
+        CameraSetContrast(m_id, contrast);
+        CameraSetGamma(m_id, gamma);
+        CameraSetBlackLevel(m_id, blackLevel);
+
+        if (!awb)
+            CameraSetWBGain(m_id, rg, gg, bg);
+//        CameraOnePushWB(m_id);
+    }
 }
 
 void CameraCtrl::cameraErrorHandle()
