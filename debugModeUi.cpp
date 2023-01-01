@@ -2,6 +2,8 @@
 #include "ui_debugModeUi.h"
 #include <QMessageBox>
 #include <JHCap.h>
+#include <QSqlError>
+#include <QDebug>
 debugModeUi::debugModeUi(DevCtrl *dev, QWidget *parent) :
     QWidget(parent),
     ui(new Ui::debugModeUi),
@@ -70,12 +72,19 @@ void debugModeUi::onLedChanged()
 {
     if (ui->rBtnLedWhite->isChecked()) {
         m_dev->ledLigthOn(DevCtrl::LED_WHITE);
+        m_dev->initCameraParas(1);
+        updateCamParas();
     } else if (ui->rBtnLedBlue->isChecked()) {
         m_dev->ledLigthOn(DevCtrl::LED_BLUE);
+        m_dev->initCameraParas(2);
+        updateCamParas();
     } else if (ui->rBtnLedGreen->isChecked()) {
         m_dev->ledLigthOn(DevCtrl::LED_GREEN);
+        m_dev->initCameraParas(3);
+        updateCamParas();
     } else {
         m_dev->ledLightOff();
+        m_dev->initCameraParas(1);
     }
 }
 
@@ -162,7 +171,7 @@ void debugModeUi::updateCamParas()
     CameraGetSaturation(CAM_INDEX_0, &sat);
     int satInt = sat * 100;
     ui->lblSaturation->setText(QString::number(sat));
-    ui->hsContrast->setValue(satInt);
+    ui->hsSaturation->setValue(satInt);
 
     int  blackLevel;
     CameraGetBlackLevel(CAM_INDEX_0, &blackLevel);
@@ -507,13 +516,17 @@ void debugModeUi::on_btnSaveBrParas_clicked()
     double bg = ui->hsBlueGain->value() / 100.0;
 
 
-    QString queryStr = QString("UPDATE camParas SET autoExpo=%1, autoGain=%2, autoWhiteBalance=%3, expoTime=%4, expoGain=%5, autoExpoTarget=%6, gamma=%7, contrast=%8, satruation=%8, blackGain=%9,"
-                               "wbRedGain=%10, wbGreenGain=%11, wbBlueGain=%12 WHERE ParaId = 1").arg(aec).arg(agc).arg(awb).arg(exposure).arg(gain).arg(aeTarget).arg(gamma).arg(contrast).arg(sat) \
+    QString queryStr = QString("UPDATE camParas SET autoExpo=%1, autoGain=%2, autoWhiteBalance=%3, expoTime=%4, "
+                               "expoGain=%5, autoExpoTarget=%6, gamma=%7, contrast=%8, satruation=%9, blackGain=%10,"
+                               "wbRedGain=%11, wbGreenGain=%12, wbBlueGain=%13 WHERE ParaId = 1").arg(aec).arg(agc) \
+            .arg(awb).arg(exposure).arg(gain).arg(aeTarget).arg(gamma).arg(contrast).arg(sat) \
             .arg(blackLevel).arg(rg).arg(gg).arg(bg);
 
-    if (query->exec("queryStr")) {
+    if (query->exec(queryStr)) {
         QMessageBox::information(this, "save ok", "save bright parameters ok");
     } else {
+        qDebug() << queryStr;
+        qDebug() << query->lastError().text();
         QMessageBox::critical(this, "save failed", "save bright parameters failed");
     }
 }
@@ -547,11 +560,13 @@ void debugModeUi::on_btnSaveFL1Paras_clicked()
     double bg = ui->hsBlueGain->value() / 100.0;
 
 
-    QString queryStr = QString("UPDATE camParas SET autoExpo=%1, autoGain=%2, autoWhiteBalance=%3, expoTime=%4, expoGain=%5, autoExpoTarget=%6, gamma=%7, contrast=%8, satruation=%8, blackGain=%9,"
-                               "wbRedGain=%10, wbGreenGain=%11, wbBlueGain=%12 WHERE ParaId = 2").arg(aec).arg(agc).arg(awb).arg(exposure).arg(gain).arg(aeTarget).arg(gamma).arg(contrast).arg(sat) \
+    QString queryStr = QString("UPDATE camParas SET autoExpo=%1, autoGain=%2, autoWhiteBalance=%3, expoTime=%4, "
+                               "expoGain=%5, autoExpoTarget=%6, gamma=%7, contrast=%8, satruation=%9, blackGain=%10,"
+                               "wbRedGain=%11, wbGreenGain=%12, wbBlueGain=%13 WHERE ParaId = 2").arg(aec).arg(agc) \
+            .arg(awb).arg(exposure).arg(gain).arg(aeTarget).arg(gamma).arg(contrast).arg(sat) \
             .arg(blackLevel).arg(rg).arg(gg).arg(bg);
 
-    if (query->exec("queryStr")) {
+    if (query->exec(queryStr)) {
         QMessageBox::information(this, "save ok", "save FL_green parameters ok");
     } else {
         QMessageBox::critical(this, "save failed", "save FL_green parameters failed");
@@ -587,11 +602,13 @@ void debugModeUi::on_btnSaveFL2Paras_clicked()
     double bg = ui->hsBlueGain->value() / 100.0;
 
 
-    QString queryStr = QString("UPDATE camParas SET autoExpo=%1, autoGain=%2, autoWhiteBalance=%3, expoTime=%4, expoGain=%5, autoExpoTarget=%6, gamma=%7, contrast=%8, satruation=%8, blackGain=%9,"
-                               "wbRedGain=%10, wbGreenGain=%11, wbBlueGain=%12 WHERE ParaId = 3").arg(aec).arg(agc).arg(awb).arg(exposure).arg(gain).arg(aeTarget).arg(gamma).arg(contrast).arg(sat) \
+    QString queryStr = QString("UPDATE camParas SET autoExpo=%1, autoGain=%2, autoWhiteBalance=%3, expoTime=%4, "
+                               "expoGain=%5, autoExpoTarget=%6, gamma=%7, contrast=%8, satruation=%9, blackGain=%10,"
+                               "wbRedGain=%11, wbGreenGain=%12, wbBlueGain=%13 WHERE ParaId = 3").arg(aec).arg(agc) \
+            .arg(awb).arg(exposure).arg(gain).arg(aeTarget).arg(gamma).arg(contrast).arg(sat) \
             .arg(blackLevel).arg(rg).arg(gg).arg(bg);
 
-    if (query->exec("queryStr")) {
+    if (query->exec(queryStr)) {
         QMessageBox::information(this, "save ok", "save FL_red parameters ok");
     } else {
         QMessageBox::critical(this, "save failed", "save FL_red parameters failed");

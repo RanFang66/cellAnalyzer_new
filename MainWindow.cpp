@@ -17,10 +17,10 @@ MainWindow::MainWindow(QWidget *parent)
 
 
     this->setWindowFlags(Qt::Window | Qt::FramelessWindowHint);
-//    QString ret = executeShellCmd("sudo raspi-gpio set 26 op dh && sleep 3");
-//    if (!ret.isEmpty()) {
-//        qDebug() << ret;
-//    }
+    QString ret = executeShellCmd("sudo raspi-gpio set 26 op dh && sleep 3");
+    if (!ret.isEmpty()) {
+        qDebug() << ret;
+    }
 
     m_dev = new DevCtrl(this);
     m_setting = new ExperiSetting(this);

@@ -150,6 +150,11 @@ void CameraCtrl::cameraBrightInit()
         double gg = query->value(13).toDouble();
         double bg = query->value(14).toDouble();
 
+        CameraSetSaturation(m_id, sat);
+        CameraSetContrast(m_id, contrast);
+        CameraSetGamma(m_id, gamma);
+        CameraSetBlackLevel(m_id, blackLevel);
+
         CameraSetAEC(m_id, aec);
         CameraSetAGC(m_id, agc);
         CameraSetAWB(m_id, awb);
@@ -161,12 +166,6 @@ void CameraCtrl::cameraBrightInit()
 
         if (!agc)
             CameraSetGain(m_id, expoGain);
-
-
-        CameraSetSaturation(m_id, sat);
-        CameraSetContrast(m_id, contrast);
-        CameraSetGamma(m_id, gamma);
-        CameraSetBlackLevel(m_id, blackLevel);
 
         if (!awb)
             CameraSetWBGain(m_id, rg, gg, bg);
@@ -193,6 +192,11 @@ void CameraCtrl::cameraFL1Init()
         double gg = query->value(13).toDouble();
         double bg = query->value(14).toDouble();
 
+        CameraSetSaturation(m_id, sat);
+        CameraSetContrast(m_id, contrast);
+        CameraSetGamma(m_id, gamma);
+        CameraSetBlackLevel(m_id, blackLevel);
+
         CameraSetAEC(m_id, aec);
         CameraSetAGC(m_id, agc);
         CameraSetAWB(m_id, awb);
@@ -204,12 +208,6 @@ void CameraCtrl::cameraFL1Init()
 
         if (!agc)
             CameraSetGain(m_id, expoGain);
-
-
-        CameraSetSaturation(m_id, sat);
-        CameraSetContrast(m_id, contrast);
-        CameraSetGamma(m_id, gamma);
-        CameraSetBlackLevel(m_id, blackLevel);
 
         if (!awb)
             CameraSetWBGain(m_id, rg, gg, bg);
@@ -235,6 +233,11 @@ void CameraCtrl::cameraFL2Init()
         double gg = query->value(13).toDouble();
         double bg = query->value(14).toDouble();
 
+        CameraSetSaturation(m_id, sat);
+        CameraSetContrast(m_id, contrast);
+        CameraSetGamma(m_id, gamma);
+        CameraSetBlackLevel(m_id, blackLevel);
+
         CameraSetAEC(m_id, aec);
         CameraSetAGC(m_id, agc);
         CameraSetAWB(m_id, awb);
@@ -245,13 +248,7 @@ void CameraCtrl::cameraFL2Init()
             CameraSetAETarget(m_id, aeTarget);
 
         if (!agc)
-            CameraSetGain(m_id, expoGain);
-
-
-        CameraSetSaturation(m_id, sat);
-        CameraSetContrast(m_id, contrast);
-        CameraSetGamma(m_id, gamma);
-        CameraSetBlackLevel(m_id, blackLevel);
+            CameraSetGain(m_id, expoGain); 
 
         if (!awb)
             CameraSetWBGain(m_id, rg, gg, bg);
