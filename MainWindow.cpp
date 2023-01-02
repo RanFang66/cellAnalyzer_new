@@ -42,7 +42,7 @@ MainWindow::MainWindow(QWidget *parent)
 
 MainWindow::~MainWindow()
 {
-//    executeShellCmd("sudo raspi-gpio set 26 op dl");
+   executeShellCmd("sudo raspi-gpio set 26 op dl");
     delete ui;
 }
 
