@@ -24,6 +24,8 @@ public slots:
 
     void onUpdateImage(void);
 
+    void initExperimentUi(void);
+
 
 signals:
     void pauseExperiment();

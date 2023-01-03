@@ -34,6 +34,7 @@ private:
     int m_cellNum;
     int m_liveCellNum;
     int m_deadCellNum;
+    double m_nucleusRate;
     double m_cellConc;
     double m_liveCellConc;
     double m_deadCellConc;

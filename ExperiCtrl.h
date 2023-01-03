@@ -72,6 +72,7 @@ private:
 
     Mat     imgFL2;
     Mat     imgFL1;
+    Mat     imgTemp;
     Mat     imgBR;
     Mat     imgMarked;
 

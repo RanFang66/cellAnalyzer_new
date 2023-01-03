@@ -125,6 +125,8 @@ void experiResultUi::initResultShow(QString experiID)
     ui->lblAggregateRate->setText(QString::number(val, 'f', 2) + "%");
     val = rec.value("avgCompactness").toDouble();
     ui->lblAvgRoundness->setText(QString::number(val, 'f', 2));
+    val = rec.value("nucleusRate").toDouble();
+    ui->lblNucleusRate->setText(QString::number(val, 'f', 2) + "%");
     showCellImage();
 }
 

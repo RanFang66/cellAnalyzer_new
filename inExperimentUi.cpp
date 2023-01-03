@@ -29,8 +29,10 @@ inExperimentUi::~inExperimentUi()
 
 void inExperimentUi::updateNoticeText(QString notice)
 {
-    ui->lblNoticeText_1st->setText(ui->lblNoticeText_2nd->text() + " finished");
-    ui->lblNoticeText_2nd->setText(ui->lblNoticeText_3rd->text() + " finished");
+    if (!(ui->lblNoticeText_2nd->text().isEmpty()))
+        ui->lblNoticeText_1st->setText(ui->lblNoticeText_2nd->text() + " finished");
+    if (!(ui->lblNoticeText_3rd->text().isEmpty()))
+        ui->lblNoticeText_2nd->setText(ui->lblNoticeText_3rd->text() + " finished");
     ui->lblNoticeText_3rd->setText(notice);
 }
 
@@ -45,7 +47,7 @@ void inExperimentUi::onUpdateImage()
     QImage imgShow = experi->getCurrImage();
     int w = imgShow.width();
     int h = imgShow.height();
-    imgShow.scaled(w/2, h/2,  Qt::KeepAspectRatio);
+    imgShow.scaled(w/2, h/2);
     QPixmap pic = QPixmap::fromImage(imgShow);
     ui->lblImage->setPixmap(pic);
 //    if (m_image_item) {
@@ -58,6 +60,14 @@ void inExperimentUi::onUpdateImage()
     experi->getCurrentState(chamber, view, imageType);
     QString notice = QString("cap the %1 image of view %2, chamber %3").arg(IMAGE_TYPE.at(imageType-1)).arg(view).arg(chamber);
     updateNoticeText(notice);
+}
+
+void inExperimentUi::initExperimentUi()
+{
+    ui->lblNoticeText_1st->setText("");
+    ui->lblNoticeText_2nd->setText("");
+    ui->lblNoticeText_3rd->setText("start experiment");
+    ui->lblImage->setPixmap(QPixmap());
 }
 
 

@@ -44,7 +44,7 @@ void CellImageAlogrithm::getBinaryImage(Mat &imgGray, Mat &imgBin, int method)
     case BINARY_OTSU:
     {
         int thresh = 128;
-        thresh = threshold(imgGray, imgBin, thresh, 255, THRESH_BINARY_INV | THRESH_OTSU);
+        thresh = threshold(imgGray, imgBin, thresh, 255, THRESH_BINARY | THRESH_OTSU);
         qDebug() << "--- Image Algorithm: OTSU threshold value: " << thresh;
         break;
     }
@@ -57,7 +57,7 @@ void CellImageAlogrithm::getBinaryImage(Mat &imgGray, Mat &imgBin, int method)
     case BINARY_TRIANGLE:
     {
         int thresh = 128;
-        thresh = threshold(imgGray, imgBin, thresh, 255, THRESH_BINARY_INV | THRESH_TRIANGLE);
+        thresh = threshold(imgGray, imgBin, thresh, 255, THRESH_BINARY | THRESH_TRIANGLE);
         qDebug() << "--- Image Algorithm: Triangle threshold value: " << thresh;
     }
     default:
@@ -76,6 +76,11 @@ void CellImageAlogrithm::generateBinary(Mat &imgSrc, Mat &imgBin)
 
     filterImage(imgGray, imgGray, BLACK_HAT);
     getBinaryImage(imgGray, imgBin, BINARY_TRIANGLE);
+
+//    namedWindow("BinSrc", WINDOW_KEEPRATIO);
+//    imshow("BinSrc", imgBin);
+
+    addBorder(imgBin, 3, 0);
     filterImage(imgBin, imgBin, MEDIAN_FILTER);
     fillHoles(imgBin, imgBin);
 }
@@ -141,21 +146,27 @@ int CellImageAlogrithm::markCellsInCluster(Mat &cluster, Mat &imgMarked, Point l
     vector<Vec4i> hier;
 
 
-    findContours(tempBin, contou, hier, RETR_TREE, CHAIN_APPROX_NONE);
+    findContours(tempBin, contou, hier, RETR_EXTERNAL, CHAIN_APPROX_NONE);
     vector<Point2f> center(contou.size());
     vector<float> radius(contou.size());
     for (unsigned long i = 0; i < contou.size(); i++) {
         minEnclosingCircle(contou[i], center[i], radius[i]);
+        if (radius[i] < maxRadiu -1 && radius[i] > minRadiu - 1) {
+            clusterCellNum++;
+        }
  //       qDebug() << "(" << center[i].x << ", " << center[i].y << ")" << endl;
     }
 
+    if (clusterCellNum < 2)
+        return clusterCellNum;
+
     for (unsigned long j = 0; j < contou.size(); j++) {
-        if (radius[j] < maxRadiu && contourArea(contou[j]) > 4) {
-            circle(imgMarked, center[j] + Point2f(ltPoint), radius[j]+1, Scalar(0, 255, 255), 1);
+        if (radius[j] < maxRadiu - 1 && radius[j] > minRadiu - 1) {
+            circle(imgMarked, center[j] + Point2f(ltPoint), radius[j]+1, Scalar(0, 255, 255), 2);
             clusterCellNum++;
         }
     }
-  return clusterCellNum;
+    return clusterCellNum;
 }
 
 void CellImageAlogrithm::analyzeCellsBright(Mat &img, Mat &imgMarked)
@@ -172,6 +183,8 @@ void CellImageAlogrithm::analyzeCellsBright(Mat &img, Mat &imgMarked)
     // get binary image
     generateBinary(imgGray, imgBin);
 
+//    namedWindow("Bin", WINDOW_KEEPRATIO);
+//    imshow("Bin", imgBin);
     //addBorder(imgBin, 3, 0);
 
     // get cell contours
@@ -183,15 +196,21 @@ void CellImageAlogrithm::analyzeCellsBright(Mat &img, Mat &imgMarked)
 
     double radiuSum = 0;
     unsigned long contourSize = contours.size();
+    Point2f center;
+    float radiu;
     qDebug() << "Total contour number: " << contourSize;
 
     if (!contours.empty()) {
         for (unsigned long i = 0; i < contourSize; i++) {
             double area = contourArea(contours[i]);
             qDebug()<< "area[" << i << "] = " << area;
-            if (area <= maxRadiu * maxRadiu*2 && area > minRadiu * minRadiu) {
-                drawContours(imgMarked, contours, i, Scalar(0, 0, 255));
+            if (area <= maxRadiu * maxRadiu * 2 && area > minRadiu * minRadiu * 2) {
+                //drawContours(imgMarked, contours, i, Scalar(0, 0, 255));
+
+                minEnclosingCircle(contours[i], center, radiu);
+                circle(imgMarked, center, radiu, Scalar(0, 0, 255), 2);
                 cellNum++;
+                radiuSum += radiu;
             } else if (area > minRadiu * minRadiu){
                 RotatedRect minRect = minAreaRect(contours[i]);
                 Mat cluster;
@@ -203,19 +222,21 @@ void CellImageAlogrithm::analyzeCellsBright(Mat &img, Mat &imgMarked)
                 cluster = imgGray(rec).clone();
                 int ret = markCellsInCluster(cluster, imgMarked, rec.tl(), rec.height);
                 if (ret > 1) {
-                    Point2f center;
-                    float radiu;
                     minEnclosingCircle(contours[i], center, radiu);
-                    circle(imgMarked, center, radiu+1, Scalar(255, 0, 255));
+                    circle(imgMarked, center, radiu, Scalar(255, 0, 255), 2);
                     clusterCellNum+=ret;
-                } else {
+                } else if (ret == 1){
                     cellNum++;
-                    drawContours(imgMarked, contours, i, Scalar(0, 0, 255));
+                    //drawContours(imgMarked, contours, i, Scalar(0, 0, 255));
+                    minEnclosingCircle(contours[i], center, radiu);
+                    circle(imgMarked, center, radiu, Scalar(0, 0, 255), 2);
+                    radiuSum += radiu;
                 }
             }
         }
     }
     avgRadiu = radiuSum / cellNum;
+    cellNum += clusterCellNum;
 
     qDebug() << "cell numbers: " << cellNum << ", average radiu: " << avgRadiu;
     filterImage(imgMarked, imgMarked, GAUSSIAN_FILTER);

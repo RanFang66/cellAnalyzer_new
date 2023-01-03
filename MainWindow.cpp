@@ -157,7 +157,7 @@ void MainWindow::onExperimentStart()
     ui->btnHelpDoc->setEnabled(false);
     ui->btnDebugPage->setEnabled(false);
     ui->stackedWidget->setCurrentIndex(inExperimentIndex);
-    inExperiment->updateNoticeText("start experiment");
+    inExperiment->initExperimentUi();
     m_experiCtrl->startExperiment(m_setting->getExperiId());
 }
 

@@ -156,7 +156,10 @@ void ExperiCtrl::startExperiment(const QString &experiId)
     if (!dir.exists()) {
         dir.mkdir(imgFilePath);
     }
-    m_algorithm->setCellParameters(m_setting->getCellMinRadiu(), m_setting->getCellMaxRadiu());
+
+    int minR = m_setting->getCellMinRadiu() * 0.8 + 0.4;
+    int maxR = m_setting->getCellMaxRadiu() * 0.8 + 0.4;
+    m_algorithm->setCellParameters(minR, maxR);
     m_algorithm->initAlgorithm();
     for (int i = 0; i < VIEW_3; i++) {
         m_cellNum[i] = 0;
@@ -470,6 +473,7 @@ void ExperiCtrl::experiCapImageStateMachine()
             break;
         case IMAGE_FL1:
             imgFL1 = devCtrl->getCVImage();
+            imgTemp = imgFL1.clone();
             imgMarked = imgFL1.clone();
             emit analyzeImage(m_imageTypeId, imgFL1, imgMarked);
             break;
@@ -528,8 +532,12 @@ void ExperiCtrl::saveFLImage()
     QString name = imgFilePath +QString("chamber%1_%2_FL1_FL2.jpg")
             .arg(m_chamberId)
             .arg(m_viewId);
-    Mat   img = imgFL1 + imgFL2;
-    imwrite(name.toStdString(), img);
+    Mat imgFL1_FL2;
+
+
+    cv::add(imgTemp, imgFL2, imgFL1_FL2, noArray(), CV_8UC3);
+ //   Mat   img = imgFL1 + imgFL2;
+    imwrite(name.toStdString(), imgFL1_FL2);
 }
 
 void ExperiCtrl::getAnalyzeResult()
@@ -562,8 +570,9 @@ void ExperiCtrl::calcAnalyzeResult()
     }
     avgRadiu /= cellNum;
     avgCompact /= cellNum;
-    aggregateRate = clusterCellNum / cellNum * 100;
-    m_data->updateData(cellNum, liveCellNum, deadCellNum, aggregateRate, avgRadiu, avgCompact);
+    aggregateRate = (double)clusterCellNum / cellNum * 100.0;
+
+    m_data->updateData(cellNum, liveCellNum, deadCellNum, aggregateRate, avgRadiu*2, avgCompact);
 }
 
 

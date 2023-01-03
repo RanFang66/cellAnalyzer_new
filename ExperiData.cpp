@@ -46,7 +46,7 @@ VALUES(:experiID, :experiName, :userName,
 :liveCellConc, :deadCellConc,
 :viability, :totalCellNum, :liveCellNum,
 :deadCellNum, :avgDiameter,
-:avgCompactness, :aggregateRate, :endTime))");
+:avgCompactness, :aggregateRate, :nucleusRate, :endTime))");
 
     query->bindValue(":experiID", m_setting->getExperiId());
     query->bindValue(":experiName", m_setting->experiName());
@@ -66,6 +66,7 @@ VALUES(:experiID, :experiName, :userName,
     query->bindValue(":avgDiameter", m_avgDiameter);
     query->bindValue(":avgCompactness", m_avgCompactness);
     query->bindValue(":aggregateRate", m_aggregateRate);
+    query->bindValue(":nucleusRate", m_nucleusRate);
     query->bindValue(":endTime", QDateTime::currentDateTime().toString("yyyy/MM/dd HH:mm:ss"));
 
 
@@ -88,16 +89,20 @@ void ExperiData::deleteExperimentData(int experiID)
 
 void ExperiData::updateData(int cellNum, int liveCellNum, int deadCellNum, double aggreRate, double avgDiameter, double avgCompact)
 {
-    m_cellNum = cellNum;
+    m_cellNum = liveCellNum + deadCellNum;
     m_liveCellNum = liveCellNum;
     m_deadCellNum = deadCellNum;
     m_avgDiameter = avgDiameter;
     m_avgCompactness = avgCompact;
-    m_viability = (double)m_liveCellNum / m_cellNum * 100;
+    m_viability = (double)m_liveCellNum / m_cellNum * 100.0;
     m_liveCellConc = m_liveCellNum * m_sampleVolume;
     m_deadCellConc = m_deadCellNum * m_sampleVolume;
     m_cellConc = m_cellNum * m_sampleVolume;
     m_aggregateRate = aggreRate;
+    m_nucleusRate = (double)m_cellNum / cellNum * 100.0;
+    if (m_nucleusRate > 100) {
+        m_nucleusRate = 100;
+    }
     insertExperimentData();
 }
 

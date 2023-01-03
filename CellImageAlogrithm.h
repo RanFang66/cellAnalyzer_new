@@ -94,7 +94,10 @@ inline void CellImageAlogrithm::setCellParameters(int minR, int maxR)
 
     minRadiu = minR;
     maxRadiu = maxR;
-    kernelSize = minRadiu;
+    if (minR % 2)
+        kernelSize = minR;
+    else
+        kernelSize = minR+1;
     m_kernel = getStructuringElement(MORPH_RECT, Size(kernelSize, kernelSize));
     for (int i = minR; i <= maxR; i++) {
         radiuStat[i] = 0;
