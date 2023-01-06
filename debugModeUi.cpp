@@ -185,6 +185,10 @@ void debugModeUi::updateCamParas()
 
     if(agc)
     {
+        int gain;
+        CameraGetGain(CAM_INDEX_0, &gain);
+        ui->lblGain->setText(QString("%1").arg(gain));
+        ui->hsGain->setValue(gain);
         ui->hsGain->setEnabled(false);
         ui->cbGain->setChecked(true);
     }
@@ -202,7 +206,10 @@ void debugModeUi::updateCamParas()
 
     if(aec)
     {
-        int aet;
+        int exposure, aet;
+        CameraGetExposure(CAM_INDEX_0, &exposure);
+        ui->lblExposure->setText(QString("%1").arg(exposure));
+        ui->hsExposure->setValue(exposure);
         ui->hsExposure->setEnabled(false);
         ui->cbExposure->setChecked(true);
         ui->hsAutoExpoTarget->setEnabled(true);
@@ -302,7 +309,8 @@ void debugModeUi::on_btnAutoFocus_clicked(bool checked)
 {
 //    ui->btnAutoFocus->setDisabled(true);
     connect(m_dev, SIGNAL(autoFocusComplete()), this, SLOT(onAutoFocusComplete()));
-    m_dev->startAutoFocus(checked);
+    if (checked)
+        m_dev->startAutoFocus(checked);
 }
 
 void debugModeUi::on_btnChipIn_clicked()

@@ -7,7 +7,7 @@
 DevCtrl::DevCtrl(QObject *parent) : QObject(parent)
 {
     autoFocusStartPos = 930;
-    autoFocusEndPos = 1010;
+    autoFocusEndPos = 1000;
     autoFocusStep = 5;
     initDeviceCtrl();
     initCameraCtrl();
@@ -101,6 +101,7 @@ void DevCtrl::onCamImageUpdate(unsigned char *data, int width, int height)
 {
     m_cvImage = Mat(height, width, CV_8UC3, data);
     m_qImage = QImage(data, width, height, QImage::Format_BGR888);
+//    m_clarity = calcClarity(m_cvImage);
     if (m_autoFocusState == FOCUS_PROCESS) {
         m_clarity = calcClarity(m_cvImage);
         if (m_clarity > m_maxClarity) {
@@ -223,7 +224,7 @@ void DevCtrl::startAutoFocus(bool act)
     if (act) {
         if (m_camTimer->isActive())
             m_camTimer->stop();
-        m_focusNextPos = autoFocusStartPos;
+        initAutoFocus();
         motorRun(CAMERA_MOTOR, MOTOR_RUN_POS, m_focusNextPos);
         m_autoFocusState = FOCUS_PROCESS;
     } else {
@@ -282,7 +283,7 @@ void DevCtrl::initAutoFocus()
 {
     m_autoFocusState = FOCUS_IDLE;
     m_focusNextPos = autoFocusStartPos;
-    m_focusPos = 150;
+    m_focusPos = 980;
     m_maxClarity = 0;
     m_clarity = 0;
 }

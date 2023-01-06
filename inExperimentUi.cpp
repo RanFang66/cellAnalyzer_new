@@ -45,11 +45,12 @@ const QStringList IMAGE_TYPE = {
 void inExperimentUi::onUpdateImage()
 {
     QImage imgShow = experi->getCurrImage();
-    int w = imgShow.width();
-    int h = imgShow.height();
-    imgShow.scaled(w/2, h/2);
+//    int w = imgShow.width();
+//    int h = imgShow.height();
+    imgShow.scaledToWidth(1200);
     QPixmap pic = QPixmap::fromImage(imgShow);
     ui->lblImage->setPixmap(pic);
+    ui->lblImage->setScaledContents(true);
 //    if (m_image_item) {
 //        m_image_item->setPixmap(QPixmap::fromImage(imgShow));
 //    } else {

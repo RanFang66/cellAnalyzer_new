@@ -92,7 +92,7 @@ void ExperiData::updateData(int cellNum, int liveCellNum, int deadCellNum, doubl
     m_cellNum = liveCellNum + deadCellNum;
     m_liveCellNum = liveCellNum;
     m_deadCellNum = deadCellNum;
-    m_avgDiameter = avgDiameter;
+    m_avgDiameter = avgDiameter * 0.6205;
     m_avgCompactness = avgCompact;
     m_viability = (double)m_liveCellNum / m_cellNum * 100.0;
     m_liveCellConc = m_liveCellNum * m_sampleVolume;
