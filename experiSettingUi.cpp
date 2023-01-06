@@ -3,6 +3,7 @@
 #include <QDateTime>
 #include <QFile>
 #include <QDebug>
+#include <QMessageBox>
 
 experiSettingUi::experiSettingUi(ExperiSetting *setting, QWidget *parent) :
     QWidget(parent),
@@ -48,7 +49,8 @@ void experiSettingUi::initExperiSettingUi()
     ui->cBoxChannel3->setChecked(false);
     ui->cBoxChannel4->setChecked(false);
     ui->cBoxChannel5->setChecked(false);
-
+    ui->cBoxChannel6->setChecked(false);
+    ui->cBoxChannel6->setEnabled(false);
     ui->editExperiName->setText(m_setting->experiName());
     ui->editExperiType->setText(m_setting->getExperiType());
     ui->editExperiUser->setText(m_setting->getUserName());
@@ -73,9 +75,9 @@ void experiSettingUi::loadStyleSheet(const QString &styleSheetFile)
 
 void experiSettingUi::on_btnNextStep_clicked()
 {
-    if (m_chipState == 1) {
+    if (m_chipState == 1 &&  m_setting->chamberSet() != 0) {
          emit startExperiment();
-    } else {
+    } else if (m_chipState != 1){
         animation = new DlgAnimationUi(this);
         animation->setAttribute(Qt::WA_DeleteOnClose);
         Qt::WindowFlags flags = animation->windowFlags();
@@ -86,6 +88,9 @@ void experiSettingUi::on_btnNextStep_clicked()
         } else {
             return;
         }
+    } else if (m_setting->chamberSet() == 0) {
+        QMessageBox::warning(this, "warning", "please select a chamber!");
+        return;
     }
 }
 

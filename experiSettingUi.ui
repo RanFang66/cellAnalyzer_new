@@ -409,7 +409,7 @@ vertical-align: middle;</string>
      <string>通道2</string>
     </property>
    </widget>
-   <widget class="QCheckBox" name="cBoxChannel5_2">
+   <widget class="QCheckBox" name="cBoxChannel6">
     <property name="geometry">
      <rect>
       <x>100</x>

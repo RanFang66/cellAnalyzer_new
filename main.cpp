@@ -43,6 +43,7 @@ int main(int argc, char *argv[])
 
     if (createDbConnect()) {
         QApplication a(argc, argv);
+        QApplication::setOverrideCursor(Qt::BlankCursor);
         MainWindow w;
         QDlgLogin *dlgLogin = new QDlgLogin(w.getUserIdPointer(), &w);
 
