@@ -9,6 +9,9 @@
 #include <opencv2/opencv.hpp>
 #include <QTimer>
 
+#include <QSqlDatabase>
+#include <QSqlQuery>
+
 using namespace cv;
 class DevCtrl : public QObject
 {
@@ -49,7 +52,6 @@ public slots:
     void onCamImageUpdate(unsigned char *data, int width, int height);
     void onCamConnected(bool ok);
     void onCamTimerTimeout();
-    void onAutoFocusSet(int low, int high, int step);
 
 signals:
     void sendDevCmd(int devId, int cmd, int data);
@@ -125,7 +127,9 @@ private:
 
     QThread             *m_camThread;
     QTimer              *m_camTimer;
-    QTimer              *m_focusTimer;
+
+    QSqlDatabase    db;
+    QSqlQuery       *query;
 
     int     m_camState;
     int     m_serialState;

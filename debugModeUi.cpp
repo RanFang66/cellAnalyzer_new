@@ -134,9 +134,6 @@ void debugModeUi::initDubugModeUi()
     connect(ui->rBtnChipMotorY, SIGNAL(clicked()), this, SLOT(onMotorChanged()));
     connect(ui->rBtnCamMotor, SIGNAL(clicked()), this, SLOT(onMotorChanged()));
     connect(ui->rBtnFilterMotor, SIGNAL(clicked()), this, SLOT(onMotorChanged()));
-    connect(ui->spinAFHighLimit, SIGNAL(valueChanged(int)), this, SLOT(onAFParaSet()));
-    connect(ui->spinAFLowLimit, SIGNAL(valueChanged(int)), this, SLOT(onAFParaSet()));
-    connect(ui->spinAFStep, SIGNAL(valueChanged(int)), this, SLOT(onAFParaSet()));
     updateCamParas();
 }
 
@@ -457,15 +454,6 @@ void debugModeUi::on_btnFL1CamParas_clicked()
     updateCamParas();
 }
 
-void debugModeUi::onAFParaSet()
-{
-    int low, high, step;
-    low = ui->spinAFHighLimit->value();
-    high = ui->spinAFLowLimit->value();
-    step = ui->spinAFStep->value();
-    emit setAutoFocusParameters(low, high, step);
-}
-
 void debugModeUi::on_hsRedGain_valueChanged(int value)
 {
     double rg = value / 100.0;
@@ -621,5 +609,28 @@ void debugModeUi::on_btnSaveFL2Paras_clicked()
     } else {
         QMessageBox::critical(this, "save failed", "save FL_red parameters failed");
     }
+}
+
+
+void debugModeUi::on_lblModifyParas_clicked()
+{
+    int low, high, step;
+
+
+    high = ui->spinAFHighLimit->value();
+    low = ui->spinAFLowLimit->value();
+    step = ui->spinAFStep->value();
+    if (high <= low) {
+        QMessageBox::warning(this, "错误", "高位置不能小于低位置");
+        return;
+    }
+    QString queryStr = QString("UPDATE autoFocusPara SET startPos=%1, endPos=%2, step=%3 WHERE ID = 1").arg(low).arg(high).arg(step);
+    if (query->exec(queryStr)) {
+        QMessageBox::information(this, "修改成功", "修改自动对焦参数成功");
+    } else {
+        QMessageBox::critical(this, "修改失败", "修改自动对焦参数失败");
+    }
+
+//    emit setAutoFocusParameters(low, high, step);
 }
 

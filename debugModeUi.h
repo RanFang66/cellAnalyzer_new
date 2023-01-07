@@ -99,8 +99,6 @@ private slots:
 
     void on_btnFL1CamParas_clicked();
 
-    void onAFParaSet();
-
     void on_hsRedGain_valueChanged(int value);
 
     void on_hsGreenGain_valueChanged(int value);
@@ -112,6 +110,8 @@ private slots:
     void on_btnSaveFL1Paras_clicked();
 
     void on_btnSaveFL2Paras_clicked();
+
+    void on_lblModifyParas_clicked();
 
 private:
     Ui::debugModeUi         *ui;

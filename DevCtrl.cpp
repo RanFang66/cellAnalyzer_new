@@ -6,9 +6,9 @@
 //int DevCtrl::autoFocusStep = 5;
 DevCtrl::DevCtrl(QObject *parent) : QObject(parent)
 {
-    autoFocusStartPos = 930;
-    autoFocusEndPos = 1000;
-    autoFocusStep = 5;
+    db = QSqlDatabase::database("cellDataConn");
+    query = new QSqlQuery(db);
+
     initDeviceCtrl();
     initCameraCtrl();
     initAutoFocus();
@@ -134,13 +134,6 @@ void DevCtrl::onCamConnected(bool ok)
 void DevCtrl::onCamTimerTimeout()
 {
     emit capImage();
-}
-
-void DevCtrl::onAutoFocusSet(int low, int high, int step)
-{
-    autoFocusStartPos = low;
-    autoFocusEndPos = high;
-    autoFocusStep = step;
 }
 
 void DevCtrl::motorRun(int id, int cmd, int pos)
@@ -281,6 +274,17 @@ void DevCtrl::initCameraCtrl()
 
 void DevCtrl::initAutoFocus()
 {
+    QString qryStr = QString("SELECT * FROM autoFocusPara WHERE ID = 1");
+    if (query->exec(qryStr) && query->next()) {
+        autoFocusStartPos = query->value(1).toInt();
+        autoFocusEndPos = query->value(2).toInt();
+        autoFocusStep = query->value(3).toInt();
+    } else {
+        autoFocusStartPos = 950;
+        autoFocusEndPos = 1000;
+        autoFocusEndPos = 5;
+    }
+
     m_autoFocusState = FOCUS_IDLE;
     m_focusNextPos = autoFocusStartPos;
     m_focusPos = 980;
