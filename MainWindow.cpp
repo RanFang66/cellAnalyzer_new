@@ -5,7 +5,7 @@
 #include <QProcess>
 #include <QFile>
 #include <QDlgLogin.h>
-
+#include <wificonfigui.h>
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -66,7 +66,6 @@ void MainWindow::initMainWindowUi()
     connect(experiRes, SIGNAL(returnToMainPage()), this, SLOT(onReturnToMainPage()));
     connect(m_experiCtrl, SIGNAL(experiCapFinished()), inExperiment, SLOT(onUpdateImage()));
     connect(userManage, SIGNAL(return2SysSetting()), this, SLOT(onReturnSysSetting()));
-    connect(debugMode, SIGNAL(setAutoFocusParameters(int, int, int)), m_dev, SLOT(onAutoFocusSet(int, int, int)));
     connect(m_dev, SIGNAL(chipStateUpdated(int)), experiSetting, SLOT(setChipState(int)));
 }
 
@@ -242,3 +241,13 @@ void MainWindow::on_btnShutdown_clicked()
         return;
     }
 }
+
+void MainWindow::on_btnWifiConfig_clicked()
+{
+    WifiConfigUi *wifi = new WifiConfigUi(this);
+    wifi->setAttribute(Qt::WA_DeleteOnClose);
+    int wifiIndex = ui->stackedWidget->addWidget(wifi);
+    ui->stackedWidget->setCurrentIndex(wifiIndex);
+    connect(wifi, &WifiConfigUi::return2SysSetting, this, &MainWindow::onReturnSysSetting);
+}
+

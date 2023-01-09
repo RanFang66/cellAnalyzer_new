@@ -70,6 +70,8 @@ private slots:
 
     void on_btnShutdown_clicked();
 
+    void on_btnWifiConfig_clicked();
+
 private:
     Ui::MainWindow      *ui;
     experiSettingUi     *experiSetting;

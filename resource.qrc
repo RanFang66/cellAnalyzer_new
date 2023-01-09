@@ -39,5 +39,7 @@
         <file>images/zoom_in.png</file>
         <file>images/arrow_return.png</file>
         <file>images/shutdown.png</file>
+        <file>cellAnalyzerDb.db</file>
+        <file>styles/wifiConfig.qss</file>
     </qresource>
 </RCC>

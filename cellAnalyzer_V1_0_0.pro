@@ -27,8 +27,10 @@ SOURCES += \
     experiSettingUi.cpp \
     exportDataDialog.cpp \
     inExperimentUi.cpp \
+    inputpassworddialog.cpp \
     main.cpp \
-    MainWindow.cpp
+    MainWindow.cpp \
+    wificonfigui.cpp
 
 HEADERS += \
     CameraCtrl.h \
@@ -49,7 +51,9 @@ HEADERS += \
     experiResultUi.h \
     experiSettingUi.h \
     exportDataDialog.h \
-    inExperimentUi.h
+    inExperimentUi.h \
+    inputpassworddialog.h \
+    wificonfigui.h
 
 FORMS += \
     DataExportDialog.ui \
@@ -64,7 +68,8 @@ FORMS += \
     experiResultUi.ui \
     experiSettingUi.ui \
     exportDataDialog.ui \
-    inExperimentUi.ui
+    inExperimentUi.ui \
+    wificonfigui.ui
 
 TRANSLATIONS += \
     cellAnalyzer_V1_0_0_zh_CN.ts

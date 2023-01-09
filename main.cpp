@@ -11,6 +11,8 @@ bool createDbConnect()
 {
     QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE", "cellDataConn");
     db.setDatabaseName("/home/seekgene/gitRepo/cellAnalyzer_new/cellAnalyzerDb.db");
+//    db.setDatabaseName("/home/ran/gitRepos/cellAnalyzer_new/cellAnalyzerDb.db");
+
     bool ok = db.open();
     if (!ok) {
         qDebug() << ": open database error!" + db.lastError().text();

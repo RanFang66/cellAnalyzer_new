@@ -516,6 +516,41 @@
        <set>Qt::AlignCenter</set>
       </property>
      </widget>
+     <widget class="QPushButton" name="btnWifiConfig">
+      <property name="geometry">
+       <rect>
+        <x>100</x>
+        <y>660</y>
+        <width>160</width>
+        <height>160</height>
+       </rect>
+      </property>
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_10">
+      <property name="geometry">
+       <rect>
+        <x>80</x>
+        <y>830</y>
+        <width>200</width>
+        <height>36</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>网络设置</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
+     </widget>
     </widget>
     <widget class="QWidget" name="pageHelpDoc"/>
     <widget class="QWidget" name="pageLangSelc">
