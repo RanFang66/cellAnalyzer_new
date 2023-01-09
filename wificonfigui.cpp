@@ -29,8 +29,8 @@ WifiConfigUi::~WifiConfigUi()
 
 void WifiConfigUi::initWifiList()
 {
-    system("nmcli device wifi > /home/ran/wifi.ini");
-    QFile file("/home/ran/wifi.ini");
+    system("nmcli device wifi > /home/seekgene/wifi.ini");
+    QFile file("/home/seekgene/wifi.ini");
     if (!file.open(QIODevice::ReadOnly)) {
         qDebug() << "No such file";
         return;
