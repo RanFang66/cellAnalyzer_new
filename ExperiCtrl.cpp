@@ -157,8 +157,8 @@ void ExperiCtrl::startExperiment(const QString &experiId)
         dir.mkdir(imgFilePath);
     }
 
-    int minR = m_setting->getCellMinRadiu() * 0.8 + 0.4;
-    int maxR = m_setting->getCellMaxRadiu() * 0.8 + 0.4;
+    int minR = m_setting->getCellMinRadiu(1) * 0.8 + 0.4;
+    int maxR = m_setting->getCellMaxRadiu(1) * 0.8 + 0.4;
     m_algorithm->setCellParameters(minR, maxR);
     m_algorithm->initAlgorithm();
     for (int i = 0; i < VIEW_3; i++) {

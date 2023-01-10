@@ -53,7 +53,7 @@ vertical-align: middle;</string>
    <property name="geometry">
     <rect>
      <x>440</x>
-     <y>1450</y>
+     <y>1480</y>
      <width>200</width>
      <height>105</height>
     </rect>
@@ -75,7 +75,7 @@ vertical-align: middle;</string>
    <property name="geometry">
     <rect>
      <x>530</x>
-     <y>330</y>
+     <y>280</y>
      <width>521</width>
      <height>1011</height>
     </rect>
@@ -235,7 +235,7 @@ vertical-align: middle;</string>
   <widget class="QLabel" name="lblRectangle">
    <property name="geometry">
     <rect>
-     <x>10</x>
+     <x>100</x>
      <y>220</y>
      <width>967</width>
      <height>17</height>
@@ -264,7 +264,7 @@ vertical-align: middle;</string>
    <property name="geometry">
     <rect>
      <x>70</x>
-     <y>330</y>
+     <y>280</y>
      <width>378</width>
      <height>1008</height>
     </rect>
@@ -308,6 +308,9 @@ vertical-align: middle;</string>
     <property name="text">
      <string>通道1</string>
     </property>
+    <property name="tristate">
+     <bool>true</bool>
+    </property>
    </widget>
    <widget class="QCheckBox" name="cBoxChannel3">
     <property name="geometry">
@@ -332,6 +335,9 @@ vertical-align: middle;</string>
     </property>
     <property name="text">
      <string>通道3</string>
+    </property>
+    <property name="tristate">
+     <bool>true</bool>
     </property>
    </widget>
    <widget class="QCheckBox" name="cBoxChannel4">
@@ -358,6 +364,9 @@ vertical-align: middle;</string>
     <property name="text">
      <string>通道4</string>
     </property>
+    <property name="tristate">
+     <bool>true</bool>
+    </property>
    </widget>
    <widget class="QCheckBox" name="cBoxChannel5">
     <property name="geometry">
@@ -382,6 +391,9 @@ vertical-align: middle;</string>
     </property>
     <property name="text">
      <string>通道5</string>
+    </property>
+    <property name="tristate">
+     <bool>true</bool>
     </property>
    </widget>
    <widget class="QCheckBox" name="cBoxChannel2">
@@ -408,6 +420,9 @@ vertical-align: middle;</string>
     <property name="text">
      <string>通道2</string>
     </property>
+    <property name="tristate">
+     <bool>true</bool>
+    </property>
    </widget>
    <widget class="QCheckBox" name="cBoxChannel6">
     <property name="geometry">
@@ -432,6 +447,9 @@ vertical-align: middle;</string>
     </property>
     <property name="text">
      <string>通道6</string>
+    </property>
+    <property name="tristate">
+     <bool>true</bool>
     </property>
    </widget>
   </widget>
@@ -458,6 +476,28 @@ vertical-align: middle;</string>
      <width>100</width>
      <height>100</height>
     </size>
+   </property>
+   <property name="flat">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="btnConfirmSetting">
+   <property name="geometry">
+    <rect>
+     <x>430</x>
+     <y>1320</y>
+     <width>200</width>
+     <height>105</height>
+    </rect>
+   </property>
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
+   <property name="text">
+    <string>Confirm</string>
    </property>
    <property name="flat">
     <bool>true</bool>

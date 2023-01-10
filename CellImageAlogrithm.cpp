@@ -211,6 +211,7 @@ void CellImageAlogrithm::analyzeCellsBright(Mat &img, Mat &imgMarked)
                 circle(imgMarked, center, radiu, Scalar(0, 0, 255), 2);
                 cellNum++;
                 radiuSum += radiu;
+                radiuStat.push_back((int)radiu);
             } else if (area > minRadiu * minRadiu){
                 RotatedRect minRect = minAreaRect(contours[i]);
                 Mat cluster;
@@ -231,6 +232,7 @@ void CellImageAlogrithm::analyzeCellsBright(Mat &img, Mat &imgMarked)
                     minEnclosingCircle(contours[i], center, radiu);
                     circle(imgMarked, center, radiu, Scalar(0, 0, 255), 2);
                     radiuSum += radiu;
+                    radiuStat.push_back((int)radiu);
                 }
             }
         }

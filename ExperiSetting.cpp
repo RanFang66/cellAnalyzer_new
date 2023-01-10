@@ -5,15 +5,9 @@ ExperiSetting::ExperiSetting(QObject *parent) : QObject(parent)
 {
     db = QSqlDatabase::database("cellDataConn");
     query = new QSqlQuery(db);
-    for (int i = 0; i < CHAMBER_NUM; i++) {
-        m_chamberSelc[i] = 0;
-    }
-    m_chamberSet = 0;
 
-    m_experiTypeID = 1;
-    m_cellTypeID = 1;
-    m_dilutionRatio = 0;
-    m_sampleID = "Sample_" + QDateTime::currentDateTime().toString("MMddHHmm");
+    initSetting(1, 1);
+
 }
 
 void ExperiSetting::initSetting(int userId, int experiTypeId)
@@ -21,14 +15,16 @@ void ExperiSetting::initSetting(int userId, int experiTypeId)
     m_experiId = QDateTime::currentDateTime().toString("yyyyMMddHHmmss");
     m_userID = userId;
     m_experiTypeID = experiTypeId;
-    m_cellTypeID = 1;
-    m_experiName = "Cell_" + m_experiId;
-    m_sampleID = "Sample_" + m_experiId;
-    m_dilutionRatio = 0;
-    m_chamberSet = 0;
+
     for (int i = 0; i < CHAMBER_NUM; i++) {
+        m_experiName[i] = "Cell_" + m_experiId;
+        m_sampleID[i] = QString("Chamber%1").arg(i+1);
+        m_dilutionRatio[i] = 1;
         m_chamberSelc[i] = 0;
+        m_cellTypeID[i] = 1;
     }
+    m_chamberSet = 0;
+
 
     QString queryStr = QString("SELECT name FROM userInfo WHERE userId = %1").arg(m_userID);
     if (query->exec(queryStr) && query->next()) {
@@ -44,30 +40,35 @@ void ExperiSetting::initSetting(int userId, int experiTypeId)
         m_experiType = "AOPI VIABILITY";
     }
 
-    queryStr = QString("SELECT * FROM cellType WHERE cellTypeID = %1").arg(m_cellTypeID);
+    queryStr = QString("SELECT * FROM cellType WHERE cellTypeID = 1");
     if (query->exec(queryStr) && query->next()) {
-        m_cellType = query->value(1).toString();
-        m_minRadiu = query->value(2).toInt();
-        m_maxRadiu = query->value(3).toInt();
+        for (int i = 0; i < CHAMBER_NUM; i++) {
+            m_cellType[i] = query->value(1).toString();
+            m_minRadiu[i] = query->value(2).toInt();
+            m_maxRadiu[i] = query->value(3).toInt();
+        }
     } else {
-        m_cellType = "cell_2_to_15um";
-        m_minRadiu = 15;
-        m_maxRadiu = 30;
+        for (int i = 0; i < CHAMBER_NUM; i++) {
+            m_cellType[i] = "cell_2_to_15um";
+            m_minRadiu[i] = 15;
+            m_maxRadiu[i] = 30;
+        }
     }
 }
 
-void ExperiSetting::setCellTypeID(int newCellTypeID)
+void ExperiSetting::setCellTypeID(int chamberid, int newCellTypeID)
 {
-    m_cellTypeID = newCellTypeID + 1;
-    QString queryStr = QString("SELECT * FROM cellType WHERE cellTypeID = %1").arg(m_cellTypeID);
+    int index = chamberid-1;
+    m_cellTypeID[index] = newCellTypeID;
+    QString queryStr = QString("SELECT * FROM cellType WHERE cellTypeID = %1").arg(m_cellTypeID[index]);
     if (query->exec(queryStr) && query->next()) {
-        m_cellType = query->value(1).toString();
-        m_minRadiu = query->value(2).toInt();
-        m_maxRadiu = query->value(3).toInt();
+        m_cellType[index] = query->value(1).toString();
+        m_minRadiu[index] = query->value(2).toInt();
+        m_maxRadiu[index] = query->value(3).toInt();
     } else {
-        m_cellType = "cell_2_to_15um";
-        m_minRadiu = 15;
-        m_maxRadiu = 30;
+        m_cellType[index] = "cell_2_to_15um";
+        m_minRadiu[index] = 15;
+        m_maxRadiu[index] = 30;
     }
 }
 

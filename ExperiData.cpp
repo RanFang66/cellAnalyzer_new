@@ -49,13 +49,13 @@ VALUES(:experiID, :experiName, :userName,
 :avgCompactness, :aggregateRate, :nucleusRate, :endTime))");
 
     query->bindValue(":experiID", m_setting->getExperiId());
-    query->bindValue(":experiName", m_setting->experiName());
+    query->bindValue(":experiName", m_setting->experiName(1));
     query->bindValue(":userName", m_setting->getUserName());
     query->bindValue(":experiType", m_setting->getExperiType());
-    query->bindValue(":cellType", m_setting->getCellType());
+    query->bindValue(":cellType", m_setting->getCellType(1));
     query->bindValue(":chamberSet", m_setting->chamberSet());
-    query->bindValue(":sampleID", m_setting->sampleId());
-    query->bindValue(":dilutionRatio", m_setting->dilutionRatio());
+    query->bindValue(":sampleID", m_setting->sampleId(1));
+    query->bindValue(":dilutionRatio", m_setting->dilutionRatio(1));
     query->bindValue(":cellConc", m_cellConc);
     query->bindValue(":liveCellConc", m_liveCellConc);
     query->bindValue(":deadCellConc", m_deadCellConc);

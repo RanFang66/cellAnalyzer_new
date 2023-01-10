@@ -57,8 +57,6 @@ void WifiConfigUi::initWifiList()
                     wifiWidget[curLine] = new QWidget(this);
                     wifiWidget[curLine]->setObjectName(QString("wifiName*%1*%2").arg(curLine).arg(wifiName));
                     wifiWidget[curLine]->installEventFilter(this);
-//                    wifiWidget[curLine]->setStyleSheet(QString("QWidget::hover{background-color:darkgray}").append(QString("QWidget{background-color:transparent; color: rgba(255, 255, 255, 0)}")));
-//                    wifiWidget[curLine]->setStyleSheet(QString("QWidget{font-size: 3font-weight: 400;color: rgba(255, 255, 255, 1);}"));
                     wifiNameLabel[curLine] = new QLabel(wifiWidget[curLine]);
                     wifiNameLabel[curLine]->setText(wifiName);
 
@@ -71,7 +69,6 @@ void WifiConfigUi::initWifiList()
                         curConnectedLine = curLine;
                     }
                     connectButton[curLine] = new QPushButton(wifiWidget[curLine]);
-//                    connectButton[curLine]->setStyleSheet(QString("QPushButton{background-color:lightgray;}").append(QString("QPushButton::pressed{background-color:darkgray;}")));
                     connectButton[curLine]->setText("Connect");
                     connectButton[curLine]->setVisible(false);
                     gridLayout->addWidget(wifiNameLabel[curLine], 0, 0, 1, 3);
@@ -119,10 +116,6 @@ void WifiConfigUi::refreshWifiList()
                 if (!wifiName.isEmpty()) {
                     wifiWidget[curLine]->setObjectName(QString("wifiName*%1*%2").arg(curLine).arg(wifiName));
                     wifiWidget[curLine]->installEventFilter(this);
-//                    wifiWidget[curLine]->setStyleSheet(QString("QWidget{font-size: 3font-weight: 400;color: rgba(255, 255, 255, 1);}"));
-
-//                    wifiWidget[curLine]->setStyleSheet(QString("QWidget::hover{background-color:darkgray}").append(QString("QWidget{background-color:transparent; color: rgba(255, 255, 255, 0)}")));
-
                     wifiNameLabel[curLine]->setText(wifiName);
 
                     iconLabel[curLine]->setText(QString::number(signalValue));
@@ -130,8 +123,6 @@ void WifiConfigUi::refreshWifiList()
                         connectLabel[curLine]->setText("已连接");
                         curConnectedLine = curLine;
                     }
-
-//                    connectButton[curLine]->setStyleSheet(QString("QPushButton{background-color:lightgray;}").append(QString("QPushButton::pressed{background-color:darkgray;}")));
                     connectButton[curLine]->setText("连接");
                     connectButton[curLine]->setVisible(false);
                 }

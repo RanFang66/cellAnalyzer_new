@@ -37,6 +37,15 @@ public:
         CELL_HUMAN_BONE,
     };
 
+    enum CHAMBER_ID {
+        CHAMBER1 = 1,
+        CHAMBER2,
+        CHAMBER3,
+        CHAMBER4,
+        CHAMBER5,
+        CHAMBER6,
+    };
+
     explicit experiSettingUi(ExperiSetting *setting, QWidget *parent = nullptr);
     ~experiSettingUi();
     void initExperiSettingUi();
@@ -49,23 +58,30 @@ private slots:
 
     void on_btnReturn_clicked();
 
-    void on_cBoxChannel1_clicked(bool checked);
-
-    void on_cBoxChannel2_clicked(bool checked);
-
-    void on_cBoxChannel3_clicked(bool checked);
-
-    void on_cBoxChannel4_clicked(bool checked);
-
-    void on_cBoxChannel5_clicked(bool checked);
-
     void on_editSampleId_textEdited(const QString &arg1);
-
-    void on_comboCellType_currentIndexChanged(int index);
 
     void on_editExperiName_textEdited(const QString &arg1);
 
-    void on_comboDilutionRate_currentIndexChanged(int index);
+
+    void updateSettingInfo(void);
+
+    void on_btnConfirmSetting_clicked();
+
+
+    void on_cBoxChannel5_clicked();
+
+    void on_cBoxChannel1_clicked();
+
+    void on_cBoxChannel2_clicked();
+
+    void on_cBoxChannel3_clicked();
+
+    void on_cBoxChannel4_clicked();
+
+    void on_cBoxChannel6_clicked();
+
+    void on_comboCellType_activated(int index);
+
 signals:
     void startExperiment();
     void exitExperimentSetting();
@@ -78,6 +94,7 @@ private:
     QSqlDatabase db;
     QSqlQuery *query;
 
+    int     currentChamber;
     void loadStyleSheet(const QString &styleSheetFile);
 };
 

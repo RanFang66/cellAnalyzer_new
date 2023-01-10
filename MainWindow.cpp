@@ -1,4 +1,4 @@
-#include "MainWindow.h"
+ #include "MainWindow.h"
 #include "ui_MainWindow.h"
 #include <QDebug>
 #include <QMessageBox>
@@ -33,7 +33,7 @@ MainWindow::MainWindow(QWidget *parent)
     experiSetting = new experiSettingUi(m_setting, this);
     experiData = new experiDataUi(this);
     debugMode = new debugModeUi(m_dev, this);
-    inExperiment = new inExperimentUi(m_experiCtrl, this);
+//    inExperiment = new inExperimentUi(m_experiCtrl, this);
     experiRes = new experiResultUi(this);
     userManage = new UserManageUi(this);
 
@@ -51,7 +51,7 @@ void MainWindow::initMainWindowUi()
     experiSettingIndex = ui->stackedWidget->addWidget(experiSetting);
     experiDataIndex = ui->stackedWidget->addWidget(experiData);
     debugModeIndex = ui->stackedWidget->addWidget(debugMode);
-    inExperimentIndex = ui->stackedWidget->addWidget(inExperiment);
+//    inExperimentIndex = ui->stackedWidget->addWidget(inExperiment);
     experiResultIndex = ui->stackedWidget->addWidget(experiRes);
     userManageIndex = ui->stackedWidget->addWidget(userManage);
 
@@ -60,11 +60,11 @@ void MainWindow::initMainWindowUi()
 
     connect(experiSetting, SIGNAL(startExperiment()), this, SLOT(onExperimentStart()));
     connect(experiSetting, SIGNAL(exitExperimentSetting()), this, SLOT(onExitExperiSetting()));
-    connect(inExperiment, SIGNAL(pauseExperiment()), this, SLOT(onExperimentPaused()));
+//    connect(inExperiment, SIGNAL(pauseExperiment()), this, SLOT(onExperimentPaused()));
     connect(m_experiCtrl, SIGNAL(experimentFinished()), this, SLOT(onExperimentFinished()));
     connect(experiData, SIGNAL(showDataDetail(QString&)), this, SLOT(onShowDataDetail(QString&)));
     connect(experiRes, SIGNAL(returnToMainPage()), this, SLOT(onReturnToMainPage()));
-    connect(m_experiCtrl, SIGNAL(experiCapFinished()), inExperiment, SLOT(onUpdateImage()));
+//    connect(m_experiCtrl, SIGNAL(experiCapFinished()), inExperiment, SLOT(onUpdateImage()));
     connect(userManage, SIGNAL(return2SysSetting()), this, SLOT(onReturnSysSetting()));
     connect(m_dev, SIGNAL(chipStateUpdated(int)), experiSetting, SLOT(setChipState(int)));
 }
@@ -155,8 +155,14 @@ void MainWindow::onExperimentStart()
     ui->btnExperiApp->setEnabled(false);
     ui->btnHelpDoc->setEnabled(false);
     ui->btnDebugPage->setEnabled(false);
+    inExperiment = new inExperimentUi(m_experiCtrl, this);
+    inExperiment->setAttribute(Qt::WA_DeleteOnClose);
+    connect(inExperiment, SIGNAL(pauseExperiment()), this, SLOT(onExperimentPaused()));
+    connect(m_experiCtrl, SIGNAL(experiCapFinished()), inExperiment, SLOT(onUpdateImage()));
+
+    inExperimentIndex = ui->stackedWidget->addWidget(inExperiment);
     ui->stackedWidget->setCurrentIndex(inExperimentIndex);
-    inExperiment->initExperimentUi();
+//    inExperiment->initExperimentUi();
     m_experiCtrl->startExperiment(m_setting->getExperiId());
 }
 
@@ -172,6 +178,7 @@ void MainWindow::onExperimentPaused()
         ui->btnDebugPage->setEnabled(true);
         m_experiCtrl->pauseExperiment();
         ui->stackedWidget->setCurrentIndex(appSelcIndex);
+        delete inExperiment;
     }
 }
 
@@ -189,6 +196,8 @@ void MainWindow::onExperimentFinished()
     ui->btnDebugPage->setEnabled(true);
     experiRes->initResultShow(m_setting->getExperiId());
     ui->stackedWidget->setCurrentIndex(experiResultIndex);
+    delete inExperiment;
+
 }
 
 void MainWindow::onShowDataDetail(QString &id)

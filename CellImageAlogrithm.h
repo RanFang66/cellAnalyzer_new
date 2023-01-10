@@ -84,7 +84,7 @@ private:
     int     avgRadiu;
     double  aggregateRate;
     double  avgCompactness;
-    QMap<int, int> radiuStat;
+    std::vector<int>  radiuStat;
 };
 
 inline void CellImageAlogrithm::setCellParameters(int minR, int maxR)
@@ -99,9 +99,7 @@ inline void CellImageAlogrithm::setCellParameters(int minR, int maxR)
     else
         kernelSize = minR+1;
     m_kernel = getStructuringElement(MORPH_RECT, Size(kernelSize, kernelSize));
-    for (int i = minR; i <= maxR; i++) {
-        radiuStat[i] = 0;
-    }
+    radiuStat.clear();
 }
 
 inline int CellImageAlogrithm::getCellNum() const

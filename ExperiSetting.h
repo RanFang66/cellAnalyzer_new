@@ -29,18 +29,18 @@ class ExperiSetting : public QObject
 public:
     explicit ExperiSetting(QObject *parent = nullptr);
     void initSetting(int userId, int experiTypeId);
-    const QString &experiName() const;
-    void setExperiName(const QString &newExperiName);
-    const QString &sampleId() const;
-    void setSampleId(const QString &newSampleId);
+    const QString &experiName(int chamberid) const;
+    void setExperiName(int chamberid, const QString &newExperiName);
+    const QString &sampleId(int chamberid) const;
+    void setSampleId(int chamberid, const QString &newSampleId);
     int  userID() const;
     void setUserID(int newUserId);
     int  experiTypeID() const;
     void setExperiTypeID(int newExperiTypeID);
-    int  cellTypeID() const;
-    void setCellTypeID(int newCellTypeID);
-    int  dilutionRatio() const;
-    void setDilutionRatio(int newDilutionRatio);
+    int  cellTypeID(int chamberid) const;
+    void setCellTypeID(int chamberid, int newCellTypeID);
+    int  dilutionRatio(int id) const;
+    void setDilutionRatio(int id, int newDilutionRatio);
     const QString &getExperiId(void) const;
 
     bool chamberIsEnable(int id);
@@ -49,9 +49,9 @@ public:
     void setUserName(const QString &userName);
     const QString &getUserName() const;
     const QString &getExperiType() const;
-    const QString &getCellType() const;
-    int  getCellMinRadiu(void) const;
-    int  getCellMaxRadiu(void) const;
+    const QString &getCellType(int chamberid) const;
+    int  getCellMinRadiu(int chamberid) const;
+    int  getCellMaxRadiu(int chamberid) const;
 
 //    struct ExperiSettingDataType {
 //        QString experiName;
@@ -70,39 +70,44 @@ private:
     QString m_experiId;
     QSqlDatabase db;
     QSqlQuery *query;
-    QString m_experiName;
-    QString m_sampleID;
-    QString m_userName;
     QString m_experiType;
-    QString m_cellType;
+    QString m_userName;
+
+
+    QString m_experiName[CHAMBER_NUM];
+    QString m_sampleID[CHAMBER_NUM];
+    QString m_cellType[CHAMBER_NUM];
+    int     m_dilutionRatio[CHAMBER_NUM];
+    int     m_cellTypeID[CHAMBER_NUM];
+    int     m_minRadiu[CHAMBER_NUM];
+    int     m_maxRadiu[CHAMBER_NUM];
+
     int     m_userID;
     int     m_experiTypeID;
-    int     m_cellTypeID;
-    int     m_dilutionRatio;
+
     bool    m_chamberSelc[CHAMBER_NUM];
     int     m_chamberSet;
-    int     m_minRadiu;
-    int     m_maxRadiu;
+
 };
 
-inline const QString &ExperiSetting::experiName() const
+inline const QString &ExperiSetting::experiName(int chamberid) const
 {
-    return m_experiName;
+    return m_experiName[chamberid-1];
 }
 
-inline void ExperiSetting::setExperiName(const QString &newExperiName)
+inline void ExperiSetting::setExperiName(int chamberid, const QString &newExperiName)
 {
-    m_experiName = newExperiName;
+    m_experiName[chamberid-1] = newExperiName;
 }
 
-inline const QString &ExperiSetting::sampleId() const
+inline const QString &ExperiSetting::sampleId(int chamberid) const
 {
-    return m_sampleID;
+    return m_sampleID[chamberid-1];
 }
 
-inline void ExperiSetting::setSampleId(const QString &newSampleId)
+inline void ExperiSetting::setSampleId(int chamberid, const QString &newSampleId)
 {
-    m_sampleID = newSampleId;
+    m_sampleID[chamberid-1] = newSampleId;
 }
 
 inline int ExperiSetting::userID() const
@@ -131,20 +136,20 @@ inline void ExperiSetting::setExperiTypeID(int newExperiTypeID)
     m_experiTypeID = newExperiTypeID;
 }
 
-inline int ExperiSetting::cellTypeID() const
+inline int ExperiSetting::cellTypeID(int chamberid) const
 {
-    return m_cellTypeID;
+    return m_cellTypeID[chamberid];
 }
 
 
-inline int ExperiSetting::dilutionRatio() const
+inline int ExperiSetting::dilutionRatio(int chamberid) const
 {
-    return m_dilutionRatio;
+    return m_dilutionRatio[chamberid-1];
 }
 
-inline void ExperiSetting::setDilutionRatio(int newDilutionRatio)
+inline void ExperiSetting::setDilutionRatio(int id, int newDilutionRatio)
 {
-    m_dilutionRatio = newDilutionRatio;
+    m_dilutionRatio[id-1] = newDilutionRatio;
 }
 
 inline const QString &ExperiSetting::getExperiId() const
@@ -164,6 +169,7 @@ inline int ExperiSetting::chamberSet() const
 
 inline void ExperiSetting::setChamberEn(int id, bool checked)
 {
+    id -= 1;
     m_chamberSelc[id] = checked;
     if (checked)
         m_chamberSet = m_chamberSet | (1 << id);
@@ -182,19 +188,19 @@ inline const QString &ExperiSetting::getExperiType() const
     return m_experiType;
 }
 
-inline const QString &ExperiSetting::getCellType() const
+inline const QString &ExperiSetting::getCellType(int chamberid) const
 {
-    return m_cellType;
+    return m_cellType[chamberid-1];
 }
 
-inline int ExperiSetting::getCellMinRadiu() const
+inline int ExperiSetting::getCellMinRadiu(int chamberid) const
 {
-    return m_minRadiu;
+    return m_minRadiu[chamberid-1];
 }
 
-inline int ExperiSetting::getCellMaxRadiu() const
+inline int ExperiSetting::getCellMaxRadiu(int chamberid) const
 {
-    return m_maxRadiu;
+    return m_maxRadiu[chamberid-1];
 }
 
 

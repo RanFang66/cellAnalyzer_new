@@ -18,7 +18,10 @@ inExperimentUi::inExperimentUi(ExperiCtrl *experiCtrl, QWidget *parent) :
 //    m_scene = new QGraphicsScene(this);
 //    ui->gvImage->setScene(m_scene);
 
-    ui->lblNoticeText_3rd->setText("start experiment...");
+    ui->lblNoticeText_1st->setText("");
+    ui->lblNoticeText_2nd->setText("");
+    ui->lblNoticeText_3rd->setText("start experiment");
+    ui->lblImage->setPixmap(QPixmap());
     m_waitingGif->start();
 }
 
@@ -44,6 +47,9 @@ const QStringList IMAGE_TYPE = {
 
 void inExperimentUi::onUpdateImage()
 {
+    if (ui->lblWaittingGif->isVisible()) {
+        ui->lblWaittingGif->setVisible(false);
+    }
     QImage imgShow = experi->getCurrImage();
 //    int w = imgShow.width();
 //    int h = imgShow.height();
@@ -51,12 +57,7 @@ void inExperimentUi::onUpdateImage()
     QPixmap pic = QPixmap::fromImage(imgShow);
     ui->lblImage->setPixmap(pic);
     ui->lblImage->setScaledContents(true);
-//    if (m_image_item) {
-//        m_image_item->setPixmap(QPixmap::fromImage(imgShow));
-//    } else {
-//        m_image_item = m_scene->addPixmap(QPixmap::fromImage(imgShow));
-//    }
-//    m_scene->setSceneRect(0, 0, imgShow.width()/2, imgShow.height()/2);
+
     int chamber, view, imageType;
     experi->getCurrentState(chamber, view, imageType);
     QString notice = QString("cap the %1 image of view %2, chamber %3").arg(IMAGE_TYPE.at(imageType-1)).arg(view).arg(chamber);
@@ -69,6 +70,7 @@ void inExperimentUi::initExperimentUi()
     ui->lblNoticeText_2nd->setText("");
     ui->lblNoticeText_3rd->setText("start experiment");
     ui->lblImage->setPixmap(QPixmap());
+    ui->lblWaittingGif->setVisible(true);
 }
 
 
