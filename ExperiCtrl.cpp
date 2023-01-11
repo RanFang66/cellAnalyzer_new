@@ -405,7 +405,7 @@ void ExperiCtrl::experiChamberStateMachine()    // ctrl the experiment in one ch
         if (!dir.exists()) {
             dir.mkdir(imgFilePath);
         }
-
+        m_autoFocusFlag = false;
         int minR = m_setting->getCellMinRadiu(m_chamberId) * 0.8 + 0.4;
         int maxR = m_setting->getCellMaxRadiu(m_chamberId) * 0.8 + 0.4;
         m_algorithm->setCellParameters(minR, maxR);

@@ -90,7 +90,7 @@ public:
     void getCamResolution(int index, int &width, int &height);
     void camChangeResolution(int index);
     void initCameraParas(int type);
-
+    void getAutoFocusParas(int *start, int *end, int *step);
 
     int getMotorPos(int id);
     int chipPos_X();

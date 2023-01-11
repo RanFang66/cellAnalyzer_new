@@ -119,6 +119,11 @@ void debugModeUi::initDubugModeUi()
         ui->lblCamName->setText(tr("Camera Closed"));
     }
 
+    int start, end, step;
+    m_dev->getAutoFocusParas(&start, &end, &step);
+    ui->spinAFHighLimit->setValue(end);
+    ui->spinAFLowLimit->setValue(start);
+    ui->spinAFStep->setValue(step);
 
     connect(m_dev, SIGNAL(devStatusUpdated()), this, SLOT(onDevStatusUpdated()));
 //    connect(m_dev, SIGNAL(chipXMotorStateUpdated()), this, SLOT(onDevStatusUpdated()));

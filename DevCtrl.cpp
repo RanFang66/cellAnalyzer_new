@@ -212,6 +212,13 @@ void DevCtrl::initCameraParas(int type)
     emit initCameraParameters(type);
 }
 
+void DevCtrl::getAutoFocusParas(int *start, int *end, int *step)
+{
+    *start = autoFocusStartPos;
+    *end = autoFocusEndPos;
+    *step = autoFocusStep;
+}
+
 void DevCtrl::startAutoFocus(bool act)
 {
     if (act) {
