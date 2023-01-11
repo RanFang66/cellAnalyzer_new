@@ -32,23 +32,23 @@ public:
     void changeView(int id);
     void changeChamber(int id);
     void changeImageType(int id);
-    void initResultShow(QString experiId);
+    void initResultShow(QString experiId, int chamber = 0);
 
 signals:
     void returnToMainPage();
 
 private slots:
     void onViewChanged();
+
     void onImageTypeChanged();
-
-
-    void on_cBoxChamberSelect_currentIndexChanged(const QString &arg1);
 
     void on_btnReturn_clicked();
 
     void on_btnZoomOut_clicked();
 
     void on_btnZoomIn_clicked();
+
+    void on_cBoxChamberSelect_activated(int index);
 
 private:
     Ui::experiResultUi *ui;

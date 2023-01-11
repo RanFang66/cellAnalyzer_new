@@ -129,6 +129,20 @@ void CameraCtrl::onSetCamParas(int type)
     delay.start();
     while(delay.elapsed() < 500)
         ;
+
+    switch (type) {
+    case 1:
+        cameraBrightInit();
+        break;
+    case 2:
+        cameraFL1Init();
+        break;
+    case 3:
+        cameraFL2Init();
+        break;
+    default:
+        break;
+    }
     emit cameraParasSetRet();
 }
 

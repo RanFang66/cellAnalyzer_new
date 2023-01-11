@@ -17,9 +17,9 @@ public:
     explicit ExperiData(ExperiSetting *setting, QObject *parent = nullptr);
 
 public slots:
-    void insertExperimentData();
+    void insertExperimentData(int chamberID);
     void deleteExperimentData(int experiID);
-    void updateData(int cellNum, int liveCellNum,
+    void updateData(int chamberId, int cellNum, int liveCellNum,
                     int deadCellNum, double aggreRate, double avgDiameter, double avgCompact);
 
 signals:

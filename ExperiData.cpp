@@ -24,7 +24,7 @@ ExperiData::ExperiData(ExperiSetting *setting, QObject *parent) : QObject(parent
 //    double aggregateRate;
 //};
 
-void ExperiData::insertExperimentData()
+void ExperiData::insertExperimentData(int chamberId)
 {
 //    query->exec("SELECT * from experiData WHERE experiID = '-1'");
 //    QSqlRecord mRec = query->record();
@@ -49,13 +49,13 @@ VALUES(:experiID, :experiName, :userName,
 :avgCompactness, :aggregateRate, :nucleusRate, :endTime))");
 
     query->bindValue(":experiID", m_setting->getExperiId());
-    query->bindValue(":experiName", m_setting->experiName(1));
+    query->bindValue(":experiName", m_setting->experiName(chamberId));
     query->bindValue(":userName", m_setting->getUserName());
     query->bindValue(":experiType", m_setting->getExperiType());
-    query->bindValue(":cellType", m_setting->getCellType(1));
-    query->bindValue(":chamberSet", m_setting->chamberSet());
-    query->bindValue(":sampleID", m_setting->sampleId(1));
-    query->bindValue(":dilutionRatio", m_setting->dilutionRatio(1));
+    query->bindValue(":cellType", m_setting->getCellType(chamberId));
+    query->bindValue(":chamberSet", chamberId);
+    query->bindValue(":sampleID", m_setting->sampleId(chamberId));
+    query->bindValue(":dilutionRatio", m_setting->dilutionRatio(chamberId));
     query->bindValue(":cellConc", m_cellConc);
     query->bindValue(":liveCellConc", m_liveCellConc);
     query->bindValue(":deadCellConc", m_deadCellConc);
@@ -87,7 +87,7 @@ void ExperiData::deleteExperimentData(int experiID)
     }
 }
 
-void ExperiData::updateData(int cellNum, int liveCellNum, int deadCellNum, double aggreRate, double avgDiameter, double avgCompact)
+void ExperiData::updateData(int chamberId, int cellNum, int liveCellNum, int deadCellNum, double aggreRate, double avgDiameter, double avgCompact)
 {
     m_cellNum = liveCellNum + deadCellNum;
     m_liveCellNum = liveCellNum;
@@ -103,7 +103,7 @@ void ExperiData::updateData(int cellNum, int liveCellNum, int deadCellNum, doubl
     if (m_nucleusRate > 100) {
         m_nucleusRate = 100;
     }
-    insertExperimentData();
+    insertExperimentData(chamberId);
 }
 
 

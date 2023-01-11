@@ -62,7 +62,7 @@ void MainWindow::initMainWindowUi()
     connect(experiSetting, SIGNAL(exitExperimentSetting()), this, SLOT(onExitExperiSetting()));
 //    connect(inExperiment, SIGNAL(pauseExperiment()), this, SLOT(onExperimentPaused()));
     connect(m_experiCtrl, SIGNAL(experimentFinished()), this, SLOT(onExperimentFinished()));
-    connect(experiData, SIGNAL(showDataDetail(QString&)), this, SLOT(onShowDataDetail(QString&)));
+    connect(experiData, SIGNAL(showDataDetail(QString&, int)), this, SLOT(onShowDataDetail(QString&, int)));
     connect(experiRes, SIGNAL(returnToMainPage()), this, SLOT(onReturnToMainPage()));
 //    connect(m_experiCtrl, SIGNAL(experiCapFinished()), inExperiment, SLOT(onUpdateImage()));
     connect(userManage, SIGNAL(return2SysSetting()), this, SLOT(onReturnSysSetting()));
@@ -200,9 +200,9 @@ void MainWindow::onExperimentFinished()
 
 }
 
-void MainWindow::onShowDataDetail(QString &id)
+void MainWindow::onShowDataDetail(QString &id, int chamberId)
 {
-    experiRes->initResultShow(id);
+    experiRes->initResultShow(id, chamberId);
     ui->stackedWidget->setCurrentIndex(experiResultIndex);
 }
 

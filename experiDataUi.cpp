@@ -99,6 +99,7 @@ void experiDataUi::initExperiDataUi()
     int pageNum = m_recordsNum / m_recordsPerPage + 1;
     ui->spinPageNum->setMaximum(pageNum);
     ui->spinPageNum->setMinimum(1);
+    curChamberID = 0;
 }
 
 void experiDataUi::loadStyleSheet(const QString &styleSheetFile)
@@ -169,12 +170,13 @@ void experiDataUi::onCurrentRowChanged(const QModelIndex &current, const QModelI
     if (current.isValid()) {
         curRec = qryModel->record(current.row());
         curExperiID = curRec.value("experiID").toString();
+        curChamberID = curRec.value("chamberSet").toInt();
     }
 }
 
 void experiDataUi::on_btnDetail_clicked()
 {
-    emit showDataDetail(curExperiID);
+    emit showDataDetail(curExperiID, curChamberID);
 }
 
 

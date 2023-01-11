@@ -31,7 +31,7 @@ public:
     };
 
 signals:
-    void showDataDetail(QString &experiID);
+    void showDataDetail(QString &experiID, int chambr);
 
 private slots:
     void on_btnDeleteData_clicked();
@@ -63,6 +63,7 @@ private:
     QItemSelectionModel *theSelection;
     QSqlRecord      curRec;
     QString         curExperiID;
+    int             curChamberID;
 
     bool    m_exportDataFlag = false;
     int     m_exportType;

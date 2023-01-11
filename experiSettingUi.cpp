@@ -137,7 +137,12 @@ void experiSettingUi::on_btnConfirmSetting_clicked()
         int chamberid = i+1;
         if (cbox[i]->checkState() == Qt::PartiallyChecked) {
             m_setting->setExperiName(chamberid, ui->editExperiName->text());
-            m_setting->setSampleId(chamberid, ui->editSampleId->text());
+            QString sampleID = ui->editSampleId->text();
+            if (!sampleID.isEmpty())
+                m_setting->setSampleId(chamberid, ui->editSampleId->text());
+            else{
+                m_setting->setSampleId(chamberid, QString("Chamber%1").arg(chamberid));
+            }
             m_setting->setCellTypeID(chamberid, ui->comboCellType->currentIndex() + 1);
             m_setting->setDilutionRatio(chamberid, ui->comboDilutionRate->currentIndex() + 1);
             m_setting->setChamberEn(chamberid, true);

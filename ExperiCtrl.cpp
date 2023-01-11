@@ -151,24 +151,24 @@ const QImage ExperiCtrl::getCurrImage() const
 
 void ExperiCtrl::startExperiment(const QString &experiId)
 {
-    imgFilePath = "/cellImages/" + experiId + "/";
-    QDir dir(imgFilePath);
-    if (!dir.exists()) {
-        dir.mkdir(imgFilePath);
-    }
+//    imgFilePath = "/cellImages/" + experiId + "/";
+//    QDir dir(imgFilePath);
+//    if (!dir.exists()) {
+//        dir.mkdir(imgFilePath);
+//    }
 
-    int minR = m_setting->getCellMinRadiu(1) * 0.8 + 0.4;
-    int maxR = m_setting->getCellMaxRadiu(1) * 0.8 + 0.4;
-    m_algorithm->setCellParameters(minR, maxR);
-    m_algorithm->initAlgorithm();
-    for (int i = 0; i < VIEW_3; i++) {
-        m_cellNum[i] = 0;
-        m_clusterCellNum[i] = 0;
-        m_liveCellNum[i] = 0;
-        m_deadCellNum[i] = 0;
-        m_avgRadiu[i] = 0;
-        m_avgCompact[i] = 0;
-    }
+//    int minR = m_setting->getCellMinRadiu(1) * 0.8 + 0.4;
+//    int maxR = m_setting->getCellMaxRadiu(1) * 0.8 + 0.4;
+//    m_algorithm->setCellParameters(minR, maxR);
+//    m_algorithm->initAlgorithm();
+//    for (int i = 0; i < VIEW_3; i++) {
+//        m_cellNum[i] = 0;
+//        m_clusterCellNum[i] = 0;
+//        m_liveCellNum[i] = 0;
+//        m_deadCellNum[i] = 0;
+//        m_avgRadiu[i] = 0;
+//        m_avgCompact[i] = 0;
+//    }
     m_experiState = EXPERI_INIT;
     experimentStateMachine();
 }
@@ -377,7 +377,7 @@ void ExperiCtrl::experimentStateMachine()       // ctrl the whole experiment: ct
 //        break;
     case EXPERI_FINISH:
         if (!m_pauseFlag){
-            calcAnalyzeResult();
+//            calcAnalyzeResult();
             emit experimentFinished();
         }
         endExperiment();
@@ -397,8 +397,30 @@ void ExperiCtrl::experiChamberStateMachine()    // ctrl the experiment in one ch
     case EXPERI_CHAMBER_IDLE:
         break;
     case EXPERI_CHAMBER_INIT:
+    {
+        QString experiId = m_setting->getExperiId();
+        QString sampleId = m_setting->sampleId(m_chamberId);
+        imgFilePath = "/cellImages/" + experiId + "_" + sampleId +"/";
+        QDir dir(imgFilePath);
+        if (!dir.exists()) {
+            dir.mkdir(imgFilePath);
+        }
+
+        int minR = m_setting->getCellMinRadiu(m_chamberId) * 0.8 + 0.4;
+        int maxR = m_setting->getCellMaxRadiu(m_chamberId) * 0.8 + 0.4;
+        m_algorithm->setCellParameters(minR, maxR);
+        m_algorithm->initAlgorithm();
+        for (int i = 0; i < VIEW_3; i++) {
+            m_cellNum[i] = 0;
+            m_clusterCellNum[i] = 0;
+            m_liveCellNum[i] = 0;
+            m_deadCellNum[i] = 0;
+            m_avgRadiu[i] = 0;
+            m_avgCompact[i] = 0;
+        }
         devCtrl->motorRun(DevCtrl::CHIP_MOTOR_Y, DevCtrl::MOTOR_RUN_POS, m_yPos);
         break;
+    }
     case EXPERI_CHAMBER_POS1:
         experiPosStateMachine();
         break;
@@ -409,6 +431,7 @@ void ExperiCtrl::experiChamberStateMachine()    // ctrl the experiment in one ch
         experiPosStateMachine();
         break;
     case EXPERI_CHAMBER_FINISH:
+        calcAnalyzeResult();
         emit experiOneChamberFinished();
         break;
     }
@@ -572,7 +595,7 @@ void ExperiCtrl::calcAnalyzeResult()
     avgCompact /= cellNum;
     aggregateRate = (double)clusterCellNum / cellNum * 100.0;
 
-    m_data->updateData(cellNum, liveCellNum, deadCellNum, aggregateRate, avgRadiu*2, avgCompact);
+    m_data->updateData(m_chamberId, cellNum, liveCellNum, deadCellNum, aggregateRate, avgRadiu*2, avgCompact);
 }
 
 

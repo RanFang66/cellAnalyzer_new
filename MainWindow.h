@@ -58,7 +58,7 @@ private slots:
 
     void onExperimentFinished();
 
-    void onShowDataDetail(QString &id);
+    void onShowDataDetail(QString &id, int chamberId);
 
     void onReturnToMainPage();
 
