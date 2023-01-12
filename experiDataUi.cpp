@@ -13,7 +13,7 @@ experiDataUi::experiDataUi(QWidget *parent) :
     db = QSqlDatabase::database("cellDataConn");
     query = new QSqlQuery(db);
     m_pageIndex = 0;
-    m_recordsPerPage = 35;
+    m_recordsPerPage = 27;
     initExperiDataUi();
 
 }
@@ -87,6 +87,7 @@ void experiDataUi::initExperiDataUi()
     ui->tblExperiData->verticalHeader()->setVisible(false);
     ui->tblExperiData->setColumnHidden(0, true);
     ui->tblExperiData->resizeColumnsToContents();
+    ui->tblExperiData->resizeRowsToContents();
 
     theSelection->clear();
     ui->btnDeleteData->setEnabled(false);

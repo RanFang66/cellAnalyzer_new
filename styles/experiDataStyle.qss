@@ -21,13 +21,9 @@ QGroupBox#groupDataExport QPushButton {
     background: rgba(0, 186, 173, 1);
     border: 2px solid rgba(0, 0, 0, 1);
     
-    font-size: 22px;
+    font-size: 32px;
     font-weight: 400;
-    letter-spacing: 0px;
-    line-height: 0px;
     color: rgba(255, 255, 255, 1);
-    text-align: center;
-    vertical-align: middle;
 }
 
 QGroupBox#groupDataRetrive QComboBox, 
@@ -71,19 +67,34 @@ QPushButton#btnFirstPage,
 QPushButton#btnLastPage,
 QPushButton#btnNextPage,
 QPushButton#btnPrevPage {
+    /* max-width: 140px;
+    max-height: 60px; */
     border-radius: 10px;
     background: rgba(0, 186, 173, 1);
     border: 2px solid rgba(0, 0, 0, 1);   
 
     font-size: 32px;
     font-weight: 400;
-    letter-spacing: 0px;
-    line-height: 0px;
     color: rgba(255, 255, 255, 1);
-    text-align: center;
+}
+
+.QGroupBox{
+    padding-left:40px;
+    padding-right:40px;
+}
+
+QSpinBox#spinPageNum {
+    min-width: 120px;
+    min-height: 60px;
+
+    font-size: 32px;
+    font-weight: 400;
+    color: rgba(0, 0, 0, 1);
 }
 
 QGroupBox#groupDataRetrive QLabel {
+    padding-left: 40px;
+    padding-right: 40px;
     font-size: 35px;
     font-weight: 400;
     letter-spacing: 0px;
@@ -91,4 +102,34 @@ QGroupBox#groupDataRetrive QLabel {
     color: rgba(255, 255, 255, 1);
     text-align: center;
     vertical-align: middle;
+}
+
+QTableView#tblExperiData {
+    font-size: 28px;
+    color: rgba(0, 0, 0, 1);
+}
+
+QHeaderView::section{
+    font-size: 32px;
+    font-weight: 400;
+
+    background: rgba(66, 66, 9B, 1);
+}
+
+QScrollBar::handle:horizontal {
+    background: rgba(97, 97, 97, 1);
+    border: 0px solid gray;
+    border-radius:5px; 
+    height: 30px;
+    width:  30px;        
+}
+
+QScrollBar:horizontal {
+    border-width:1px;                
+    border-style: solid;                    
+    border-color: rgb(97, 97, 97, 1);
+    height: 30px;
+    width: 200px;                             
+    margin:0px 0px 0px 0px;                 
+    border-radius:5px;                      
 }

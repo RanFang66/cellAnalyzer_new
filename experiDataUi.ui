@@ -199,6 +199,15 @@
    </item>
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout_2">
+     <property name="spacing">
+      <number>40</number>
+     </property>
+     <property name="leftMargin">
+      <number>45</number>
+     </property>
+     <property name="rightMargin">
+      <number>45</number>
+     </property>
      <item>
       <widget class="QPushButton" name="btnFirstPage">
        <property name="text">

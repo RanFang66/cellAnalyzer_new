@@ -497,7 +497,7 @@ vertical-align: middle;</string>
     </sizepolicy>
    </property>
    <property name="text">
-    <string>Confirm</string>
+    <string>确认设置</string>
    </property>
    <property name="flat">
     <bool>true</bool>

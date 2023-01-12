@@ -19,8 +19,8 @@ inExperimentUi::inExperimentUi(ExperiCtrl *experiCtrl, QWidget *parent) :
 //    ui->gvImage->setScene(m_scene);
 
     ui->lblNoticeText_1st->setText("");
-    ui->lblNoticeText_2nd->setText("");
-    ui->lblNoticeText_3rd->setText("start experiment");
+    ui->lblNoticeText_2nd->setText("自动对焦中...");
+    ui->lblNoticeText_3rd->setText("开始实验");
     ui->lblImage->setPixmap(QPixmap());
     m_waitingGif->start();
 }
@@ -33,16 +33,16 @@ inExperimentUi::~inExperimentUi()
 void inExperimentUi::updateNoticeText(QString notice)
 {
     if (!(ui->lblNoticeText_2nd->text().isEmpty()))
-        ui->lblNoticeText_1st->setText(ui->lblNoticeText_2nd->text() + " finished");
+        ui->lblNoticeText_1st->setText(ui->lblNoticeText_2nd->text());
     if (!(ui->lblNoticeText_3rd->text().isEmpty()))
-        ui->lblNoticeText_2nd->setText(ui->lblNoticeText_3rd->text() + " finished");
+        ui->lblNoticeText_2nd->setText(ui->lblNoticeText_3rd->text());
     ui->lblNoticeText_3rd->setText(notice);
 }
 
 const QStringList IMAGE_TYPE = {
-    "bright",
-    "FL 1",
-    "FL 2",
+    "明场",
+    "绿色荧光",
+    "红色荧光",
 };
 
 void inExperimentUi::onUpdateImage()
@@ -60,15 +60,15 @@ void inExperimentUi::onUpdateImage()
 
     int chamber, view, imageType;
     experi->getCurrentState(chamber, view, imageType);
-    QString notice = QString("cap the %1 image of view %2, chamber %3").arg(IMAGE_TYPE.at(imageType-1)).arg(view).arg(chamber);
+    QString notice = QString("拍摄槽位%1-视野%2-%3图片完成").arg(chamber).arg(view).arg(IMAGE_TYPE.at(imageType-1));
     updateNoticeText(notice);
 }
 
 void inExperimentUi::initExperimentUi()
 {
     ui->lblNoticeText_1st->setText("");
-    ui->lblNoticeText_2nd->setText("");
-    ui->lblNoticeText_3rd->setText("start experiment");
+    ui->lblNoticeText_2nd->setText("自动对焦中...");
+    ui->lblNoticeText_3rd->setText("开始实验");
     ui->lblImage->setPixmap(QPixmap());
     ui->lblWaittingGif->setVisible(true);
 }
