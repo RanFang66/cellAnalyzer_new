@@ -10,8 +10,8 @@
 bool createDbConnect()
 {
     QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE", "cellDataConn");
-//    db.setDatabaseName("/home/seekgene/gitRepo/cellAnalyzer_new/cellAnalyzerDb.db");
-    db.setDatabaseName("/home/ran/gitRepos/cellAnalyzer_new/cellAnalyzerDb.db");
+    db.setDatabaseName("/home/seekgene/gitRepo/cellAnalyzer_new/cellAnalyzerDb.db");
+//    db.setDatabaseName("/home/ran/gitRepos/cellAnalyzer_new/cellAnalyzerDb.db");
 
     bool ok = db.open();
     if (!ok) {
@@ -45,7 +45,7 @@ int main(int argc, char *argv[])
 
     if (createDbConnect()) {
         QApplication a(argc, argv);
-//        QApplication::setOverrideCursor(Qt::BlankCursor);
+        QApplication::setOverrideCursor(Qt::BlankCursor);
         MainWindow w;
         QDlgLogin *dlgLogin = new QDlgLogin(w.getUserIdPointer(), &w);
 
