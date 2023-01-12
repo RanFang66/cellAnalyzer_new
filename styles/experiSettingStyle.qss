@@ -96,6 +96,9 @@ QCheckBox::indicator:unchecked {
     image: url(:/images/checkbox_icon.png);
 }
 
+QCheckBox::indicator:indeterminate {
+    image: url(:/images/checkbox_interminate.png);
+}
 
 QCheckBox::indicator:checked {
     image: url(:/images/checkbox_selc_icon.png);

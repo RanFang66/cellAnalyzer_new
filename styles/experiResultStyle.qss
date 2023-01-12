@@ -51,6 +51,14 @@ QComboBox#cBoxChamberSelect {
                                       stop: 0 #FF0ECE, stop: 1 #FFFFFF); */
 }
 
+QLabel#lblViewSelc,
+QLabel#lblImageTypeSelc,
+QLabel#lblImageTools{
+    font-size: 32px;
+    font-weight: 400;
+    color: rgba(10, 247, 231, 1);
+}
+
 
 .QRadioButton {
     font-size: 32px;

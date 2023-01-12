@@ -41,5 +41,7 @@
         <file>images/shutdown.png</file>
         <file>cellAnalyzerDb.db</file>
         <file>styles/wifiConfig.qss</file>
+        <file>images/WIFI.png</file>
+        <file>images/checkbox_interminate.png</file>
     </qresource>
 </RCC>

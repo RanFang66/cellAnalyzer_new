@@ -13,7 +13,7 @@ experiDataUi::experiDataUi(QWidget *parent) :
     db = QSqlDatabase::database("cellDataConn");
     query = new QSqlQuery(db);
     m_pageIndex = 0;
-    m_recordsPerPage = 27;
+    m_recordsPerPage = 24;
     initExperiDataUi();
 
 }
